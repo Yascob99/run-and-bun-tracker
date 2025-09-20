@@ -1,5 +1,3 @@
-json = require "pkmgen3.json"
-
 GameSettings = {
 	game = 0,
 	gamename = "",

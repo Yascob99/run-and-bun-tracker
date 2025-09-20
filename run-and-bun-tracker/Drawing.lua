@@ -33,8 +33,8 @@ function Drawing.drawPokemonIcon(id, x, y, selectedPokemon)
 	else
 		gui.drawRectangle(x,y,36,36, GraphicConstants.NONSELECTEDCOLOR, 0xFF222222)
 	end
-	if id ~= nil and id ~= 0 then
-		local name = GameSettings.names[id]:gsub(" ", "-"):lower()
+	if id ~= nil and id ~= 0 and GameSettings.names[id] ~= nil and type(GameSettings.names[id]) == "string" then
+		local name = PokemonData.name[id]:gsub(" ", "-"):lower()
 		gui.drawImage(DATA_FOLDER .. "/images/pokemon-gen8/regular/" .. name .. ".png", x- 16, y - 24)
 	end
 end
@@ -83,8 +83,10 @@ function Drawing.drawPokemonView()
 		gender = "White"
 	end
 	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 45, 7, name, genderColor)
-	if Program.selectedPokemon["status"] ~= "None" then
-		Drawing.drawStatusIcon(Program.selectedPokemon["status"], GraphicConstants.SCREEN_WIDTH + 5, 5)
+	if Program.selectedPokemon["status"] ~= "None"  then
+		Drawing.drawStatusIcon(Program.selectedPokemon["status"], GraphicConstants.SCREEN_WIDTH + 6, 6)
+	elseif Program.selectedPokemon["hp"] == 0 and Program.selectedPokemon["maxHP"] ~= 0 then
+		Drawing.drawStatusIcon("Fainted", GraphicConstants.SCREEN_WIDTH + 6, 6)
 	end
 	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 45, 17, "HP:")
 	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
@@ -313,19 +315,25 @@ function Drawing.drawButtons()
 					Drawing.drawPokemonIcon(team[j]['pkmID'], Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2], LayoutSettings.pokemonIndex.player == Buttons[i].team and LayoutSettings.pokemonIndex.slot == j)
 					if team[j]['pkmID'] > 0 and team[j]['pkmID'] < 1238 then
 						local colorbar = 'white'
+						local status = team[j]['status']
 						if team[j]['curHP'] / team[j]['maxHP'] <= 0.2 then
 							colorbar = 'red'
 						elseif team[j]['curHP'] / team[j]['maxHP'] <= 0.2 then
 							colorbar = 'yellow'
 						end
-						Drawing.drawStatusIcon(team[j]['status'], Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2])
+						if team[j]['curHP'] == 0 then
+							status = "Fainted"
+						end
+						Drawing.drawStatusIcon(status, Buttons[i].position[1] + (j-1) * 39 + 1, Buttons[i].position[2] + 1)
 						Drawing.drawText(Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2] + 36, "Lv. " .. team[j]['level'])
-						if isEnemy and Program.isWildEncounter then
-							Drawing.drawText(Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 46, "?" .. "/" .. "?", colorbar)
-						elseif isEnemy then
-							Drawing.drawText(Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 46,"?" .. "/" .. team[j]['maxHP'], colorbar)
-						else
-							Drawing.drawText(Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 46, team[j]['curHP'] .. "/" .. team[j]['maxHP'], colorbar)
+						if team[j]['curHP'] > 0 then
+							if isEnemy and Program.isWildEncounter then
+								Drawing.drawText(Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 46, "?" .. "/" .. "?", colorbar)
+							elseif isEnemy then
+								Drawing.drawText(Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 46,"?" .. "/" .. team[j]['maxHP'], colorbar)
+							else
+								Drawing.drawText(Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 46, team[j]['curHP'] .. "/" .. team[j]['maxHP'], colorbar)
+							end
 						end
 					end
 				end

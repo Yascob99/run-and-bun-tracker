@@ -8,6 +8,7 @@
 
 DATA_FOLDER = "run-and-bun-tracker"
 dofile (DATA_FOLDER .. "/Data.lua")
+dofile (DATA_FOLDER .. "/Json.lua")
 dofile (DATA_FOLDER .. "/Memory.lua")
 dofile (DATA_FOLDER .. "/Utils.lua")
 dofile (DATA_FOLDER .. "/GameSettings.lua")
