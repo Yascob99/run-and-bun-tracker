@@ -124,13 +124,15 @@ function Drawing.drawPokemonView()
 	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 120, 80, "EV", "white")
 	
 	
-	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 95, "HP", Utils.getNatureColor("hp", Program.selectedPokemon["nature"]))
-	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 105, "Attack", Utils.getNatureColor("atk", Program.selectedPokemon["nature"]))
-	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 115, "Defense", Utils.getNatureColor("def", Program.selectedPokemon["nature"]))
-	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 125, "Sp. Atk", Utils.getNatureColor("spa", Program.selectedPokemon["nature"]))
-	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 135, "Sp. Def", Utils.getNatureColor("spd", Program.selectedPokemon["nature"]))
-	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 145, "Speed", Utils.getNatureColor("spe", Program.selectedPokemon["nature"]))
+	
 	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 95, "HP", Utils.getNatureColor("hp", "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 105, "Attack", Utils.getNatureColor("atk", "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 115, "Defense", Utils.getNatureColor("def", "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 125, "Sp. Atk", Utils.getNatureColor("spa", "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 135, "Sp. Def", Utils.getNatureColor("spd", "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 145, "Speed", Utils.getNatureColor("spe", "white")
+
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 60, 95, "?", "white")
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 60, 105, "?", "white")
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 60, 115, "?", "white")
@@ -152,6 +154,13 @@ function Drawing.drawPokemonView()
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 120, 135, "?", "white")
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 120, 145, "?", "white")
 	else
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 95, "HP", Utils.getNatureColor("hp", Program.selectedPokemon["nature"]))
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 105, "Attack", Utils.getNatureColor("atk", Program.selectedPokemon["nature"]))
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 115, "Defense", Utils.getNatureColor("def", Program.selectedPokemon["nature"]))
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 125, "Sp. Atk", Utils.getNatureColor("spa", Program.selectedPokemon["nature"]))
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 135, "Sp. Def", Utils.getNatureColor("spd", Program.selectedPokemon["nature"]))
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 145, "Speed", Utils.getNatureColor("spe", Program.selectedPokemon["nature"]))
+
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 60, 95, Program.selectedPokemon["maxHP"], Utils.getNatureColor("hp", Program.selectedPokemon["nature"]))
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 60, 105, Program.selectedPokemon["attack"], Utils.getNatureColor("atk", Program.selectedPokemon["nature"]))
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 60, 115, Program.selectedPokemon["defense"], Utils.getNatureColor("def", Program.selectedPokemon["nature"]))
