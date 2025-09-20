@@ -218,14 +218,21 @@ function Program.getTrainerData(index)
 		local personality = Memory.readdword(start)
 		local magicword = (personality ~ Memory.readdword(start + 4))
 		local growthoffset = (TableData.growth[(personality % 24) + 1] - 1) * 12
+		local otId = Memory.readdword(start + 4)
+		local tid = Utils.getbits(otId, 0, 16)
+		local sid = Utils.getbits(otId, 16, 16)
 		local growth = (Memory.readdword(start + 32 + growthoffset) ~ magicword)
+		local p1 = math.floor(personality / 65536)
+		local p2 = personality % 65536
+		local isShinyMon = Utils.bit_xor(Utils.bit_xor(Utils.bit_xor(tid, sid), p1), p2) < 8
 		trainerdata[i] = {
 			pkmID = Utils.getbits(growth, 0, 16),
 			status = Utils.getStatus(start+80),
 			curHP = Memory.readword(start + 86),
 			maxHP = Memory.readword(start + 88),
 			level = Memory.readbyte(start + 84),
-			isEnemy = isEnemyMon
+			isEnemy = isEnemyMon,
+			isShiny = isShinyMon
 		}
 	end
 	return trainerdata

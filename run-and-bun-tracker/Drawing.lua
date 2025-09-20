@@ -27,7 +27,7 @@ function Drawing.drawLayout()
 	)
 end
 
-function Drawing.drawPokemonIcon(id, x, y, selectedPokemon)
+function Drawing.drawPokemonIcon(id, x, y, selectedPokemon, isShiny)
 	if selectedPokemon then
 		gui.drawRectangle(x,y,36,36, GraphicConstants.SELECTEDCOLOR[1], GraphicConstants.SELECTEDCOLOR[2])
 	else
@@ -35,7 +35,11 @@ function Drawing.drawPokemonIcon(id, x, y, selectedPokemon)
 	end
 	if id ~= nil and id ~= 0 and GameSettings.names[id] ~= nil and type(GameSettings.names[id]) == "string" then
 		local name = PokemonData.name[id]:gsub(" ", "-"):lower()
-		gui.drawImage(DATA_FOLDER .. "/images/pokemon-gen8/regular/" .. name .. ".png", x- 16, y - 24)
+		local path = "regular/"
+		if isShiny then
+			path = "shiny/"
+		end
+		gui.drawImage(DATA_FOLDER .. "/images/pokemon-gen8/".. path .. name .. ".png", x- 16, y - 24)
 	end
 end
 function Drawing.drawStatusIcon(status, x, y)
@@ -67,7 +71,7 @@ function Drawing.drawGeneralInfo()
 end
 
 function Drawing.drawPokemonView()
-	Drawing.drawPokemonIcon(Program.selectedPokemon.pokemonID, GraphicConstants.SCREEN_WIDTH + 5, 5, Program.selectedPokemon)
+	Drawing.drawPokemonIcon(Program.selectedPokemon.pokemonID, GraphicConstants.SCREEN_WIDTH + 5, 5, Program.selectedPokemon, Program.selectedPokemon.isShiny)
 	local colorbar = "white"
 
 	if Program.selectedPokemon["hp"] / Program.selectedPokemon["maxHP"] <= 0.2 then
@@ -321,7 +325,7 @@ function Drawing.drawButtons()
 				end
 				gui.drawText(Buttons[i].position[1] + 4, Buttons[i].position[2] - 13, Buttons[i].text, 'cyan', null, 10, 'Arial')
 				for j = 1,6,1 do
-					Drawing.drawPokemonIcon(team[j]['pkmID'], Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2], LayoutSettings.pokemonIndex.player == Buttons[i].team and LayoutSettings.pokemonIndex.slot == j)
+					Drawing.drawPokemonIcon(team[j]['pkmID'], Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2], LayoutSettings.pokemonIndex.player == Buttons[i].team and LayoutSettings.pokemonIndex.slot == j, team[j]['isShiny'])
 					if team[j]['pkmID'] > 0 and team[j]['pkmID'] < 1238 then
 						local colorbar = 'white'
 						local status = team[j]['status']
