@@ -126,12 +126,12 @@ function Drawing.drawPokemonView()
 	
 	
 	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
-		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 95, "HP", Utils.getNatureColor("hp", "white")
-		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 105, "Attack", Utils.getNatureColor("atk", "white")
-		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 115, "Defense", Utils.getNatureColor("def", "white")
-		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 125, "Sp. Atk", Utils.getNatureColor("spa", "white")
-		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 135, "Sp. Def", Utils.getNatureColor("spd", "white")
-		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 145, "Speed", Utils.getNatureColor("spe", "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 95, "HP",  "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 105, "Attack",  "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 115, "Defense",  "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 125, "Sp. Atk",  "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 135, "Sp. Def",  "white")
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 10, 145, "Speed",  "white")
 
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 60, 95, "?", "white")
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 60, 105, "?", "white")
