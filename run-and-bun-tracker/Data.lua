@@ -1314,11 +1314,11 @@ PokemonData = {
 		"Fire","Water","Grass","Electric",
 		"Psychic","Ice","Dragon","Dark"
 	},
-	typeColor = { 
+	typeColor = { '0x9FA19F',
 		'0xFF8000', '0x81B9EF', '0x9141CB', '0x915121',
-		'0xAFA981', '0x91A119', '0x704170', '0x60A1B8',
+		'0xAFA981', '0x91A119', '0x704170', '0x60A1B8', '0xEF70EF',
 		'0xE62829', '0x2980EF', '0x3FA129', '0xFAC000',
-		'0xEF4179', '0x3DCEF3', '0x5060E1', '0x624D4E', '0xEF70EF'
+		'0xEF4179', '0x3DCEF3', '0x5060E1', '0x624D4E' 
 	},
 	status = {
 		"None","Sleep","Poison","Burn","Freeze",

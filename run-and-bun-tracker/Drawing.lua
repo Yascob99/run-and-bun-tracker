@@ -193,7 +193,7 @@ function Drawing.drawPokemonView()
 	else
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 80, 162, PokemonData.nature[Program.selectedPokemon["nature"] + 1], "yellow")
 	end
-	local hptype = Program.getHiddenPower(Program.selectedPokemon)
+	local hptype = Utils.indexOf(PokemonData.type, Program.getHP(Program.selectedPokemon)) + 1
 	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 15, 172, "Hidden Power:")
 	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 80, 172, "???", PokemonData.typeColor[hptype])

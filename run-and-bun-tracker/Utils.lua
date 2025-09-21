@@ -8,14 +8,14 @@ function Utils.ifelse(condition, ifcase, elsecase)
 	end
 end
 
--- Shifts bits of 'value', 'n' bits to the left
-function Utils.bit_lshift(value, n)
-	return math.floor(value) * (2 ^ n)
+-- Shifts bits of 'value', 'level' bits to the left
+function Utils.bit_lshift(value, level)
+	return math.floor(value) * (2 ^ level)
 end
 
--- Shifts bits of 'value', 'n' bits to the right
-function Utils.bit_rshift(value, n)
-	return math.floor(value / (2 ^ n))
+-- Shifts bits of 'value', 'level' bits to the right
+function Utils.bit_rshift(value, level)
+	return math.floor(value / (2 ^ level))
 end
 
 -- gets bits from least significant to most
@@ -52,8 +52,8 @@ function Utils.rngAdvance(a)
 	return (Utils.mult32(a, 0x41C64E6D) + 0x6073) % 0x100000000
 end
 
-function Utils.rngAdvanceMulti(a, n) -- TODO, use tables to make this in O(logn) time
-	for i = 1, n, 1 do
+function Utils.rngAdvanceMulti(a, level) -- TODO, use tables to make this in O(logn) time
+	for i = 1, level, 1 do
 		a = (Utils.mult32(a, 0x41C64E6D) + 0x6073) % 0x100000000
 	end
 	return a
@@ -186,4 +186,50 @@ function Utils.bit_oper(a, b, operand)
 		r,m = r + m*operand%(s-a-b), m/2
 	until m < 1
 	return math.floor(r)
+end
+
+function Utils.indexOf(array, value)
+    for i, v in ipairs(array) do
+        if v == value then
+            return i
+        end
+    end
+    return nil
+end
+
+function Utils.expRequired(id,level)
+	expCurve = GameSettings.mons[GameSettings.names[id]]
+	if (expCurve == 0) then -- medium fast curve
+		return level^3 
+	end 
+	if (expCurve == 1) then -- erratic curve
+		if (levl<=50) then
+        	return math.floor(((100 - level)*level^3)/50)
+    	end
+   		if (level<=68) then
+        	return math.floor(((150 - level)*level^3)/100)
+    	end
+    	if (level<=98) then
+        	return math.floor(math.floor((1911 - 10 * level) / 3) * level^3 / 500)
+    	end
+    	return math.floor((160 - level) * level^3 / 100)
+	end 
+	if (expCurve == 2) then -- fluctuating curve
+		if (level<15) then
+			return math.floor((math.floor((level + 1) / 3) + 24) * level^3 / 50)
+		end
+		if (level<=36) then
+			return math.floor((level + 14) * level^3 / 50)
+		end
+		return math.floor((math.floor(level / 2) + 32) * level^3 / 50)
+	end
+	if (expCurve == 3) then return -- medium slow curve
+		math.floor((6 * (level)^3) / 5) - (15 * (level)^2) + (100 * level) - 140 
+	end
+	if (expCurve == 4) then -- fast curve
+		return math.floor((4*(level^3))/5)
+	end
+	if (expCurve == 5) then -- slow curve
+		return math.floor((5*(level^3))/4)
+	end
 end

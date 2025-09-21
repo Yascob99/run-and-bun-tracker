@@ -65,14 +65,11 @@ function GameSettings.initialize()
 		GameSettings.rngseed = Memory.readword(GameSettings.wram)
 		GameSettings.gBattleOutcome = 0x2023716 -- BattleStatus [0 = In battle, 1 = Won the match, 2 = Lost the match, 4 = Fled, 7 = Caught]
 		GameSettings.gBattleTypeFlags = 0x2023364 -- Value 20 for tutorial fight, 0 then 4 for wild, (went to 8 then 12 for rival fight)
+		GameSettings.gPokemonStorage = 0x2028848
+		GameSettings.gPlayerPartyCount = 0x2023a95
 		local monData = GameSettings.generatePokemonDetails()
-		GameSettings.mons = monData[1]
-		GameSettings.names =  monData[2]
-		local file = io.open("mons.json", "w")
-		local output = "[]"
-		output = json.encode(GameSettings.mons)
-		file:write(output)
-		file:close()
+		GameSettings.mons = monData[1] -- Probably should move this to the Data section.
+		GameSettings.names =  monData[2] -- Probably should move this to the Data section. 
 	end
 end
 
@@ -123,7 +120,7 @@ function GameSettings.generatePokemonDetails()
 		mon.unknown5 = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 35) -- Unsure values 0-39
 		address = GameSettings.pokemonNameTable + nameOffset
 		name = GameSettings.toString(address, monNameLength)
-		mons[name] = mon
+		mons[name] = mon 
 		names[i] = name
 	end
 	return {mons, names}

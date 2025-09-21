@@ -390,7 +390,7 @@ function Program.readBoxMon(address)
 	end
 	return mon
 end
-function readPartyMon(address)
+function Program.readPartyMon(address)
 	local mon = Program.readBoxMon(address)
 	mon.status = Utils.getStatus(address + 80)
 	mon.sleepTurns = sleep_turns_result
@@ -416,7 +416,7 @@ function Program.getPokemonData(index)
 			address = GameSettings.estats + 100 * (index.slot - 1)
 			isEnemyMon = true
 		end
-		local mon = readPartyMon(address)
+		local mon = Program.readPartyMon(address)
 		mon.isEnemy = isEnemyMon
 		return mon
 end
@@ -434,15 +434,67 @@ function Program.getAbility(mon)
     return current
 end
 
-function Program.getHiddenPower(mon)
-    return math.floor(((mon.hpIV%2 + (2*(mon.attackIV%2))+(4*(mon.defenseIV%2))+(8*(mon.speedIV%2))+(16*(mon.spAttackIV%2))+(32*(mon.spDefenseIV%2)))*5)/21) + 1
-end
-
 function Program.isValidPokemon(pokemonID)
 	return pokemonID ~= nil and PokemonData.name[pokemonID] ~= nil
 end
 function Program.advance10Frames()
 	for i = 0, 10, 1 do
 		emu.frameadvance()
+	end
+end
+
+function Program.getHP(mon)
+    hptype = ((mon.hpIV%2 + (2*(mon.attackIV%2))+(4*(mon.defenseIV%2))+(8*(mon.speedIV%2))+(16*(mon.spAttackIV%2))+(32*(mon.spDefenseIV%2)))*5)/21
+    hptype = math.floor(hptype)
+	if (hptype == 0) then
+		return "Fighting"
+	end
+	if (hptype == 1) then
+		return "Flying"
+	end
+	if (hptype == 2) then
+		return "Poison"
+	end
+	if (hptype == 3) then
+		return "Ground"
+	end
+	if (hptype == 4) then
+		return "Rock"
+	end
+	if (hptype ==5) then
+		return "Bug"
+	end
+	if (hptype == 6) then
+		return "Ghost"
+	end
+	if (hptype ==7) then
+		return "Steel"
+	end
+	if (hptype == 8) then
+		return "Fire"
+	end
+	if (hptype == 9) then
+		return "Water"
+	end
+	if (hptype == 10) then
+		return "Grass"
+	end
+	if (hptype == 11) then
+		return "Electric"
+	end
+	if (hptype == 12) then
+		return "Psychic"
+	end
+	if (hptype == 13) then
+		return "Ice"
+	end
+	if (hptype == 14) then
+		return "Dragon"
+	end
+	if (hptype == 15) then
+		return "Dark"
+	end
+	if (hptype == 16) then
+		return "Fairy"
 	end
 end

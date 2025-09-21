@@ -57,7 +57,8 @@ Buttons = {
 		backgroundcolor = {0xFF00AAFF, 0xFF000055},
 		textcolor = 0xFF00AAFF,
 		onclick = function()
-			
+			FileManager.exportCurrentMons("exportedMons.txt")
+			return
 		end
 	},
 	{
