@@ -193,12 +193,18 @@ function Drawing.drawPokemonView()
 	else
 		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 80, 162, PokemonData.nature[Program.selectedPokemon["nature"] + 1], "yellow")
 	end
-	local hptype = Utils.indexOf(PokemonData.type, Program.getHP(Program.selectedPokemon)) + 1
+	local hptype = Utils.indexOf(PokemonData.type, Program.getHP(Program.selectedPokemon))
+	if hptype > 8 then
+		hptype = hptype + 1
+	end
+	if hptype == 17 then
+		hptype = 9
+	end
 	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 15, 172, "Hidden Power:")
 	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
-		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 80, 172, "???", PokemonData.typeColor[hptype])
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 80, 172, "???")
 	else
-		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 80, 172, PokemonData.type[hptype], PokemonData.typeColor[hptype])
+		Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 80, 172, Program.getHP(Program.selectedPokemon), PokemonData.typeColor[hptype])
 	end
 	gui.drawRectangle(GraphicConstants.SCREEN_WIDTH + 5, 185, GraphicConstants.RIGHT_GAP - 11, 65,0xFFAAAAAA, 0xFF222222)
 	if Program.selectedPokemon.moves[1] then

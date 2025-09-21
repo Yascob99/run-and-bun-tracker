@@ -45,6 +45,7 @@ Program.catchdata = {
 	rate = 0
 }
 
+-- Main loop for the program. This is run every 10 frames currently (called in the Run and Bun Tracker).
 function Program.main()
 	Input.update()
 	Program.trainerPokemonTeam = Program.getTrainerData(1)
@@ -79,6 +80,7 @@ function Program.main()
 	Drawing.drawButtons()
 end
 
+-- gets the information on the player character for the map mainly
 function Program.getTrainerInfo()
 	local trainer = GameSettings.trainerpointer
 	if Memory.readbyte(trainer) == 0 then
@@ -96,6 +98,7 @@ function Program.getTrainerInfo()
 	end
 end
 
+-- Not currently used, but maintained for if it's wanted as a feature later.
 function Program.updateCatchData()
 	if LayoutSettings.menus.catch.selecteditem == LayoutSettings.menus.catch.AUTO then
 		local pokemonaux = Program.getPokemonData({player = 2, slot = 1})
@@ -141,6 +144,7 @@ function Program.updateCatchData()
 	Program.catchdata.rate = (y/65536) * (y/65536) * (y/65536) * (y/65536)
 end
 
+-- Not currently used, but maintained for when encounters are implemented.
 function Program.updateEncounterData()
 	-- Search map in ROM's table
 	if Program.map.id == 0 then
@@ -190,6 +194,8 @@ function Program.updateEncounterData()
 		end
 	end
 end
+
+-- gets a blank trainer with blank pokemon data
 function Program.getBlankTrainerData()
 	local trainerdata = {}
 	for i = 1,6,1 do
@@ -197,12 +203,15 @@ function Program.getBlankTrainerData()
 			pkmID = 0,
 			curHP = 0,
 			maxHP = 0,
-			level = 0
+			level = 0,
+			isEnemy = false,
+			isShiny = false
 		}
 	end
 	return trainerdata
 end
 
+-- Based on the original tracker with some code from Ironmon tracker for determining Shinyness
 function Program.getTrainerData(index)
 	local trainerdata = {}
 	local st = 0
@@ -238,6 +247,7 @@ function Program.getTrainerData(index)
 	return trainerdata
 end
 
+-- Pretty much copy pasted from the Run and Bun MGBA lua. With some modifications to get extra dervived values for this tracker.
 function Program.readBoxMon(address)
 	local mon = {}
 	local monNameLength=10
