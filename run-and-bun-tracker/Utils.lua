@@ -197,8 +197,16 @@ function Utils.indexOf(array, value)
     return nil
 end
 
+function Utils.calcLevel(exp, ID)
+	local level = 1
+	while (exp >= Utils.expRequired(ID,level+1)) do
+		level=level+1
+	end
+	return level
+end
+
 function Utils.expRequired(id,level)
-	expCurve = GameSettings.mons[GameSettings.names[id]]
+	local expCurve = GameSettings.mons[GameSettings.names[id]]["levelUpType"]
 	if (expCurve == 0) then -- medium fast curve
 		return level^3 
 	end 

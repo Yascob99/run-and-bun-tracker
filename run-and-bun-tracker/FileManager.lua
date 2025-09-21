@@ -41,7 +41,7 @@ function FileManager.getPartyPrint(mon)
 		str = str .. string.format(" @ %s", PokemonData.item[mon.heldItem])
 	end
 	str = str .. string.format("\n")
-	str = str .. "Ability: " .. string.format("%s", PokemonData.ability[mon.pokemonID] .. string.format("\n"))
+	str = str .. "Ability: " .. string.format("%s", Program.getAbility(mon) .. string.format("\n"))
 	str = str .. string.format("Level: %d\n", mon.level)
 	str = str .. string.format("%s", PokemonData.nature[mon.nature] .. " Nature" .. string.format("\n"))
 	str = str .. string.format("IVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe", mon.hpIV, mon.attackIV, mon.defenseIV, mon.spAttackIV, mon.spDefenseIV, mon.speedIV) .. string.format("\n")
@@ -63,12 +63,12 @@ end
 function FileManager.getPCPrint(mon)
     local hptype = Program.getHP(mon)
 	str = ""
-	str = str ..  PokemonData.name[mon.species]
+	str = str ..  PokemonData.name[mon.pokemonID]
 	if (PokemonData.item[mon.heldItem]) then
 		str = str .. string.format(" @ %s", PokemonData.item[mon.heldItem])
 	end
 	str = str .. string.format("\n")
-	str = str .. "Ability: " .. string.format("%s", PokemonData.ability[mon.pokemonID] .. string.format("\n"))
+	str = str .. "Ability: " .. string.format("%s", Program.getAbility(mon) .. string.format("\n"))
 	str = str .. string.format("Level: %d\n", Utils.calcLevel(mon.experience, mon.pokemonID))
 	str = str .. string.format("%s", PokemonData.nature[mon.nature]) .. " Nature" .. string.format("\n")
 	str = str .. string.format("IVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe", mon.hpIV, mon.attackIV, mon.defenseIV, mon.spAttackIV, mon.spDefenseIV, mon.speedIV) .. string.format("\n")
