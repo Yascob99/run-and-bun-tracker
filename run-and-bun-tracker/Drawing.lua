@@ -50,7 +50,7 @@ function Drawing.drawStatusIcon(status, x, y)
 end
 
 function Drawing.drawText(x, y, text, color)
-	gui.drawText( x, y, text, color, null, 9, "Franklin Gothic Medium")
+	gui.drawText( x, y, text, color, nil, 9, "Franklin Gothic Medium")
 end
 
 function Drawing.drawTriangleRight(x, y, size, color)
@@ -80,11 +80,11 @@ function Drawing.drawPokemonView()
 		colorbar = "yellow"
 	end
 	local name = PokemonData.name[Program.selectedPokemon["pokemonID"]] or ""
-	local genderColor = 0xFFFF9C94
+	local genderColor = "0xFFFF9C94"
 	if Program.selectedPokemon.gender == "Male" then
-		genderColor = 0xFF42CEFF
+		genderColor = "0xFF42CEFF"
 	elseif Program.selectedPokemon.gender == "Unknown" then
-		gender = "White"
+		genderColor = "White"
 	end
 	Drawing.drawText(GraphicConstants.SCREEN_WIDTH + 45, 7, name, genderColor)
 	if Program.selectedPokemon["status"] ~= "None"  then
@@ -226,11 +226,6 @@ function Drawing.drawMap()
 	local position = {-7, GraphicConstants.UP_GAP + GraphicConstants.SCREEN_HEIGHT}
 	local tilesize = 8
 	local coords = Map.findCoords(Memory.readbyte(GameSettings.mapid))
-	if roameravailable == 1 and roamermapid > 0 then
-		local roamerid = Memory.readword(roameraddr + 8)
-		local roamercoords = Map.findCoords(roamermapid)
-		gui.drawImage(DATA_FOLDER .. "/images/pokemon/" .. roamerid .. ".gif", position[1] + (roamercoords[1] - 1)*8 - 8, position[2] + (roamercoords[2] - 1)*8 - 12, 32, 32)
-	end
 	
 	if Program.trainerInfo.gender >= 0 then
 		local gender = 'girl'
@@ -329,7 +324,7 @@ function Drawing.drawButtons()
 					team = Program.enemyPokemonTeam
 					isEnemy = true
 				end
-				gui.drawText(Buttons[i].position[1] + 4, Buttons[i].position[2] - 13, Buttons[i].text, 'cyan', null, 10, 'Arial')
+				gui.drawText(Buttons[i].position[1] + 4, Buttons[i].position[2] - 13, Buttons[i].text, 'cyan', nil, 10, 'Arial')
 				for j = 1,6,1 do
 					Drawing.drawPokemonIcon(team[j]['pkmID'], Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2], LayoutSettings.pokemonIndex.player == Buttons[i].team and LayoutSettings.pokemonIndex.slot == j, team[j]['isShiny'])
 					if team[j]['pkmID'] > 0 and team[j]['pkmID'] < 1238 then

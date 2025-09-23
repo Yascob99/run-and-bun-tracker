@@ -5,8 +5,8 @@ GraphicConstants = {
 	SCREEN_HEIGHT = 160,
 	SCREEN_WIDTH = 240,
 	
-	SELECTEDCOLOR = {'yellow', 0xFF555500},
-	NONSELECTEDCOLOR = 0xFFAAAAAA,
+	SELECTEDCOLOR = {'yellow', '0xFF555500'},
+	NONSELECTEDCOLOR = '0xFFAAAAAA',
 	
 	SLOTCOLORS = {
 		'red',
@@ -17,13 +17,13 @@ GraphicConstants = {
 		'yellow',
 		'pink',
 		'cyan',
-		0xFF66FF66,
-		0xFF660000,
-		0xFF000066,
+		'0xFF66FF66',
+		'0xFF660000',
+		'0xFF000066',
 		'black',
-		0xFFFF6060,
-		0xFFFF44FF,
-		0xFFFFFF99,
-		0xFF777700
+		'0xFFFF6060',
+		'0xFFFF44FF',
+		'0xFFFFFF99',
+		'0xFF777700'
 	}
 }

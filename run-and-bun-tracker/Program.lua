@@ -403,7 +403,6 @@ end
 function Program.readPartyMon(address)
 	local mon = Program.readBoxMon(address)
 	mon.status = Utils.getStatus(address + 80)
-	mon.sleepTurns = sleep_turns_result
 	mon.level = Memory.readbyte(address + 84)
 	mon.mail = Memory.readdword(address + 85)
 	mon.hp = Memory.readword(address + 86)
@@ -437,7 +436,7 @@ end
 
 function Program.getAbility(mon)
 	local pokemonID = mon.pokemonID
-    current = PokemonData.ability[(pokemonID*3)+1+mon.altAbility]
+    local current = PokemonData.ability[(pokemonID*3)+1+mon.altAbility]
     if (current == "None") then
         current = PokemonData.ability[(pokemonID*3)+1]
     end
@@ -454,7 +453,7 @@ function Program.advance10Frames()
 end
 
 function Program.getHP(mon)
-    hptype = ((mon.hpIV%2 + (2*(mon.attackIV%2))+(4*(mon.defenseIV%2))+(8*(mon.speedIV%2))+(16*(mon.spAttackIV%2))+(32*(mon.spDefenseIV%2)))*5)/21
+    local hptype = ((mon.hpIV%2 + (2*(mon.attackIV%2))+(4*(mon.defenseIV%2))+(8*(mon.speedIV%2))+(16*(mon.spAttackIV%2))+(32*(mon.spDefenseIV%2)))*5)/21
     hptype = math.floor(hptype)
 	if (hptype == 0) then
 		return "Fighting"

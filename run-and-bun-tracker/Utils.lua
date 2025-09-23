@@ -112,31 +112,31 @@ function Utils.getNatureColor(stat, nature)
 		color = "white"
 	elseif stat == "atk" then
 		if nature < 5 then
-			color = 0xFF00FF00
+			color = "0xFF00FF00"
 		elseif nature % 5 == 0 then
 			color = "red"
 		end
 	elseif stat == "def" then
 		if nature > 4 and nature < 10 then
-			color = 0xFF00FF00
+			color = "0xFF00FF00"
 		elseif nature % 5 == 1 then
 			color = "red"
 		end
 	elseif stat == "spe" then
 		if nature > 9 and nature < 15 then
-			color = 0xFF00FF00
+			color = "0xFF00FF00"
 		elseif nature % 5 == 2 then
 			color = "red"
 		end
 	elseif stat == "spa" then
 		if nature > 14 and nature < 20 then
-			color = 0xFF00FF00
+			color = "0xFF00FF00"
 		elseif nature % 5 == 3 then
 			color = "red"
 		end
 	elseif stat == "spd" then
 		if nature > 19 then
-			color = 0xFF00FF00
+			color = "0xFF00FF00"
 		elseif nature % 5 == 4 then
 			color = "red"
 		end
@@ -211,7 +211,7 @@ function Utils.expRequired(id,level)
 		return level^3 
 	end 
 	if (expCurve == 1) then -- erratic curve
-		if (levl<=50) then
+		if (level<=50) then
         	return math.floor(((100 - level)*level^3)/50)
     	end
    		if (level<=68) then

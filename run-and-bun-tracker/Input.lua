@@ -89,15 +89,6 @@ function Input.check(xmouse, ymouse)
 						LayoutSettings.selectedslot[j] = not LayoutSettings.selectedslot[j]
 					end
 				end
-			elseif Buttons[i].type == ButtonType.catchData then
-				local enabled = Buttons[i].enabled()
-				for j = 1, #Buttons[i].text, 1 do
-					if enabled[j] then
-						if Input.isInRange(xmouse, ymouse, Buttons[i].box_first[1], Buttons[i].box_first[2] + j * Buttons[i].box_first[4], Buttons[i].box_first[3], Buttons[i].box_first[4]) then
-							Buttons[i].onclick(j)
-						end
-					end
-				end
 			end
 		end
 	end	

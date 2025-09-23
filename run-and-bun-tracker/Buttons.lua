@@ -91,30 +91,5 @@ Buttons = {
 		text = 'Enemy Data',
 		team = 2,
 		position = {4, GraphicConstants.UP_GAP + GraphicConstants.SCREEN_HEIGHT + 120}
-	},
-	
-		onclick = function(i)
-			forms.destroyall()
-			if i == 1 then
-				Forms.formhandle = forms.newform(250, 130, 'Change Pokemon')
-				Forms.dropdownhandle = forms.dropdown(Forms.formhandle, PokemonData.name, 75, 15, 80, 30)
-				forms.button(Forms.formhandle, 'Accept', Forms.onChangeCatchPokemonClick, 75, 50, 80, 30)
-			elseif i == 2 then
-				Forms.formhandle = forms.newform(250, 130, 'Change Cur. HP')
-				Forms.texthandle = forms.textbox(Forms.formhandle, Program.catchdata.curHP, 80, 30, 'UNSIGNED', 75, 15)
-				forms.button(Forms.formhandle, 'Accept', Forms.onChangeCatchCurHPClick, 75, 50, 80, 30)
-			elseif i == 3 then
-				Forms.formhandle = forms.newform(250, 130, 'Change Max. HP')
-				Forms.texthandle = forms.textbox(Forms.formhandle, Program.catchdata.maxHP, 80, 30, 'UNSIGNED', 75, 15)
-				forms.button(Forms.formhandle, 'Accept', Forms.onChangeCatchMaxHPClick, 75, 50, 80, 30)
-			elseif i == 4 then
-				Forms.formhandle = forms.newform(250, 130, 'Change status')
-				Forms.dropdownhandle = forms.dropdown(Forms.formhandle, PokemonData.status, 75, 15, 80, 30)
-				forms.button(Forms.formhandle, 'Accept', Forms.onChangeCatchStatusClick, 75, 50, 80, 30)
-			elseif i == 5 then
-				Forms.formhandle = forms.newform(250, 130, 'Change Ball')
-				Forms.dropdownhandle = forms.dropdown(Forms.formhandle, {'Master Ball', 'Ultra Ball', 'Great Ball', 'Poke Ball', 'Safari Ball'}, 75, 15, 80, 30)
-				forms.button(Forms.formhandle, 'Accept', Forms.onChangeCatchBallClick, 75, 50, 80, 30)
-			end
-		end
+	}
 	}			

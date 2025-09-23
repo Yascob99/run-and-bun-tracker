@@ -2,13 +2,15 @@ FileManager = {}
 
 function FileManager.exportCurrentMons(filename)
     	local file = io.open(filename, "w")
-        FileManager.printPartyStatus(file)
-		file:close()
+		if file ~= nil then
+        	FileManager.printPartyStatus(file)
+			file:close()
+		end
 end
 
 function FileManager.printPartyStatus(file)
-    address = GameSettings.gPokemonStorage + 4
-    i = 0
+    local address = GameSettings.gPokemonStorage + 4
+    local i = 0
 	for _, mon in ipairs(FileManager.getParty()) do
 		if (mon.pokemonID ~= 0) then
 			file:write(FileManager.getPartyPrint(mon))
@@ -35,7 +37,7 @@ end
 
 function FileManager.getPartyPrint(mon)
     local hptype = Program.getHP(mon)
-	str = ""
+	local str = ""
 	str = str .. PokemonData.name[mon.pokemonID]
 	if (PokemonData.item[mon.heldItem]) then
 		str = str .. string.format(" @ %s", PokemonData.item[mon.heldItem])
@@ -62,7 +64,7 @@ end
 
 function FileManager.getPCPrint(mon)
     local hptype = Program.getHP(mon)
-	str = ""
+	local str = ""
 	str = str ..  PokemonData.name[mon.pokemonID]
 	if (PokemonData.item[mon.heldItem]) then
 		str = str .. string.format(" @ %s", PokemonData.item[mon.heldItem])
@@ -86,3 +88,55 @@ function FileManager.getPCPrint(mon)
 	return str
 end
 
+function FileManager.parseConfig(data)
+    local str = ""
+    local char = ""
+    local isKey = true
+    local key = ""
+    local value = ""
+    local outData = {}
+    for i = 1, #data,1 do
+        char = data:sub(5,5)
+        if char == "="  and isKey then
+            isKey = false
+            key = str:gsub("%s+", "")
+        elseif char == "\n" and not isKey then
+            if key == "" then
+                console.log("Error Processing config file. Incorrect Formatting.")
+                return {}
+            else
+                value = str:gsub("%s+", "")
+                outData[key] = value
+                key = ""
+                value = ""
+                str = ""
+            end
+        else
+            str = str .. char
+        end
+    end
+    return outData
+end
+function FileManager.readConfig(path)
+    local file = io.open(path, "r")
+    if file ~= nil then
+        local data = file:read("*all")
+        local settings = FileManager.parseConfig(data)
+        file:close()
+        console.log(data)
+    end
+end
+function FileManager.writeConfig(path, dataTable)
+    local file = io.open(path, "w")
+    local key = ""
+    local value = ""
+    if file ~= nil then 
+        for i = 1, #dataTable, 1 do
+            key = dataTable[i].key
+            value = dataTable[i].value
+            file:write(key .. " = " .. value)
+        end
+        console.log("Wrote config file")
+        file:close()
+    end
+end

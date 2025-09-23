@@ -67,6 +67,7 @@ function GameSettings.initialize()
 		GameSettings.gBattleTypeFlags = 0x2023364 -- Value 20 for tutorial fight, 0 then 4 for wild, (went to 8 then 12 for rival fight)
 		GameSettings.gPokemonStorage = 0x2028848
 		GameSettings.gPlayerPartyCount = 0x2023a95
+		-- GameSettings.encountertable
 		local monData = GameSettings.generatePokemonDetails()
 		GameSettings.mons = monData[1] -- Probably should move this to the Data section.
 		GameSettings.names =  monData[2] -- Probably should move this to the Data section. 
