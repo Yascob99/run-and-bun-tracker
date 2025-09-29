@@ -1,19 +1,33 @@
 -- Lua Script made by MKDasher
--- Based on FractalFusion's VBA-rr lua scripts, with some extra features.
+-- Based on MKdasher's pokemon gen 3 lua extension for bizhawk, with some extra features. Also borrows some code and ideas from Besteon's Ironmon-Tracker.
 -- NOTE: On Bizhawk, go to Config / Display... Then uncheck Stretch pixels by integers only.
 
 -- TODO
 -- Pickup
 -- Roaming
 
+--
+
 DATA_FOLDER = "run-and-bun-tracker"
 
+-- load important modules before 
 dofile (DATA_FOLDER .. "/Data.lua")
 dofile (DATA_FOLDER .. "/Json.lua")
 dofile (DATA_FOLDER .. "/Memory.lua")
 dofile (DATA_FOLDER .. "/Utils.lua")
 dofile (DATA_FOLDER .. "/GameSettings.lua")
 dofile (DATA_FOLDER .. "/FileManager.lua")
+local romloaded = false
+ 
+-- wait for rom to be loaded before initializing the script
+if GameSettings.getRomName() == "" or GameSettings.getRomName() == "Null" then
+	print("> Waiting for a game ROM to be loaded... (File -> Open ROM)")
+	while not romloaded do
+		if GameSettings.getRomName() == "" or GameSettings.getRomName() == "Null" then
+			romloaded = true
+		end
+	end
+end
 
 
 -- Initialize Game Settings before loading other files.
