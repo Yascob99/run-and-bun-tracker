@@ -17,14 +17,14 @@ dofile (DATA_FOLDER .. "/Memory.lua")
 dofile (DATA_FOLDER .. "/Utils.lua")
 dofile (DATA_FOLDER .. "/GameSettings.lua")
 dofile (DATA_FOLDER .. "/FileManager.lua")
-local romloaded = false
+dofile (DATA_FOLDER .. "/Inifile.lua")
  
 -- wait for rom to be loaded before initializing the script
-if GameSettings.getRomName() == "" or GameSettings.getRomName() == "Null" then
+if GameSettings.isRomLoaded() then
 	print("> Waiting for a game ROM to be loaded... (File -> Open ROM)")
-	while not romloaded do
-		if GameSettings.getRomName() == "" or GameSettings.getRomName() == "Null" then
-			romloaded = true
+	while not GameSettings.romloaded do
+		if GameSettings.isRomLoaded() then
+			GameSettings.romloaded = true
 		end
 	end
 end
@@ -43,6 +43,7 @@ dofile (DATA_FOLDER .. "/Input.lua")
 dofile (DATA_FOLDER .. "/RNG.lua")
 dofile (DATA_FOLDER .. "/Exports.lua")
 dofile (DATA_FOLDER .. "/Drawing.lua")
+dofile (DATA_FOLDER .. "/ExternalUI.lua")
 
 -- Main loop
 if GameSettings.game == 0 then
