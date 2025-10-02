@@ -7,7 +7,7 @@ function Input.update()
 	Input.mousetab = input.getmouse()
 	if Input.mousetab["Left"] and not Input.mousetab_prev["Left"] then
 		local xmouse = Input.mousetab["X"]
-		local ymouse = Input.mousetab["Y"] + GraphicConstants.UP_GAP
+		local ymouse = Input.mousetab["Y"] + Constants.Graphics.UP_GAP
 		Input.check(xmouse, ymouse)
 	end
 	Input.mousetab_prev = Input.mousetab

@@ -7,7 +7,8 @@ Program = {
 	trainerInfo = {},
 	isInBattle = false,
 	inTrainersView = false,
-	isWildEncounter = false
+	isWildEncounter = false,
+	hasRunOnce = false
 }
 Program.rng = {
 	current = 0,
@@ -45,39 +46,50 @@ Program.catchdata = {
 	rate = 0
 }
 
--- Main loop for the program. This is run every 10 frames currently (called in the Run and Bun Tracker).
-function Program.main()
-	Input.update()
-	Program.trainerPokemonTeam = Program.getTrainerData(1)
-	
-	Program.trainerInfo = Program.getTrainerInfo()
-	local battleFlags = Memory.readdword(GameSettings.gBattleTypeFlags)
-	
-	if Program.getBattleOutcome() == 0 and not Program.isInBattle then -- Happens once at battle start
-		Program.isInBattle = true
-		Program.isWildEncounter = Utils.getbits(battleFlags, 3, 1) == 0
-		Program.enemyPokemonTeam = Program.getTrainerData(2)
-	elseif Program.getBattleOutcome() == 0 then --loops while in battle
-		Program.isInBattle = true -- for if the player starts the script mid-battle
-		Program.enemyPokemonTeam = Program.getTrainerData(2)
-	elseif Program.isInBattle then -- Happens once after a battle ends
-		Program.isInBattle = false
-		Program.enemyPokemonTeam = Program.getBlankTrainerData()
-		LayoutSettings.pokemonIndex.player = 1
-		LayoutSettings.pokemonIndex.slot = 1
-	else --loops out of battle
-		Program.enemyPokemonTeam = Program.getBlankTrainerData()
+-- Main loop for the program. This is run every 10 frames currently (called in Main.).
+function Program.mainLoop()
+	if GameSettings.isRomLoaded() then
+		Input.update()
+		Program.trainerPokemonTeam = Program.getTrainerData(1)
+		
+		Program.trainerInfo = Program.getTrainerInfo()
+		local battleFlags = Memory.readdword(GameSettings.gBattleTypeFlags)
+		local battleOutcome = Program.getBattleOutcome()
+		if battleOutcome == 0 and not Program.isInBattle then -- Happens once at battle start
+			Program.isInBattle = true
+			Program.isWildEncounter = Utils.getbits(battleFlags, 3, 1) == 0
+			Program.enemyPokemonTeam = Program.getTrainerData(2)
+		elseif battleOutcome == 0 then --loops while in battle
+			Program.isInBattle = true -- for if the player starts the script mid-battle
+			Program.enemyPokemonTeam = Program.getTrainerData(2)
+		elseif Program.isInBattle then -- Happens once after a battle ends
+			Program.isInBattle = false
+			Program.enemyPokemonTeam = Program.getBlankTrainerData()
+			LayoutSettings.pokemonIndex.player = 1
+			LayoutSettings.pokemonIndex.slot = 1
+			-- Caught
+			if battleOutcome == 7  and Program.isWildEncounter then
+				console.log("caught")
+			end
+			-- Fled
+			if battleOutcome == 4 or battleOutcome == 1 and Program.isWildEncounter then
+				console.log("Ran or killed")
+			end
+		else --loops out of battle
+			Program.enemyPokemonTeam = Program.getBlankTrainerData()
+		end
+		if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then
+			local pokemonaux = Program.getPokemonData(LayoutSettings.pokemonIndex)
+			Program.selectedPokemon = pokemonaux
+			Drawing.drawPokemonView()
+		end
+		if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.MAP then
+			Drawing.drawMap()
+		end
+		Drawing.drawButtons()
+	else
+		print ("No rom currently loaded")
 	end
-	if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then
-		local pokemonaux = Program.getPokemonData(LayoutSettings.pokemonIndex)
-		Program.selectedPokemon = pokemonaux
-
-		Drawing.drawPokemonView()
-	end
-	if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.MAP then
-		Drawing.drawMap()
-	end
-	Drawing.drawButtons()
 end
 
 -- gets the information on the player character for the map mainly
@@ -144,7 +156,7 @@ function Program.updateCatchData()
 	Program.catchdata.rate = (y/65536) * (y/65536) * (y/65536) * (y/65536)
 end
 
--- Not currently used, but maintained for when encounters are implemented.
+-- Not currently used, but maintained for when encounters are implemented. (will likely need modifications)
 function Program.updateEncounterData()
 	-- Search map in ROM's table
 	if Program.map.id == 0 then
@@ -446,11 +458,6 @@ end
 function Program.isValidPokemon(pokemonID)
 	return pokemonID ~= nil and PokemonData.name[pokemonID] ~= nil
 end
-function Program.advance10Frames()
-	for i = 0, 10, 1 do
-		emu.frameadvance()
-	end
-end
 
 function Program.getHP(mon)
     local hptype = ((mon.hpIV%2 + (2*(mon.attackIV%2))+(4*(mon.defenseIV%2))+(8*(mon.speedIV%2))+(16*(mon.spAttackIV%2))+(32*(mon.spDefenseIV%2)))*5)/21
@@ -505,5 +512,15 @@ function Program.getHP(mon)
 	end
 	if (hptype == 16) then
 		return "Fairy"
+	end
+end
+
+-- Returns focus back to Bizhawk, using the name of the rom as the name of the Bizhawk window (from Ironmon Tracker)
+function Program.focusBizhawkWindow()
+	if not Main.IsOnBizhawk() then return end
+	local bizhawkWindowName = GameSettings.getRomName()
+	if not Utils.isNilOrEmpty(bizhawkWindowName) then
+		local command = string.format("AppActivate(%s)", bizhawkWindowName)
+		FileManager.tryOsExecute(command)
 	end
 end

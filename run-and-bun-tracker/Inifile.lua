@@ -44,6 +44,7 @@ local backends = {
 	},
 }
 
+-- check if love module present
 if love then
 	backends.love = {
 		lines = love.filesystem.lines,

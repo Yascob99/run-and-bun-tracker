@@ -1,8 +1,6 @@
 Memory = {}
 
---- @param addr number
---- @param size number
-function Memory.read( addr, size)
+function Memory.read(addr, size)
 	local mem = ""
 	local memdomain = (addr >> 24)
 	if memdomain == 0 then

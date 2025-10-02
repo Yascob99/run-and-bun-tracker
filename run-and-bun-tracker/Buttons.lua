@@ -49,8 +49,8 @@ Buttons = {
 		end,
 		text = 'Export Mons',
 		box = {
-			GraphicConstants.SCREEN_WIDTH + GraphicConstants.RIGHT_GAP  / 2 - 30,
-			GraphicConstants.UP_GAP + GraphicConstants.SCREEN_HEIGHT + GraphicConstants.DOWN_GAP - 17,
+			Constants.Graphics.SCREEN_WIDTH + Constants.Graphics.RIGHT_GAP  / 2 - 30,
+			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + Constants.Graphics.DOWN_GAP - 17,
 			60,
 			13
 		},
@@ -69,8 +69,8 @@ Buttons = {
 		model = 'main',
 		box = {
 			0,
-			GraphicConstants.UP_GAP + GraphicConstants.SCREEN_HEIGHT + 1,
-			GraphicConstants.SCREEN_WIDTH,
+			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 1,
+			Constants.Graphics.SCREEN_WIDTH,
 			15
 		}
 	},
@@ -81,7 +81,7 @@ Buttons = {
 		end,
 		text = 'Player Data',
 		team = 1,
-		position = {4, GraphicConstants.UP_GAP + GraphicConstants.SCREEN_HEIGHT + 40}
+		position = {4, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 40}
 	},
 	{
 		type = ButtonType.pokemonteamMenu,
@@ -90,6 +90,6 @@ Buttons = {
 		end,
 		text = 'Enemy Data',
 		team = 2,
-		position = {4, GraphicConstants.UP_GAP + GraphicConstants.SCREEN_HEIGHT + 120}
+		position = {4, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 120}
 	}
 	}			

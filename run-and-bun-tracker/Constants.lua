@@ -1,4 +1,6 @@
-GraphicConstants = {
+Constants  = {}
+
+Constants.Graphics = {
 	UP_GAP = 15,
 	DOWN_GAP = 185,
 	RIGHT_GAP = 150,

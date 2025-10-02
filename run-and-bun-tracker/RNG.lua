@@ -1,5 +1,7 @@
 RNG = {}
 
+-- Currently not used. Maintained for if needed for later functionality.
+
 function RNG.update()
 	Program.rng.previous = Program.rng.current
 	Program.rng.current = Memory.readdword(GameSettings.rng)
@@ -54,7 +56,7 @@ function RNG.update()
 					accum = accum + Program.map.encounters[encountermode].RATES[k]
 					if rngtop%100 < accum then
 						if LayoutSettings.selectedslot[k] then
-							Program.rng.grid[i][j] = GraphicConstants.SLOTCOLORS[k]
+							Program.rng.grid[i][j] = Constants.Graphics.SLOTCOLORS[k]
 						end
 						break
 					end
@@ -68,7 +70,7 @@ function RNG.update()
 						accum = accum + pickuprarity[k]
 						if Utils.gettop(rng2)%100 < accum then
 							if LayoutSettings.selectedslot[k] then
-								Program.rng.grid[i][j] = GraphicConstants.SLOTCOLORS[k]
+								Program.rng.grid[i][j] = Constants.Graphics.SLOTCOLORS[k]
 							end
 							break
 						end

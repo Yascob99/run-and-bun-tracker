@@ -38,7 +38,7 @@ function GameSettings.initialize()
 		GameSettings.game = 2
 		GameSettings.gamename = "Pokemon Emerald (U)"
 		GameSettings.gamecolor = 0xFF009D07
-		GameSettings.encountertable = 0x8552D48 -- Unsure if correct, may have to update
+		GameSettings.encountertable = 0x8552D48 -- Unsure if correct, may have to update (might be 0x8552B44)
 		GameSettings.version = GameSettings.VERSIONS.E
 		GameSettings.language = GameSettings.LANGUAGES.U
 	else
@@ -120,7 +120,7 @@ function GameSettings.generatePokemonDetails()
 		mon.unknown4 = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 34) -- Unsure values 0-255
 		mon.unknown5 = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 35) -- Unsure values 0-39
 		address = GameSettings.pokemonNameTable + nameOffset
-		name = GameSettings.toString(address, monNameLength)
+		name = Utils.toString(address, monNameLength)
 		mons[name] = mon 
 		names[i] = name
 	end
@@ -131,12 +131,7 @@ end
 function GameSettings.getRomName()
 	return gameinfo.getromname() or ""
 end
-function GameSettings.toString(address, length)
-	local nickname = ""
-	for i=0, length - 1, 1 do
-		local charByte = Memory.readbyte(address + i)
-		if charByte == 0xFF then break end -- end of sequence
-		nickname = nickname .. CharData.charmap[charByte]
-	end
-	return nickname
+
+function GameSettings.isRomLoaded()
+	return GameSettings.getRomName() == "" or GameSettings.getRomName()
 end
