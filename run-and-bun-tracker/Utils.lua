@@ -206,7 +206,7 @@ function Utils.calcLevel(exp, ID)
 end
 
 function Utils.expRequired(id,level)
-	local expCurve = GameSettings.mons[GameSettings.names[id]]["levelUpType"]
+	local expCurve = GameSettings.mons[GameSettings.names[id + 1]]["levelUpType"]
 	if (expCurve == 0) then -- medium fast curve
 		return level^3 
 	end 

@@ -8,12 +8,14 @@ FileManager.INVALID_FILE_PATTERN = '[%<%>%:%"%/%\\%|%?%*]'
 FileManager.Folders = {}
 
 FileManager.Folders.TrackerCode = "run-and-bun-tracker"
-FileManager.Folders.Images = FileManager.Folders.TrackerCode .. "/images"
-FileManager.Folders.RegularSprite = FileManager.Folders.Images .."/pokemon/regular"
-FileManager.Folders.ShinySprite = FileManager.Folders.Images .."/pokemon/shiny"
-FileManager.Folders.Maps = FileManager.Folders.Images .. "/maps"
-FileManager.Folders.Player = FileManager.Folders.Images .. "/player"
-FileManager.Folders.Status = FileManager.Folders.Images .. "/status"
+FileManager.Folders.Images = FileManager.Folders.TrackerCode .. FileManager.slash .. "images"
+FileManager.Folders.Pokemon = FileManager.Folders.Images .. FileManager.slash .. "pokemon"
+FileManager.Folders.RegularSprite = FileManager.Folders.Pokemon .. FileManager.slash .. "regular"
+FileManager.Folders.ShinySprite = FileManager.Folders.Pokemon .. FileManager.slash .. "shiny"
+FileManager.Folders.Maps = FileManager.Folders.Images .. FileManager.slash .. "map"
+FileManager.Folders.Player = FileManager.Folders.Images .. FileManager.slash .. "player"
+FileManager.Folders.Status = FileManager.Folders.Images .. FileManager.slash .. "status"
+FileManager.Folders.Type = FileManager.Folders.Images .. FileManager.slash .. "types"
 
 FileManager.Files = {
 	SETTINGS = "Settings.ini",
@@ -132,59 +134,6 @@ function FileManager.getPCPrint(mon)
 	str = str .. string.format("\n")
 	return str
 end
-
--- function FileManager.parseConfig(data)
---     local str = ""
---     local char = ""
---     local isKey = true
---     local key = ""
---     local value = ""
---     local outData = {}
---     for i = 1, #data,1 do
---         char = data:sub(5,5)
---         if char == "="  and isKey then
---             isKey = false
---             key = str:gsub("%s+", "")
---         elseif char == "\n" and not isKey then
---             if key == "" then
---                 console.log("Error Processing config file. Incorrect Formatting.")
---                 return {}
---             else
---                 value = str:gsub("%s+", "")
---                 outData[key] = value
---                 key = ""
---                 value = ""
---                 str = ""
---             end
---         else
---             str = str .. char
---         end
---     end
---     return outData
--- end
--- function FileManager.readConfig(path)
---     local file = io.open(path, "r")
---     if file ~= nil then
---         local data = file:read("*all")
---         local settings = FileManager.parseConfig(data)
---         file:close()
---         console.log(data)
---     end
--- end
--- function FileManager.writeConfig(path, dataTable)
---     local file = io.open(path, "w")
---     local key = ""
---     local value = ""
---     if file ~= nil then 
---         for i = 1, #dataTable, 1 do
---             key = dataTable[i].key
---             value = dataTable[i].value
---             file:write(key .. " = " .. value)
---         end
---         console.log("Wrote config file")
---         file:close()
---     end
--- end
 
 -- Returns true if a file exists at its absolute file path; false otherwise
 function FileManager.fileExists(filepath)

@@ -87,6 +87,7 @@ function Program.mainLoop()
 			Drawing.drawMap()
 		end
 		Drawing.drawButtons()
+		Drawing.drawLayout()
 	else
 		print ("No rom currently loaded")
 	end
@@ -522,5 +523,22 @@ function Program.focusBizhawkWindow()
 	if not Utils.isNilOrEmpty(bizhawkWindowName) then
 		local command = string.format("AppActivate(%s)", bizhawkWindowName)
 		FileManager.tryOsExecute(command)
+	end
+end
+
+-- Get's the pokemon's types. Fails on certain pokemon (Ponyta and Rapidash) unsure why.
+function Program.getPokemonTypes(ID)
+	-- Temporary override for my own Sanity until I can find a more elegant solution
+	if GameSettings.names[ID] == "Ponyta" or GameSettings.names[ID] == "Rapidash" then
+		return {"fire", ""}
+	end
+	local mon = GameSettings.mons[GameSettings.names[ID]]
+	if mon ~= nil then
+		if mon.type2 == nil then
+			mon.type2 = ""
+		end
+		return {mon["type1"]:lower(), mon["type2"]:lower()}
+	else
+		return {"", ""}
 	end
 end

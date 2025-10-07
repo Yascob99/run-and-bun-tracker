@@ -1,5 +1,26 @@
 Drawing = {}
 
+function Drawing.drawLayout()
+	gui.drawRectangle(
+		Constants.Graphics.SCREEN_WIDTH,
+		0,
+		Constants.Graphics.RIGHT_GAP - 1,
+		Constants.Graphics.UP_GAP +  Constants.Graphics.DOWN_GAP + Constants.Graphics.SCREEN_HEIGHT - 1,
+		GameSettings.gamecolor,
+		0x00000000
+	)
+	gui.drawRectangle(
+		0,
+		Constants.Graphics.SCREEN_HEIGHT + Constants.Graphics.UP_GAP,
+		Constants.Graphics.SCREEN_WIDTH,
+		Constants.Graphics.DOWN_GAP - 1,
+		GameSettings.gamecolor,
+		0x00000000
+	)
+end
+
+
+
 function Drawing.drawPokemonIcon(id, x, y, selectedPokemon, isShiny)
 	if selectedPokemon then
 		gui.drawRectangle(x,y,36,36, Constants.Graphics.SELECTEDCOLOR[1], Constants.Graphics.SELECTEDCOLOR[2])
@@ -19,6 +40,11 @@ function Drawing.drawStatusIcon(status, x, y)
 	if status ~= nil and status ~= "None" then
 		status = status:gsub(" ", "-")
 		gui.drawImage(FileManager.prependDir(FileManager.Folders.Status, true) .. status .. ".png", x, y)
+	end
+end
+function Drawing.drawTypeIcon(type, x, y)
+	if type ~= nil and type ~= "" then
+		gui.drawImage(FileManager.prependDir(FileManager.Folders.Type, true) .. type .. ".png", x, y, 32, 32)
 	end
 end
 
@@ -46,16 +72,21 @@ end
 function Drawing.drawPokemonView()
 	Drawing.drawPokemonIcon(Program.selectedPokemon.pokemonID, Constants.Graphics.SCREEN_WIDTH + 5, 5, Program.selectedPokemon, Program.selectedPokemon.isShiny)
 	local colorbar = "white"
-
+	local types = Program.getPokemonTypes(Program.selectedPokemon.pokemonID)
+	Drawing.drawTypeIcon(types[1],  Constants.Graphics.SCREEN_WIDTH + 100, 0)
+	if types[1] ~= types[2] and types[2] ~= nil then
+		Drawing.drawTypeIcon(types[2],  Constants.Graphics.SCREEN_WIDTH + 100, 30)
+	end
+	Drawing.drawTypeIcon()
 	if Program.selectedPokemon["hp"] / Program.selectedPokemon["maxHP"] <= 0.2 then
 		colorbar = "red"
 	elseif Program.selectedPokemon["hp"] / Program.selectedPokemon["maxHP"] <= 0.5 then
 		colorbar = "yellow"
 	end
-	local name = PokemonData.name[Program.selectedPokemon["pokemonID"]] or ""
-	local genderColor = "0xFFFF9C94"
+	local name = GameSettings.names[Program.selectedPokemon["pokemonID"]] or ""
+	local genderColor = 0xFFFF9C94
 	if Program.selectedPokemon.gender == "Male" then
-		genderColor = "0xFF42CEFF"
+		genderColor = 0xFF42CEFF
 	elseif Program.selectedPokemon.gender == "Unknown" then
 		genderColor = "White"
 	end
@@ -212,7 +243,7 @@ function Drawing.drawMap()
 		else --frlg
 			gender = gender .. '-frlg'
 		end
-		gui.drawImage(FileManager.prependDir(FileManager.Folder.Player, true) .. gender .. ".png", position[1] + (coords[1] - 1)*8, position[2] + (coords[2] - 1)*8, 16, 16)
+		gui.drawImage(FileManager.prependDir(FileManager.Folders.Player, true) .. gender .. ".png", position[1] + (coords[1] - 1)*8, position[2] + (coords[2] - 1)*8, 16, 16)
 	end
 	gui.drawText(
 		2,
@@ -229,7 +260,6 @@ function Drawing.drawButtons()
 	for i = 1, #Buttons, 1 do
 		if Buttons[i].visible() then
 			if Buttons[i].type == ButtonType.singleButton then
-				console.log("Drawing")
 				gui.drawRectangle(Buttons[i].box[1], Buttons[i].box[2], Buttons[i].box[3], Buttons[i].box[4], Buttons[i].backgroundcolor[1], Buttons[i].backgroundcolor[2])
 				Drawing.drawText(Buttons[i].box[1] + 2, Buttons[i].box[2] + (Buttons[i].box[4] - 12) / 2 + 1, Buttons[i].text, Buttons[i].textcolor)
 			elseif Buttons[i].type == ButtonType.horizontalMenu then
@@ -312,6 +342,12 @@ function Drawing.drawButtons()
 						if team[j]['curHP'] == 0 then
 							status = "Fainted"
 						end
+						-- Code for type Icons. Currently Disabled
+						--local types = Program.getPokemonTypes(team[j]['pkmID'])
+						--Drawing.drawTypeIcon(types[1],  Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 22)
+						--if types[1] ~= types[2] and types[2] ~= nil then
+							--Drawing.drawTypeIcon(types[2],  Buttons[i].position[1] + (j-1) * 39 + 22, Buttons[i].position[2] + 22)
+						--end
 						Drawing.drawStatusIcon(status, Buttons[i].position[1] + (j-1) * 39 + 1, Buttons[i].position[2] + 1)
 						Drawing.drawText(Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2] + 36, "Lv. " .. team[j]['level'])
 						if team[j]['curHP'] > 0 then

@@ -8,7 +8,7 @@ Constants.Graphics = {
 	SCREEN_WIDTH = 240,
 	
 	SELECTEDCOLOR = {'yellow', '0xFF555500'},
-	NONSELECTEDCOLOR = '0xFFAAAAAA',
+	NONSELECTEDCOLOR = 'gray',
 	
 	SLOTCOLORS = {
 		'red',

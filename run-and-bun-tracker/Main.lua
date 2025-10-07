@@ -78,6 +78,7 @@ function Main.Run()
 			if GameSettings.getRomName() ~= "" and GameSettings.getRomName() ~= "Null" then
 				romLoaded = true
 			end
+			client.SetGameExtraPadding(0, 0, 0, 0)
 			Main.frameAdvance()
 		end
 	end
@@ -107,10 +108,11 @@ function Main.Run()
 
 		Main.hasRunOnce = true
 		Program.hasRunOnce = true
-
+		client.SetGameExtraPadding(0, Constants.Graphics.UP_GAP, Constants.Graphics.RIGHT_GAP, Constants.Graphics.DOWN_GAP)
+		gui.defaultTextBackground(0)
 		-- Allow emulation until something needs to happen, advancing 10 frames at a time (the code doesn't neet to run a ton)
 		while not (Main.forceRestart) do
-			xpcall(function() Program.mainLoop() end, FileManager.logError)
+			Program.mainLoop()
 			Main.advance10Frames()
 		end
 		if Main.forceRestart then
