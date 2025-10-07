@@ -35,6 +35,7 @@ FileManager.Files = {
 	{ name = "Utils", filepath = "Utils.lua", },
 	{ name = "Memory", filepath = "Memory.lua", },
 	{ name = "GameSettings", filepath = "GameSettings.lua", },
+	--{ name = "Encounters", filepath = "Encounters.lua",},
 	-- Second set of core files
 	{ name = "Buttons", filepath = "Buttons.lua", },
 	{ name = "LayoutSettings", filepath = "LayoutSettings.lua", },

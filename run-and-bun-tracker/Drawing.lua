@@ -88,7 +88,7 @@ function Drawing.drawPokemonView()
 	if Program.selectedPokemon.gender == "Male" then
 		genderColor = 0xFF42CEFF
 	elseif Program.selectedPokemon.gender == "Unknown" then
-		genderColor = "White"
+		genderColor = 0xFF000000
 	end
 	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 45, 7, name, genderColor)
 	if Program.selectedPokemon["status"] ~= "None"  then

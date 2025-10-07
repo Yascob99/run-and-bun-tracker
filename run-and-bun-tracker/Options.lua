@@ -5,3 +5,5 @@ Options = {
 ["Current Attempt"] = 0,
 ["Export Mon Data Directory"] = '/',
 }
+Options.FILES = {}
+Options.PATHS = {}
