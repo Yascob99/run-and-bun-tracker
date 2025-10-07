@@ -1,1 +1,4 @@
 .vscode/*
+run-and-bun-tracker/errorlog.txt
+run-and-bun-tracker/knownworkingdir.txt
+run-and-bun-tracker/osexecute-output.txt

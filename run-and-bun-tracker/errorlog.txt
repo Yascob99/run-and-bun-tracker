@@ -1,6 +1,0 @@
-Tracker Version: 0.2.0
-Rom Name: Pokemon - Emerald Version (USA, Europe) (patched)
-Game: Pokemon Emerald (U)
-Date: Mon Oct  6 20:53:15 2025
-------------------------------
-
