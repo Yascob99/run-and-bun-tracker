@@ -50,7 +50,7 @@ function RunAndBunTracker.setupEmulatorSpecifics()
 		print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n") -- This "clears" the Console for mGBA
 	end
 
-	print(string.format("Loading Ironmon Tracker for %s", trackerLabel))
+	print(string.format("Loading Run and Bun Tracker for %s", trackerLabel))
 end
 
 -- Returns true if all appropriate conditions are met; false otherwise

@@ -24,21 +24,10 @@ ButtonType = {
 		-- team : player index
 		-- text : title text
 		-- position : {X,Y} of top-left
-	rngViewButtons = 5,
-		-- position() : {X,Y} of top-left (function since it varies)
-		-- buttonsize : size of rng view buttons
 	encounterSlots = 6,
 		-- box_first : size of first slot text
 		-- selectedslot : array of boolean values
 		-- model : variable in LayoutSettings.menus
-	pickupData = 7,
-		-- box_first : place of first element
-	catchData = 8
-		-- enabled() : array of enabled items
-		-- text : array of item text
-		-- data() : array of data
-		-- box_first : size of first element of menu
-		-- onclick(i) : function triggered when the button is clicked
 }
 
 Buttons = {
@@ -75,21 +64,40 @@ Buttons = {
 		}
 	},
 	{
-		type = ButtonType.pokemonteamMenu,
+		type = ButtonType.horizontalMenu,
 		visible = function()
-			return LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.TRAINER
+			return LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.ENCOUNTERS 
 		end,
-		text = 'Player Data',
-		team = 1,
-		position = {4, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 40}
+		model = 'encounters',
+		box = {
+			0,
+			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 17,
+			Constants.Graphics.SCREEN_WIDTH,
+			13
+		}
 	},
 	{
 		type = ButtonType.pokemonteamMenu,
 		visible = function()
 			return LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.TRAINER
 		end,
+		text = 'Player Data',
+		team = 1,
+		position = {4, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 40},
+		selectable = function(slot)
+			return Program.trainerPokemonTeam[slot].pkmID ~= 0
+		end
+	},
+	{
+		type = ButtonType.pokemonteamMenu,
+		visible = function()
+			return LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.TRAINER and Battle.isInBattle
+		end,
 		text = 'Enemy Data',
 		team = 2,
-		position = {4, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 120}
+		position = {4, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 120},
+		selectable = function(slot)
+			return Program.enemyPokemonTeam[slot].pkmID ~= 0
+		end
 	}
-	}			
+}			

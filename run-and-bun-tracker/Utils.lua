@@ -1,3 +1,4 @@
+---@diagnostic disable: cast-local-type
 Utils = {}
 
 function Utils.ifelse(condition, ifcase, elsecase)
@@ -112,31 +113,31 @@ function Utils.getNatureColor(stat, nature)
 		color = "white"
 	elseif stat == "atk" then
 		if nature < 5 then
-			color = "0xFF00FF00"
+			color = 0xFF00FF00
 		elseif nature % 5 == 0 then
 			color = "red"
 		end
 	elseif stat == "def" then
 		if nature > 4 and nature < 10 then
-			color = "0xFF00FF00"
+			color = 0xFF00FF00
 		elseif nature % 5 == 1 then
 			color = "red"
 		end
 	elseif stat == "spe" then
 		if nature > 9 and nature < 15 then
-			color = "0xFF00FF00"
+			color = 0xFF00FF00 
 		elseif nature % 5 == 2 then
 			color = "red"
 		end
 	elseif stat == "spa" then
 		if nature > 14 and nature < 20 then
-			color = "0xFF00FF00"
+			color = 0xFF00FF00
 		elseif nature % 5 == 3 then
 			color = "red"
 		end
 	elseif stat == "spd" then
 		if nature > 19 then
-			color = "0xFF00FF00"
+			color = 0xFF00FF00
 		elseif nature % 5 == 4 then
 			color = "red"
 		end
@@ -188,6 +189,12 @@ function Utils.bit_oper(a, b, operand)
 	return math.floor(r)
 end
 
+function Utils.centerTextOffset(text, charSize, width)
+	charSize = charSize or 4
+	width = width or Constants.Graphics.SCREEN.RIGHT_GAP
+	return (width - (charSize * string.len(text))) / 2
+end
+
 function Utils.indexOf(array, value)
     for i, v in ipairs(array) do
         if v == value then
@@ -206,7 +213,7 @@ function Utils.calcLevel(exp, ID)
 end
 
 function Utils.expRequired(id,level)
-	local expCurve = GameSettings.mons[GameSettings.names[id + 1]]["levelUpType"]
+	local expCurve = GameSettings.mons[id]["levelUpType"]
 	if (expCurve == 0) then -- medium fast curve
 		return level^3 
 	end 
@@ -240,4 +247,43 @@ function Utils.expRequired(id,level)
 	if (expCurve == 5) then -- slow curve
 		return math.floor((5*(level^3))/4)
 	end
+end
+
+--- Iterates over a table to find a value and returns true if that value is present.
+function Utils.isInTable(table, value)
+	for _, item in pairs(table) do
+		if item == value then
+			return true
+		end
+	end
+	return false
+end
+
+function Utils.getSaveBlock1Addr()
+	return Memory.readdword(GameSettings.gSaveBlock1ptr)
+end
+
+-- Sets accuracies of 0 to 100.
+function Utils.checkAccuracy(num)
+	if num == 0 then
+		return 100
+	end
+	return num
+end
+
+--- Adds all targets to a targets list for each flag.
+---@param targetFlags integer --The targetFlags list from game data
+---@return table -- A table with the outputed targeting data
+function Utils.checkTargets(targetFlags)
+	local targets = {}
+	for i, flag in ipairs(MoveData.flagOrder) do
+		if targetFlags > flag then
+			targetFlags = targetFlags - flag
+			table.insert(targets, flag)
+		elseif targetFlags == flag then
+			table.insert(targets, flag)
+			return targets
+		end
+	end
+	return targets
 end

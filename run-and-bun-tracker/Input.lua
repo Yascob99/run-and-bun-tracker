@@ -69,24 +69,9 @@ function Input.check(xmouse, ymouse)
 				end
 			elseif Buttons[i].type == ButtonType.pokemonteamMenu then
 				for j = 1, 6, 1 do
-					if Input.isInRange(xmouse, ymouse, Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2], 36, 36) then
+					if Input.isInRange(xmouse, ymouse, Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2], 36, 36) and Buttons[i].selectable(j) then
 						LayoutSettings.pokemonIndex.player = Buttons[i].team
 						LayoutSettings.pokemonIndex.slot = j
-					end
-				end
-			elseif Buttons[i].type == ButtonType.encounterSlots then
-				local encountermode = LayoutSettings.menus[Buttons[i].model].selecteditem
-				if Program.map.encounters[encountermode].encrate > 0 then
-					for j = 1, Program.map.encounters[encountermode].SLOTS, 1 do
-						if Input.isInRange(xmouse, ymouse, Buttons[i].box_first[1], Buttons[i].box_first[2] + j * (Buttons[i].box_first[4] + 2), Buttons[i].box_first[3], Buttons[i].box_first[4]) then
-							LayoutSettings.selectedslot[j] = not LayoutSettings.selectedslot[j]
-						end
-					end
-				end
-			elseif Buttons[i].type == ButtonType.pickupData then
-				for j = 1, #PickupData[GameSettings.version].rarity, 1 do
-					if Input.isInRange(xmouse, ymouse, Buttons[i].box_first[1], Buttons[i].box_first[2] + j * (Buttons[i].box_first[4] + 2), Buttons[i].box_first[3], Buttons[i].box_first[4]) then
-						LayoutSettings.selectedslot[j] = not LayoutSettings.selectedslot[j]
 					end
 				end
 			end

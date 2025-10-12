@@ -24,6 +24,8 @@ FileManager.Files = {
 	ERROR_LOG = FileManager.Folders.TrackerCode .. FileManager.slash .. "errorlog.txt",
 	CRASH_REPORT = FileManager.Folders.TrackerCode .. FileManager.slash .. "crashreport.txt",
 	KNOWN_WORKING_DIR = FileManager.Folders.TrackerCode .. FileManager.slash .. "knownworkingdir.txt",
+	ENCOUNTER_LOG = FileManager.Folders.TrackerCode .. FileManager.slash .. "encounters.txt",
+	ENCOUNTER_CSV = FileManager.Folders.TrackerCode .. FileManager.slash .. "encounters.csv",
 	}
 	FileManager.LuaCode = {
 	-- First set of core files
@@ -35,7 +37,8 @@ FileManager.Files = {
 	{ name = "Utils", filepath = "Utils.lua", },
 	{ name = "Memory", filepath = "Memory.lua", },
 	{ name = "GameSettings", filepath = "GameSettings.lua", },
-	--{ name = "Encounters", filepath = "Encounters.lua",},
+	{ name = "Encounters", filepath = "Encounters.lua",},
+	{ name = "Battle", filepath = "Battle.lua",},
 	-- Second set of core files
 	{ name = "Buttons", filepath = "Buttons.lua", },
 	{ name = "LayoutSettings", filepath = "LayoutSettings.lua", },
@@ -49,21 +52,23 @@ FileManager.Files = {
 	}
 
 function FileManager.exportCurrentMons(filename)
-    	local file = io.open(filename, "w")
-		if file ~= nil then
-        	FileManager.printPartyStatus(file)
-			file:close()
-		end
+	local file = io.open(filename, "w")
+	if file ~= nil then
+		FileManager.printPartyStatus(file)
+		file:close()
+	end
 end
 
 function FileManager.printPartyStatus(file)
     local address = GameSettings.gPokemonStorage + 4
     local i = 0
+	-- checks the party mons.
 	for _, mon in ipairs(FileManager.getParty()) do
 		if (mon.pokemonID ~= 0) then
 			file:write(FileManager.getPartyPrint(mon))
 		end
 	end
+	-- Only checks the first 4 boxes increase by 30 per box
     while i<120 do
 		if (Memory.readdword(address) ~=0) then 
 			file:write((FileManager.getPCPrint(Program.readBoxMon(address))))
@@ -86,7 +91,7 @@ end
 function FileManager.getPartyPrint(mon)
     local hptype = Program.getHP(mon)
 	local str = ""
-	str = str .. PokemonData.name[mon.pokemonID]
+	str = str .. GameSettings.names[mon.pokemonID]
 	if (PokemonData.item[mon.heldItem]) then
 		str = str .. string.format(" @ %s", PokemonData.item[mon.heldItem])
 	end
@@ -113,7 +118,7 @@ end
 function FileManager.getPCPrint(mon)
     local hptype = Program.getHP(mon)
 	local str = ""
-	str = str ..  PokemonData.name[mon.pokemonID]
+	str = str ..  GameSettings.names[mon.pokemonID]
 	if (PokemonData.item[mon.heldItem]) then
 		str = str .. string.format(" @ %s", PokemonData.item[mon.heldItem])
 	end
@@ -715,4 +720,102 @@ function FileManager.copyTable(source, destination)
 		end
 	end
 	return destination
+end
+
+--- Initializes the encounter log for 
+function FileManager.setupEncounterLog()
+	local filepath =FileManager.prependDir(FileManager.Files.ENCOUNTER_LOG)
+	local encounterLog = io.open(filepath, "r")
+	if encounterLog ~= nil then
+		Encounters.encounters = FileManager.readTableFromFile(filepath)
+	else
+		encounterLog = io.open(filepath, "w")
+		if encounterLog then
+			encounterLog:write('{}')
+			encounterLog:flush()
+			encounterLog:close()
+		end
+	end
+end
+
+--- Writes a table in dictionary formatting to a CSV file
+---@param t table The table to write to a CSV. Should be in a {[string] = string,...} format. If not, the data will be converted to that format regardless of whether that makes sense or not.
+---@param filepath string The filepath of the CSV to write to
+---@param orderby? table Optional, an indexed list of strings(one dimensional) that is used to define the order that the dict is written to the CSV
+function FileManager.writeTabletoCSV(t, filepath, orderby)
+  	orderby = orderby or nil
+	-- if the file path is not proper, or the filepath has the wrong extensions, write to the error log and exit.
+	if filepath == nil or filepath == "" or string.lower(FileManager.extractFileExtensionFromPath(filepath)) ~= "csv" then
+		FileManager.logError("Invalid Path for CSV: " .. filepath)
+		return
+	end
+	-- Use the absolute path of the file to prevent errors.
+	filepath = FileManager.prependDir(filepath);
+	local line1 = ""
+	local line2 = ""
+	-- check if orderby was provided or was not a table, if so proceed without it.
+	if orderby == nil or type(orderby) ~= "table" then
+  		for key, value in pairs(t) do
+			-- convert the key and value to a string if they aren't
+  			if type(key) ~= "string" then
+  				key = tostring(key)
+  			end
+  			if type(value) ~= "string" then
+  				value = tostring(value)
+  			end
+			-- handle escaping of
+  			line1 = line1 .. FileManager.escapeCharsCSV(key) .. ","
+  			line2 = line2 .. FileManager.escapeCharsCSV(value) .. ","
+  		end
+	-- If an orderby table was provided
+  	else
+		local key = nil
+		local value = nil
+    	for i=1, #orderby, 1 do
+      		key = orderby[i]
+      		value = t[key]
+			-- handle if there is no data matching the key, or if there is no key at that index. 
+			if key == nil then
+				key = ""
+			end
+			if value == nil then
+				value = ""
+			end
+			-- convert the key and value to a string if they aren't strings
+      		if type(key) ~= "string" then
+  				key = tostring(key)
+  			end
+  			if type(value) ~= "string" then
+  				value = tostring(value)
+  			end
+			-- handles the escaping of characters
+  			line1 = line1 .. FileManager.escapeCharsCSV(key) .. ","
+  			line2 = line2 .. FileManager.escapeCharsCSV(value) .. ","
+    	end
+  	end
+	-- Writes to the csv file, erroring if there is an issue.
+	local file = io.open(filepath, "w")
+	if file == nil then
+		FileManager.logError("Error opening file:" .. filepath)
+		return
+	end
+	file:write(line1)
+	file:write("\n")
+	file:write(line2)
+	file:flush()
+	file:close()
+end
+
+--- Escapes any characters that require escaping before outputing to a csv file (commas and double quotes, and newlines)
+--- @param str string The string to escape.
+--- @return string str returns an escaped version of the string for use as a csv cell
+function FileManager.escapeCharsCSV(str)
+	-- handles all double quotes. If there are commas, they are already handled by the quote wrap
+	if string.find(str,'"') ~= nil then
+		return '"' + string.gsub(str, '"', '""') .. '""'
+	-- handles commas and newlines if there were no double quotes
+	elseif string.find(str, ',') ~=nil or string.find(str, '\n') then
+		return '"' .. str .. '"'
+	end
+	return str
 end

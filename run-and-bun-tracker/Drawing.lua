@@ -16,10 +16,32 @@ function Drawing.drawLayout()
 		Constants.Graphics.DOWN_GAP - 1,
 		GameSettings.gamecolor,
 		0x00000000
+	) 
+	local location = PokemonData.map[Battle.regionID]
+	local encounterstatus = "Encounter Available"
+	local color = 0xFF009D07
+	if not Encounters.isEncounterAvailable(location) then
+		encounterstatus = "Encounter Not Available"
+		color = 0xFF004D07
+	end
+	gui.drawRectangle(
+		0,
+		0,
+		Constants.Graphics.SCREEN_WIDTH,
+		Constants.Graphics.UP_GAP,
+		color,
+		color - 0x80000000
+	)
+	gui.drawText(
+		Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(encounterstatus) + 5) * 3),
+		3,
+		encounterstatus,
+		"white",
+		0x00000000,
+		10,
+		"Lucida Console"
 	)
 end
-
-
 
 function Drawing.drawPokemonIcon(id, x, y, selectedPokemon, isShiny)
 	if selectedPokemon then
@@ -28,7 +50,7 @@ function Drawing.drawPokemonIcon(id, x, y, selectedPokemon, isShiny)
 		gui.drawRectangle(x,y,36,36, Constants.Graphics.NONSELECTEDCOLOR, 0xFF222222)
 	end
 	if id ~= nil and id ~= 0 and GameSettings.names[id] ~= nil and type(GameSettings.names[id]) == "string" then
-		local name = PokemonData.name[id]:gsub(" ", "-"):lower()
+		local name = GameSettings.names[id]:gsub(" ", "-"):lower()
 		local path = FileManager.prependDir(FileManager.Folders.RegularSprite, true)
 		if isShiny then
 			path = FileManager.prependDir(FileManager.Folders.ShinySprite, true)
@@ -36,6 +58,18 @@ function Drawing.drawPokemonIcon(id, x, y, selectedPokemon, isShiny)
 		gui.drawImage(path .. name .. ".png", x- 16, y - 24)
 	end
 end
+
+function Drawing.drawPokemonIconByName(name, x, y)
+	
+	if Encounters.encounters[Battle.location] == name then
+		gui.drawRectangle(x,y,36,36, Constants.Graphics.SELECTEDCOLOR[1], Constants.Graphics.SELECTEDCOLOR[2])
+	else
+		gui.drawRectangle(x,y,36,36, Constants.Graphics.NONSELECTEDCOLOR, 0xFF222222)
+	end
+	local path = FileManager.prependDir(FileManager.Folders.RegularSprite, true)
+	gui.drawImage(path .. name .. ".png", x- 16, y - 24)
+end
+
 function Drawing.drawStatusIcon(status, x, y)
 	if status ~= nil and status ~= "None" then
 		status = status:gsub(" ", "-")
@@ -44,7 +78,7 @@ function Drawing.drawStatusIcon(status, x, y)
 end
 function Drawing.drawTypeIcon(type, x, y)
 	if type ~= nil and type ~= "" then
-		gui.drawImage(FileManager.prependDir(FileManager.Folders.Type, true) .. type .. ".png", x, y, 32, 32)
+		gui.drawImage(FileManager.prependDir(FileManager.Folders.Type, true) .. type .. ".png", x, y)
 	end
 end
 
@@ -73,17 +107,19 @@ function Drawing.drawPokemonView()
 	Drawing.drawPokemonIcon(Program.selectedPokemon.pokemonID, Constants.Graphics.SCREEN_WIDTH + 5, 5, Program.selectedPokemon, Program.selectedPokemon.isShiny)
 	local colorbar = "white"
 	local types = Program.getPokemonTypes(Program.selectedPokemon.pokemonID)
-	Drawing.drawTypeIcon(types[1],  Constants.Graphics.SCREEN_WIDTH + 100, 0)
+	Drawing.drawTypeIcon(types[1],  Constants.Graphics.SCREEN_WIDTH + 100, 32)
 	if types[1] ~= types[2] and types[2] ~= nil then
-		Drawing.drawTypeIcon(types[2],  Constants.Graphics.SCREEN_WIDTH + 100, 30)
+		Drawing.drawTypeIcon(types[2],  Constants.Graphics.SCREEN_WIDTH + 100, 44)
 	end
-	Drawing.drawTypeIcon()
 	if Program.selectedPokemon["hp"] / Program.selectedPokemon["maxHP"] <= 0.2 then
 		colorbar = "red"
 	elseif Program.selectedPokemon["hp"] / Program.selectedPokemon["maxHP"] <= 0.5 then
 		colorbar = "yellow"
 	end
-	local name = GameSettings.names[Program.selectedPokemon["pokemonID"]] or ""
+	local name = ""
+	if GameSettings.names[Program.selectedPokemon["pokemonID"]] ~= nil then
+		name = GameSettings.names[Program.selectedPokemon["pokemonID"]]:gsub("-", " ") or ""
+	end
 	local genderColor = 0xFFFF9C94
 	if Program.selectedPokemon.gender == "Male" then
 		genderColor = 0xFF42CEFF
@@ -97,7 +133,7 @@ function Drawing.drawPokemonView()
 		Drawing.drawStatusIcon("Fainted", Constants.Graphics.SCREEN_WIDTH + 6, 6)
 	end
 	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 45, 17, "HP:")
-	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
+	if Program.selectedPokemon.isEnemy and Battle.isWildEncounter then
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 60, 17, "?" .. " / " .. "?", colorbar)
 	elseif Program.selectedPokemon.isEnemy then
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 60, 17, "?" .. " / " .. Program.selectedPokemon["maxHP"], colorbar)
@@ -107,13 +143,13 @@ function Drawing.drawPokemonView()
 	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 45, 27, "Level: " .. Program.selectedPokemon["level"])
 	
 	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 5, 43, "Item:")
-	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
+	if Program.selectedPokemon.isEnemy and Battle.isWildEncounter then
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 42, 43, "???", "yellow")
 	else
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 42, 43, PokemonData.item[Program.selectedPokemon["heldItem"]], "yellow")
 	end
 	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 5, 53, "Abilty:")
-	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
+	if Program.selectedPokemon.isEnemy and Battle.isWildEncounter then
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 42, 53, "???", "yellow")
 	else	
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 42, 53, Program.getAbility(Program.selectedPokemon), "yellow")
@@ -133,7 +169,7 @@ function Drawing.drawPokemonView()
 	
 	
 	
-	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
+	if Program.selectedPokemon.isEnemy and Battle.isWildEncounter then
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 95, "HP",  "white")
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 105, "Attack",  "white")
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 115, "Defense",  "white")
@@ -192,23 +228,17 @@ function Drawing.drawPokemonView()
 	end
 	
 	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 15, 162, "Nature:")
-	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
+	if Program.selectedPokemon.isEnemy and Battle.isWildEncounter then
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 80, 162, "???", "yellow")
 	else
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 80, 162, PokemonData.nature[Program.selectedPokemon["nature"] + 1], "yellow")
 	end
-	local hptype = Utils.indexOf(PokemonData.type, Program.getHP(Program.selectedPokemon))
-	if hptype > 8 then
-		hptype = hptype + 1
-	end
-	if hptype == 17 then
-		hptype = 9
-	end
+	local hptype, hpcolor = Program.getHP(Program.selectedPokemon)
 	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 15, 172, "Hidden Power:")
-	if Program.selectedPokemon.isEnemy and Program.isWildEncounter then
+	if Program.selectedPokemon.isEnemy and Battle.isWildEncounter then
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 80, 172, "???")
 	else
-		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 80, 172, Program.getHP(Program.selectedPokemon), PokemonData.typeColor[hptype])
+		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 80, 172, hptype, hpcolor)
 	end
 	gui.drawRectangle(Constants.Graphics.SCREEN_WIDTH + 5, 185, Constants.Graphics.RIGHT_GAP - 11, 65,0xFFAAAAAA, 0xFF222222)
 	if Program.selectedPokemon.moves[1] then
@@ -228,8 +258,7 @@ end
 function Drawing.drawMap()
 	gui.drawImage(FileManager.prependDir(FileManager.Folders.Maps, true) .. Map.file .. ".png", 1, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 17, Constants.Graphics.SCREEN_WIDTH - 1, 167)
 	local position = {-7, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT}
-	local tilesize = 8
-	local coords = Map.findCoords(Memory.readbyte(GameSettings.mapid))
+	local coords = Map.findCoords(Memory.readbyte(GameSettings.regionID)) -- Uses an outdated map id. Will look into replacing in the future.
 	
 	if Program.trainerInfo.gender >= 0 then
 		local gender = 'girl'
@@ -248,12 +277,104 @@ function Drawing.drawMap()
 	gui.drawText(
 		2,
 		Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 19,
-		PokemonData.map[Memory.readbyte(GameSettings.mapid) + 1],
+		Battle.location,
 		"white",
 		0x00000000,
 		9,
 		"Lucida Console"
 	)
+end
+
+function Drawing.drawEncounterTab(encounters, encounterType, map, numEncounters)
+	local output = ""
+	local half = 6
+	local offset = 39
+	local topOffset = 39
+	local bottomOffset = 0
+	local bottomShift = 0
+	local bottomleftGap = 5
+	local topleftGap = 5
+	if encounters ~= nil then
+		if numEncounters > 6 then
+			local isOdd = numEncounters%2 == 1
+			half = math.floor(numEncounters/2)
+			bottomOffset = offset * 6 / half
+			topOffset = bottomOffset
+			bottomleftGap = (Constants.Graphics.SCREEN_WIDTH - offset * half)/2
+			if isOdd then
+				half = half + 1
+				topOffset = offset * 6 / half
+			end
+			bottomShift = half - numEncounters - 1
+			topleftGap = (Constants.Graphics.SCREEN_WIDTH - offset * half)/2
+		end
+		
+		local i = 0
+		local levels = ""
+		for name, data in pairs(encounters) do
+			levels = data.lowlevel
+			if data.lowlevel ~= data.highlevel then
+				levels = levels .. "-" .. data.highlevel
+			end
+			if i < half then
+				Drawing.drawPokemonIconByName(name, topleftGap + (i) * topOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 60)
+				gui.drawText(topleftGap + (i) * topOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 46,levels  ,"white", 0x00000000, 10,"Lucida Console")
+				gui.drawText(topleftGap + (i) * topOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 100,data.rate .. "%" ,"white", 0x00000000, 10,"Lucida Console")
+			else
+				Drawing.drawPokemonIconByName(name, bottomleftGap + (i-6) * bottomOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 130)
+				gui.drawText(bottomleftGap + (i + bottomShift) * bottomOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 116,levels  ,"white", 0x00000000, 10,"Lucida Console")
+				gui.drawText(bottomleftGap + (i + bottomShift) * bottomOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 170,data.rate .. "%" ,"white", 0x00000000, 10,"Lucida Console")
+			end
+			i = i + 1
+		end
+	else
+		output = "No ".. encounterType .. " encounters in" 
+		gui.drawText(
+			Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output) + 5) * 3),
+			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2,
+			output,
+			"white",
+			0x00000000,
+			10,
+			"Lucida Console"
+		)
+		gui.drawText(
+			Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(map) + 5) * 3),
+			12 + Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2,
+			map,
+			"white",
+			0x00000000,
+			10,
+			"Lucida Console"
+		)
+	end
+end
+
+function Drawing.drawEncounters()
+	local mapID = Battle.mapID
+	local map = Battle.location
+	local encounters = nil
+	local output = ""
+	local length = 0
+	if Encounters.doesMapHaveEncounters(map) then
+		for i, encounterType in ipairs(LayoutSettings.menus.encounters.types) do
+			encounters = Encounters.routeEncounters[Encounters.routeEncounters.Keys[i]][mapID]
+			length = Encounters.routeEncounters[Encounters.routeEncounters.Keys[i]]['lengths'][mapID]
+			if LayoutSettings.menus.encounters.selecteditem == i then
+				Drawing.drawEncounterTab(encounters, encounterType, map, length)
+			end
+		end
+	else
+		gui.drawText(
+			Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output) + 5) * 3),
+			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 34) / 2,
+			"This route has no Encounters",
+			"white",
+			0x00000000,
+			10,
+			"Lucida Console"
+		)
+	end
 end
 
 function Drawing.drawButtons()
@@ -342,16 +463,10 @@ function Drawing.drawButtons()
 						if team[j]['curHP'] == 0 then
 							status = "Fainted"
 						end
-						-- Code for type Icons. Currently Disabled
-						--local types = Program.getPokemonTypes(team[j]['pkmID'])
-						--Drawing.drawTypeIcon(types[1],  Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 22)
-						--if types[1] ~= types[2] and types[2] ~= nil then
-							--Drawing.drawTypeIcon(types[2],  Buttons[i].position[1] + (j-1) * 39 + 22, Buttons[i].position[2] + 22)
-						--end
 						Drawing.drawStatusIcon(status, Buttons[i].position[1] + (j-1) * 39 + 1, Buttons[i].position[2] + 1)
 						Drawing.drawText(Buttons[i].position[1] + (j-1) * 39, Buttons[i].position[2] + 36, "Lv. " .. team[j]['level'])
 						if team[j]['curHP'] > 0 then
-							if isEnemy and Program.isWildEncounter then
+							if isEnemy and Battle.isWildEncounter then
 								Drawing.drawText(Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 46, "?" .. "/" .. "?", colorbar)
 							elseif isEnemy then
 								Drawing.drawText(Buttons[i].position[1] + (j-1) * 39 - 1, Buttons[i].position[2] + 46,"?" .. "/" .. team[j]['maxHP'], colorbar)
@@ -360,56 +475,6 @@ function Drawing.drawButtons()
 							end
 						end
 					end
-				end
-			elseif Buttons[i].type == ButtonType.encounterSlots then
-				local encountermode = LayoutSettings.menus[Buttons[i].model].selecteditem
-				if Program.map.encounters[encountermode].encrate > 0 then
-					for j = 1, Program.map.encounters[encountermode].SLOTS, 1 do
-						local levelstr = Program.map.encounters[encountermode].pokemon[j].minlevel
-						if Program.map.encounters[encountermode].pokemon[j].minlevel ~= Program.map.encounters[encountermode].pokemon[j].maxlevel then
-							levelstr = levelstr .. '-' .. Program.map.encounters[encountermode].pokemon[j].maxlevel
-						end
-						if LayoutSettings.selectedslot[j] then
-							gui.drawRectangle(Buttons[i].box_first[1], Buttons[i].box_first[2] + j * (Buttons[i].box_first[4] + 2), Buttons[i].box_first[4], Buttons[i].box_first[4], 'white', Constants.Graphics.SLOTCOLORS[j])
-							Drawing.drawText(Buttons[i].box_first[1] + 10, Buttons[i].box_first[2] - 2 + j * (Buttons[i].box_first[4] + 2), "Slot " .. j .. " (" .. Program.map.encounters[encountermode].RATES[j] .. "%):")
-							Drawing.drawText(Buttons[i].box_first[1] + 61, Buttons[i].box_first[2] - 2 + j * (Buttons[i].box_first[4] + 2), PokemonData.name[Program.map.encounters[encountermode].pokemon[j].id + 1] .. " Lv. " .. levelstr)
-						else
-							gui.drawRectangle(Buttons[i].box_first[1], Buttons[i].box_first[2] + j * (Buttons[i].box_first[4] + 2), Buttons[i].box_first[4], Buttons[i].box_first[4], 'gray', Constants.Graphics.SLOTCOLORS[j])
-							Drawing.drawText(Buttons[i].box_first[1] + 10, Buttons[i].box_first[2] - 2 + j * (Buttons[i].box_first[4] + 2), "Slot " .. j .. " (" .. Program.map.encounters[encountermode].RATES[j] .. "%):", "gray")
-							Drawing.drawText(Buttons[i].box_first[1] + 61, Buttons[i].box_first[2] - 2 + j * (Buttons[i].box_first[4] + 2), PokemonData.name[Program.map.encounters[encountermode].pokemon[j].id + 1] .. " Lv. " .. levelstr, "gray")
-						end
-					end
-				else
-					Drawing.drawText(Buttons[i].box_first[1] + 10, Buttons[i].box_first[2] + 7, 'No encounters')
-				end
-			elseif Buttons[i].type == ButtonType.pickupData then
-				local pickupitem = PickupData[GameSettings.version].item
-				local pickuprarity = PickupData[GameSettings.version].rarity
-				if GameSettings.version == GameSettings.VERSIONS.E then
-					pickupitem = pickupitem[LayoutSettings.menus.pickuplevel.selecteditem]
-				end
-				for j = 1, #pickupitem, 1 do
-					if LayoutSettings.selectedslot[j] then
-						gui.drawRectangle(Buttons[i].box_first[1], Buttons[i].box_first[2] + j * (Buttons[i].box_first[4] + 2), Buttons[i].box_first[4], Buttons[i].box_first[4], 'white', Constants.Graphics.SLOTCOLORS[j])
-						Drawing.drawText(Buttons[i].box_first[1] + 10, Buttons[i].box_first[2] - 2 + j * (Buttons[i].box_first[4] + 2), "(" .. pickuprarity[j] .. "%):")
-						Drawing.drawText(Buttons[i].box_first[1] + 40, Buttons[i].box_first[2] - 2 + j * (Buttons[i].box_first[4] + 2), PokemonData.item[pickupitem[j] + 1])
-					else
-						gui.drawRectangle(Buttons[i].box_first[1], Buttons[i].box_first[2] + j * (Buttons[i].box_first[4] + 2), Buttons[i].box_first[4], Buttons[i].box_first[4], 'gray', Constants.Graphics.SLOTCOLORS[j])
-						Drawing.drawText(Buttons[i].box_first[1] + 10, Buttons[i].box_first[2] - 2 + j * (Buttons[i].box_first[4] + 2), "(" .. pickuprarity[j] .. "%):", 'gray')
-						Drawing.drawText(Buttons[i].box_first[1] + 40, Buttons[i].box_first[2] - 2 + j * (Buttons[i].box_first[4] + 2), PokemonData.item[pickupitem[j] + 1], 'gray')
-					end
-				end
-			elseif Buttons[i].type == ButtonType.catchData then
-				local enabled = Buttons[i].enabled()
-				local data = Buttons[i].data()
-				for j = 1, #Buttons[i].text, 1 do
-					local itemcolor = Constants.Graphics.NONSELECTEDCOLOR
-					if enabled[j] then
-						itemcolor = 'white'
-					end
-					gui.drawRectangle(Buttons[i].box_first[1], Buttons[i].box_first[2] + j * Buttons[i].box_first[4], Buttons[i].box_first[3], Buttons[i].box_first[4], Constants.Graphics.NONSELECTEDCOLOR)
-					Drawing.drawText(Buttons[i].box_first[1] + 2 - 50, Buttons[i].box_first[2] + j * Buttons[i].box_first[4] + 1, Buttons[i].text[j], Constants.Graphics.NONSELECTEDCOLOR)
-					Drawing.drawText(Buttons[i].box_first[1] + 2, Buttons[i].box_first[2] + j * Buttons[i].box_first[4] + 1, data[j], itemcolor)
 				end
 			end
 		end

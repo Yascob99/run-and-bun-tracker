@@ -49,42 +49,22 @@ Program.catchdata = {
 -- Main loop for the program. This is run every 10 frames currently (called in Main.).
 function Program.mainLoop()
 	if GameSettings.isRomLoaded() then
-		Input.update()
 		Program.trainerPokemonTeam = Program.getTrainerData(1)
-		
 		Program.trainerInfo = Program.getTrainerInfo()
-		local battleFlags = Memory.readdword(GameSettings.gBattleTypeFlags)
-		local battleOutcome = Program.getBattleOutcome()
-		if battleOutcome == 0 and not Program.isInBattle then -- Happens once at battle start
-			Program.isInBattle = true
-			Program.isWildEncounter = Utils.getbits(battleFlags, 3, 1) == 0
-			Program.enemyPokemonTeam = Program.getTrainerData(2)
-		elseif battleOutcome == 0 then --loops while in battle
-			Program.isInBattle = true -- for if the player starts the script mid-battle
-			Program.enemyPokemonTeam = Program.getTrainerData(2)
-		elseif Program.isInBattle then -- Happens once after a battle ends
-			Program.isInBattle = false
-			Program.enemyPokemonTeam = Program.getBlankTrainerData()
-			LayoutSettings.pokemonIndex.player = 1
-			LayoutSettings.pokemonIndex.slot = 1
-			-- Caught
-			if battleOutcome == 7  and Program.isWildEncounter then
-				console.log("caught")
-			end
-			-- Fled
-			if battleOutcome == 4 or battleOutcome == 1 and Program.isWildEncounter then
-				console.log("Ran or killed")
-			end
-		else --loops out of battle
-			Program.enemyPokemonTeam = Program.getBlankTrainerData()
-		end
-		if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then
+
+		-- Displays pokemon data on the right if there is a pokemon in the party in slot 1.
+		if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then 
 			local pokemonaux = Program.getPokemonData(LayoutSettings.pokemonIndex)
 			Program.selectedPokemon = pokemonaux
 			Drawing.drawPokemonView()
 		end
+		-- Draws the Map if required.
 		if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.MAP then
 			Drawing.drawMap()
+		end
+		-- Draws encounters if on tab
+		if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.ENCOUNTERS then
+			Drawing.drawEncounters()
 		end
 		Drawing.drawButtons()
 		Drawing.drawLayout()
@@ -93,20 +73,27 @@ function Program.mainLoop()
 	end
 end
 
--- gets the information on the player character for the map mainly
+--- Runs on loop while out of Battle
+function Program.outOfBattleLoop()
+	Program.enemyPokemonTeam = Program.getBlankTrainerData()
+end
+
+-- gets the information on the player character for the map and other functions
 function Program.getTrainerInfo()
 	local trainer = GameSettings.trainerpointer
 	if Memory.readbyte(trainer) == 0 then
 		return {
 			gender = -1,
 			tid = 0,
-			sid = 0
+			sid = 0,
+			sKey = nil
 		}
 	else
 		return {
 			gender = Memory.readbyte(trainer + 8),
 			tid = Memory.readword(trainer + 10),
-			sid = Memory.readword(trainer + 12)
+			sid = Memory.readword(trainer + 12),
+			skey = Memory.readdword(trainer + 24)
 		}
 	end
 end
@@ -157,63 +144,13 @@ function Program.updateCatchData()
 	Program.catchdata.rate = (y/65536) * (y/65536) * (y/65536) * (y/65536)
 end
 
--- Not currently used, but maintained for when encounters are implemented. (will likely need modifications)
-function Program.updateEncounterData()
-	-- Search map in ROM's table
-	if Program.map.id == 0 then
-		Program.map.encounters[1].encrate = -1
-		Program.map.encounters[2].encrate = -1
-		Program.map.encounters[3].encrate = -1
-		return
-	end
-	local mapid_aux = Memory.readword(GameSettings.encountertable)
-	local index = 0
-	while mapid_aux ~= Program.map.id do
-		index = index + 1
-		mapid_aux = Memory.readword(GameSettings.encountertable + 20*index)
-		if mapid_aux == 0xFFFF then
-			Program.map.encounters[1].encrate = -1
-			Program.map.encounters[2].encrate = -1
-			Program.map.encounters[3].encrate = -1
-			return
-		end
-	end
-	
-	-- Search encounter data
-	for i=1,3,1 do
-		local minl = {}
-		local maxl = {}
-		local pkm = {}
-		local pointer = Memory.readdword(GameSettings.encountertable + 20*index + 4*i)
-		if pointer == 0 then
-			Program.map.encounters[i].encrate = -1
-		else
-			local ratio = Memory.readword(pointer)
-			if ratio == 0xFFFF then
-				Program.map.encounters[i].encrate = -1
-			else
-				Program.map.encounters[i].encrate = ratio
-				Program.map.encounters[i].pokemon = {}
-				pointer = Memory.readdword(pointer + 4)
-				for j = 1, Program.map.encounters[i].SLOTS,1 do
-					local pkmdata = Memory.readdword(pointer + (j-1)*4)
-					Program.map.encounters[i].pokemon[j] = {
-						minlevel = Utils.getbits(pkmdata, 0, 8),
-						maxlevel = Utils.getbits(pkmdata, 8, 8),
-						id = Utils.getbits(pkmdata, 16, 16)
-					}
-				end
-			end
-		end
-	end
-end
-
 -- gets a blank trainer with blank pokemon data
 function Program.getBlankTrainerData()
 	local trainerdata = {}
 	for i = 1,6,1 do
 		trainerdata[i] = {
 			pkmID = 0,
+			status = 0,
 			curHP = 0,
 			maxHP = 0,
 			level = 0,
@@ -392,8 +329,8 @@ function Program.readBoxMon(address)
 	mon.altAbility = (flags >> 29) & 3
 	if mon.pokemonID ~= nil and mon.pokemonID ~= 0 and type(mon.pokemonID) == "number" then
 		local pGender = mon.personality % 256
-		if  GameSettings.mons[GameSettings.names[mon.pokemonID + 1]] ~= nil then
-			local genderThreshold = GameSettings.mons[GameSettings.names[mon.pokemonID + 1]]["genderThreshold"]
+		if  GameSettings.mons[mon.pokemonID] ~= nil then
+			local genderThreshold = GameSettings.mons[mon.pokemonID]["genderThreshold"]
 			if genderThreshold ~= nil then
 				if genderThreshold == 0 or pGender < genderThreshold then
 					mon.gender = "Female"
@@ -443,76 +380,75 @@ function Program.getPokemonData(index)
 		return mon
 end
 
-function Program.getBattleOutcome()
-	return Memory.readbyte(GameSettings.gBattleOutcome)
-end
-
 function Program.getAbility(mon)
-	local pokemonID = mon.pokemonID
-    local current = PokemonData.ability[(pokemonID*3)+1+mon.altAbility]
+	local speciesData = GameSettings.mons[mon.pokemonID]
+	if speciesData == nil then
+		return "None"
+	end
+    local current = speciesData.abilities[mon.altAbility]
     if (current == "None") then
-        current = PokemonData.ability[(pokemonID*3)+1]
+        current = speciesData.ability1
     end
     return current
 end
 
 function Program.isValidPokemon(pokemonID)
-	return pokemonID ~= nil and PokemonData.name[pokemonID] ~= nil
+	return pokemonID ~= nil and GameSettings.names[pokemonID] ~= nil
 end
 
 function Program.getHP(mon)
     local hptype = ((mon.hpIV%2 + (2*(mon.attackIV%2))+(4*(mon.defenseIV%2))+(8*(mon.speedIV%2))+(16*(mon.spAttackIV%2))+(32*(mon.spDefenseIV%2)))*5)/21
     hptype = math.floor(hptype)
 	if (hptype == 0) then
-		return "Fighting"
+		return "Fighting", 0xFFFF8000
 	end
 	if (hptype == 1) then
-		return "Flying"
+		return "Flying", 0xFF81B9EF
 	end
 	if (hptype == 2) then
-		return "Poison"
+		return "Poison", 0xFF9141CB
 	end
 	if (hptype == 3) then
-		return "Ground"
+		return "Ground", 0xFF915121
 	end
 	if (hptype == 4) then
-		return "Rock"
+		return "Rock", 0xFFAFA981
 	end
 	if (hptype ==5) then
-		return "Bug"
+		return "Bug", 0xFF91A119
 	end
 	if (hptype == 6) then
-		return "Ghost"
+		return "Ghost", 0xFF704170
 	end
 	if (hptype ==7) then
-		return "Steel"
+		return "Steel", 0xFF60A1B8
 	end
 	if (hptype == 8) then
-		return "Fire"
+		return "Fire", 0xFFE62829
 	end
 	if (hptype == 9) then
-		return "Water"
+		return "Water", 0xFF2980EF
 	end
 	if (hptype == 10) then
-		return "Grass"
+		return "Grass", 0xFF3FA129
 	end
 	if (hptype == 11) then
-		return "Electric"
+		return "Electric", 0xFFFAC000
 	end
 	if (hptype == 12) then
-		return "Psychic"
+		return "Psychic", 0xFFEF4179
 	end
 	if (hptype == 13) then
-		return "Ice"
+		return "Ice", 0xFF3DCEF3
 	end
 	if (hptype == 14) then
-		return "Dragon"
+		return "Dragon", 0xFF5060E1
 	end
 	if (hptype == 15) then
-		return "Dark"
+		return "Dark", 0xFF624D4E
 	end
 	if (hptype == 16) then
-		return "Fairy"
+		return "Fairy", 0xFFEF70EF
 	end
 end
 
@@ -526,13 +462,9 @@ function Program.focusBizhawkWindow()
 	end
 end
 
--- Get's the pokemon's types. Fails on certain pokemon (Ponyta and Rapidash) unsure why.
+-- Get's the pokemon's types. 
 function Program.getPokemonTypes(ID)
-	-- Temporary override for my own Sanity until I can find a more elegant solution
-	if GameSettings.names[ID] == "Ponyta" or GameSettings.names[ID] == "Rapidash" then
-		return {"fire", ""}
-	end
-	local mon = GameSettings.mons[GameSettings.names[ID]]
+	local mon = GameSettings.mons[ID]
 	if mon ~= nil then
 		if mon.type2 == nil then
 			mon.type2 = ""
@@ -541,4 +473,91 @@ function Program.getPokemonTypes(ID)
 	else
 		return {"", ""}
 	end
+end
+
+--- Gets the mon ID from a memory address
+function Program.getMonID(address)
+	local personality = Memory.readdword(address)
+	local magicword = (personality ~ Memory.readdword(address + 4))
+	local growthoffset = (TableData.growth[(personality % 24) + 1] - 1) * 12
+	local growth = (Memory.readdword(address+ 32 + growthoffset) ~ magicword)
+	return Utils.getbits(growth, 0, 16)
+end
+
+--- Returns true if the trainer has been defeated by the player; false otherwise
+--- @param trainerId number
+--- @param saveBlock1Addr number? (Optional) Include the SaveBlock 1 address if known to avoid extra memory reads
+--- @return boolean isDefeated
+function Program.hasDefeatedTrainer(trainerId, saveBlock1Addr)
+	-- Don't reveal defeated trainers if player isn't actively playing the game (e.g. title screen w/ old save data)
+	if not Map.isValidMapLocation() then
+		return false
+	end
+	saveBlock1Addr = saveBlock1Addr or Utils.getSaveBlock1Addr()
+	local idAddrOffset = math.floor((0x500 + trainerId) / 8)
+	local idBit = (0x500 + trainerId) % 8
+	local trainerFlagAddr = saveBlock1Addr + 1270 + idAddrOffset
+	local result = Memory.readbyte(trainerFlagAddr)
+	return Utils.getbits(result, idBit, 1) ~= 0
+end
+
+---Returns 1, 2, or 3 depending on game.
+---FRLG: 1=Bulbasaur (left), 2=Squirtle (middle), 3=Charmander (right)
+---RSE: 1=Treecko (left), 2=Torchic (middle), 3=Mudkip (right)
+---@return number starterChoice
+function Program.getStarterChoice()
+	local saveblock1Addr = Utils.getSaveBlock1Addr()
+	return 1 + Memory.readbyte(saveblock1Addr + 5090)
+end
+
+--- Returns the Rivals trainer ID for the first fight. Depends on playergender and the starterChoice
+function Program.getRivalID()
+	local starterChoice = Program.getStarterChoice() or 1
+	local gender = Program.trainerInfo.gender or 0
+	local id = 520
+	return id + (1 - gender) * 9 + (starterChoice - 1) * 3 -- 520 is the first rival for if the player is a girl, 529 is the first for if the player is a boy, then there are variants for each starter choice 
+end
+
+function Program.checkForBallsInInventory()
+end
+
+--- Gets items from the inventory given an offset and an amount of data to get.
+--- @param offset number
+--- @param size number
+--- @return table? data Or nil if for some reason this data is not accessible
+function Program.checkInventory(offset, size)
+	local address = GameSettings.inventoryAddress + offset
+	-- check that the offset is divisible by 4. If it isn't, the offset will result in invalid data.
+	if offset % 4 ~= 0  or Program.trainerInfo.sKey == nil then
+		return nil
+	end
+	if size % 4 ~= 0 then
+		size = math.floor(size/4)*4
+	end
+	local data = {}
+	local itemID = 0
+	local quantity = 0
+	local iOffset = 0
+	for i = 1, size/4, 1 do
+		iOffset = (i-1) * 4
+		itemID = Memory.readword(address + iOffset)
+		if itemID ~= 0 then
+			quantity = Utils.bit_xor(Memory.readword(address + 2 + iOffset), Program.trainerInfo.sKey)
+		else
+			quantity = 0
+		end
+		if itemID ~= 0 and quantity ~= 0 then
+			table.insert(data, {itemID, quantity})
+		end
+	end
+	return data
+end
+
+--- Checks the first slot of the ball inventory for balls, if there is balls, returns true.
+---@return boolean
+function Program.checkForBalls()
+	if Program.checkInventory(440, 4) ~= nil then
+		return true
+	end
+	return false
 end

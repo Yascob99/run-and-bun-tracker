@@ -16,6 +16,7 @@ Main.EMU = {
 	BIZHAWK29 = "Bizhawk 2.9", -- Lua 5.4
 	BIZHAWK_FUTURE = "Bizhawk Future", -- Lua 5.4
 }
+Main.frames = 0
 
 -- Returns false if an error occurs that completely prevents the Tracker from functioning; otherwise, returns true
 function Main.Initialize()
@@ -95,6 +96,9 @@ function Main.Run()
 	-- After a game is successfully loaded, then initialize the remaining Tracker files
 	FileManager.setupErrorLog()
 	FileManager.executeEachFile("initialize") -- initialize all tracker files
+	FileManager.setupEncounterLog() -- Initialize the encounter log
+	Map.initialize()
+	Encounters.getEncounterData()
 	Main.tempQuickloadFiles = nil -- From now on, quickload files should be re-checked
 
 	-- Final garbage collection prior to game loops beginning
@@ -110,10 +114,15 @@ function Main.Run()
 		Program.hasRunOnce = true
 		client.SetGameExtraPadding(0, Constants.Graphics.UP_GAP, Constants.Graphics.RIGHT_GAP, Constants.Graphics.DOWN_GAP)
 		gui.defaultTextBackground(0)
-		-- Allow emulation until something needs to happen, advancing 10 frames at a time (the code doesn't neet to run a ton)
+		-- Allow emulation until something needs to happen. Run main loop only every 10 frames. Input detection shoudld be run every frame for better responsiveness.
 		while not (Main.forceRestart) do
-			Program.mainLoop()
-			Main.advance10Frames()
+			if Main.frames%10 == 0 then
+				Program.mainLoop()
+			end
+			Battle.update()
+			Input.update()
+			Main.frameAdvance()
+			Main.frames = Main.frames + 1
 		end
 		if Main.forceRestart then
 			RunAndBunTracker.startTracker()

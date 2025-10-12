@@ -1,6 +1,11 @@
 Memory = {}
-
-function Memory.read(addr, size)
+--- Reads data from a given game address
+---@param addr number address to read from
+---@param size number amount of data to read
+---@param signed? boolean Optional, deafults to false, If the data should be read as a signed integer
+---@return integer data an integer representation of the data
+function Memory.read(addr, size, signed)
+	signed = signed or false
 	local mem = ""
 	local memdomain = (addr >> 24)
 	if memdomain == 0 then
@@ -13,25 +18,52 @@ function Memory.read(addr, size)
 		mem = "ROM"
 	end
 	addr = (addr & 0xFFFFFF)
-	if size == 1 then
-		return memory.read_u8(addr,mem)
-	elseif size == 2 then
-		return memory.read_u16_le(addr,mem)
-	elseif size == 3 then
-		return memory.read_u24_le(addr,mem)
+	if signed then
+		if size == 1 then
+			return memory.read_s8(addr,mem)
+		elseif size == 2 then
+			return memory.read_s16_le(addr,mem)
+		elseif size == 3 then
+			return memory.read_s24_le(addr,mem)
+		else
+			return memory.read_s32_le(addr,mem)
+		end
 	else
-		return memory.read_u32_le(addr,mem)
-	end 
+		if size == 1 then
+			return memory.read_u8(addr,mem)
+		elseif size == 2 then
+			return memory.read_u16_le(addr,mem)
+		elseif size == 3 then
+			return memory.read_u24_le(addr,mem)
+		else
+			return memory.read_u32_le(addr,mem)
+		end
+	end
 end
 
-function Memory.readdword(addr)
-	return Memory.read(addr, 4)
+--- Reads 4 bytes of data from a memory address
+---@param addr number address to read from
+---@param signed? boolean  Optional, deafults to false, If the data should be read as a signed integer
+---@return integer data an integer representation of the data
+function Memory.readdword(addr, signed)
+	signed = signed or false
+	return Memory.read(addr, 4, signed)
 end
 
-function Memory.readword(addr)
-	return Memory.read(addr, 2)
+--- Reads 2 bytes of data from a memory address
+---@param addr number address to read from
+---@param signed? boolean  Optional, deafults to false, If the data should be read as a signed integer
+---@return integer data an integer representation of the data
+function Memory.readword(addr, signed)
+	signed = signed or false
+	return Memory.read(addr, 2, signed)
 end
 
-function Memory.readbyte(addr)
-	return Memory.read(addr, 1)
+--- Reads 1 bytes of data from a memory address
+---@param addr number address to read from
+---@param signed? boolean  Optional, deafults to false, If the data should be read as a signed integer
+---@return integer data an integer representation of the data
+function Memory.readbyte(addr, signed)
+	signed = signed or false
+	return Memory.read(addr, 1, signed)
 end

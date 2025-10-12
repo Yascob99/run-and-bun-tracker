@@ -1,6 +1,12 @@
 Map = {
 	grid = {},
-	file = ''
+	file = '',
+	banks = {},
+	bankLengths = {},
+	details = {},
+	names = {},
+	layoutAddresses = {},
+	regionDict = {},
 }
 
 Map.file = 'hoenn'
@@ -28,13 +34,13 @@ Map.grid = {
 	{0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5}
 }
 
-function Map.findCoords(mapid)
+function Map.findCoords(regionid)
 	local x = 0
 	local y = 0
 	local count = 0
 	for i = 1, #Map.grid, 1 do
 		for j = 1, #Map.grid[i], 1 do
-			if mapid == Map.grid[i][j] then
+			if regionid == Map.grid[i][j] then
 				count = count + 1
 				x = x + j
 				y = y + i
@@ -46,4 +52,98 @@ function Map.findCoords(mapid)
 	else
 		return {x/count, y/count}
 	end
+end
+
+function Map.initialize()
+	Map.populateMapData()
+	Map.populateMapDetails()
+	-- FileManager.writeTableToFile(Map.banks, FileManager.prependDir(FileManager.Folders.TrackerCode .. FileManager.slash .. "Maps.txt"))
+end
+
+function Map.isValidMapLocation()
+	return Battle.mapId ~= nil and Battle.mapId ~= 0
+end
+
+function Map.processMapBank(pointer, BankLength, index)
+	Map.banks[index] = {}
+	local mapAddress = nil
+	local layoutID
+	local regionID
+	for i = 1, BankLength, 1 do
+		mapAddress = Memory.readdword(pointer + (i -1) *4)
+		layoutID = Memory.readword(mapAddress + 18)
+		regionID = Memory.readbyte(mapAddress + 20)
+		Map.banks[index][i] = {
+			layoutAddress = Memory.readdword(mapAddress),
+			scriptDataAdress = Memory.readdword(mapAddress + 4),
+			mapScripts = Memory.readdword(mapAddress + 8),
+			connectionAddress = Memory.readdword(mapAddress + 12),
+			musicID = Memory.readword(mapAddress + 16),
+			layoutID = layoutID,
+			regionID = regionID,
+			cave = Memory.readbyte(mapAddress + 21),
+			weather = Memory.readbyte(mapAddress + 22),
+			mapType = Memory.readbyte(mapAddress + 23),
+			-- 2 bytes of unused space
+			mapFlags = Memory.readbyte(mapAddress + 26),
+			battleType = Memory.readbyte(mapAddress + 27)
+		}
+
+		-- Maps the layoutID to a region for quicker lookup purposes
+		Map.regionDict[layoutID] = regionID + 1
+	end
+end
+
+function Map.populateMapData()
+	local mapBanklength = 34
+	local mapBankAddress = GameSettings.mapbankAddress
+	local mapBankPointer = mapBankAddress
+	local mapBankEnd = mapBankAddress + 4
+	local length
+	local entries = 0
+	-- Run this to get all of the map banks except for the last.
+	for i = 1, mapBanklength - 1, 1 do
+		mapBankPointer = Memory.readdword(mapBankAddress + (i - 1) * 4)
+		mapBankEnd = Memory.readdword(mapBankAddress + (i) * 4)
+		length = (mapBankEnd - mapBankPointer)/4
+		Map.processMapBank(mapBankPointer, length, i)
+		entries = entries + length
+		table.insert(Map.bankLengths, length)
+	end
+	-- The last bank ends at the start of the mapBankPointer
+	length = (mapBankAddress - mapBankEnd)/4
+	Map.processMapBank(mapBankEnd, length, mapBanklength)
+	Map.numMaps = entries + length
+	table.insert(Map.bankLengths, length)
+end
+
+function Map.populateMapDetails()
+	local map = {}
+	local mapDetailsAddress = GameSettings.mapDetailsAddress
+	local mapDetailslength = 213
+	local length
+	local name
+	local mapNameAddress
+	local nextMapNameAddress = nil
+	for i = 1, mapDetailslength, 1 do
+		if i == mapDetailslength then
+			mapNameAddress = nextMapNameAddress
+			nextMapNameAddress = GameSettings.specialMapNames
+		else
+			mapNameAddress = Memory.readdword(mapDetailsAddress + 4 + (i -1) * 8) 
+			nextMapNameAddress = Memory.readdword(mapDetailsAddress + 4 + (i) * 8) 
+		end
+		length = nextMapNameAddress - mapNameAddress - 1
+		name = Utils.toString(mapNameAddress, length)
+		table.insert(Map.names, name)
+		Map.details[name] = {
+			x = Memory.readbyte(mapDetailsAddress + (i -1) * 8),
+			y = Memory.readbyte(mapDetailsAddress + 1 + (i - 1) * 8),
+			width = Memory.readbyte(mapDetailsAddress + 2 + (i - 1) * 8),
+			height = Memory.readbyte(mapDetailsAddress + 3 + (i -1 ) * 8),
+		}
+	end
+end
+
+function Map.mapTrainerIDsToRoute()
 end
