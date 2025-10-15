@@ -194,7 +194,10 @@ function Utils.centerTextOffset(text, charSize, width)
 	width = width or Constants.Graphics.SCREEN.RIGHT_GAP
 	return (width - (charSize * string.len(text))) / 2
 end
-
+---comment
+---@param array table
+---@param value any
+---@return any
 function Utils.indexOf(array, value)
     for i, v in ipairs(array) do
         if v == value then
@@ -286,4 +289,16 @@ function Utils.checkTargets(targetFlags)
 		end
 	end
 	return targets
+end
+
+--- Joins 2 similarly dimensioned tables
+---@param table1? table
+---@param table2 table
+---@return table
+function Utils.joinTables(table1,table2)
+	table1 = table1 or {}
+    for i=1,#table2 do
+        table1[#table1+1] = table2[i]
+    end
+    return table1
 end

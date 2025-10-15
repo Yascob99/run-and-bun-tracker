@@ -55,9 +55,24 @@ function Map.findCoords(regionid)
 end
 
 function Map.initialize()
-	Map.populateMapData()
-	Map.populateMapDetails()
-	-- FileManager.writeTableToFile(Map.banks, FileManager.prependDir(FileManager.Folders.TrackerCode .. FileManager.slash .. "Maps.txt"))
+	local mapPath = FileManager.Folders.Data .. FileManager.slash .. "MapData.txt"
+	local mapDetailsPath = FileManager.Folders.Data .. FileManager.slash .. "MapDetails.txt"
+	if FileManager.fileExists(mapPath) then
+		local data = FileManager.readTableFromFile(mapPath) or {{}, {}, 0, {}}
+		Map.banks, Map.regionDict, Map.numMaps, Map.bankLengths = table.unpack(data)
+	else
+		console.log("Gathering Map Data")
+		Map.populateMapData()
+		FileManager.writeTableToFile(table.pack(Map.banks, Map.regionDict, Map.numMaps, Map.bankLengths), mapPath)
+	end
+	if FileManager.fileExists(mapDetailsPath) then
+		local data = FileManager.readTableFromFile(mapDetailsPath) or {{}, {}}
+		Map.names, Map.details = table.unpack(data)
+	else
+		console.log("Gathering Map Details")
+		Map.populateMapDetails()
+		FileManager.writeTableToFile(table.pack(Map.names, Map.details), mapDetailsPath)
+	end
 end
 
 function Map.isValidMapLocation()
@@ -108,17 +123,16 @@ function Map.populateMapData()
 		length = (mapBankEnd - mapBankPointer)/4
 		Map.processMapBank(mapBankPointer, length, i)
 		entries = entries + length
-		table.insert(Map.bankLengths, length)
+		Map.bankLengths[i] = length
 	end
 	-- The last bank ends at the start of the mapBankPointer
 	length = (mapBankAddress - mapBankEnd)/4
 	Map.processMapBank(mapBankEnd, length, mapBanklength)
 	Map.numMaps = entries + length
-	table.insert(Map.bankLengths, length)
+	Map.bankLengths[mapBanklength] = length
 end
 
 function Map.populateMapDetails()
-	local map = {}
 	local mapDetailsAddress = GameSettings.mapDetailsAddress
 	local mapDetailslength = 213
 	local length
@@ -143,7 +157,4 @@ function Map.populateMapDetails()
 			height = Memory.readbyte(mapDetailsAddress + 3 + (i -1 ) * 8),
 		}
 	end
-end
-
-function Map.mapTrainerIDsToRoute()
 end

@@ -4,3 +4,5 @@ run-and-bun-tracker/knownworkingdir.txt
 run-and-bun-tracker/osexecute-output.txt
 run-and-bun-tracker/encounters.txt
 run-and-bun-tracker/encounters.csv
+run-and-bun-tracker/attempts/
+run-and-bun-tracker/attempts/*

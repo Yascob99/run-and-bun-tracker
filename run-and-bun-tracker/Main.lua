@@ -83,7 +83,7 @@ function Main.Run()
 			Main.frameAdvance()
 		end
 	end
-	
+	console.log("Please wait, initializing Data")
 	GameSettings.initialize()
 
 	-- If the loaded game is unsupported, remove the Tracker padding but continue to let the game play.
@@ -114,12 +114,12 @@ function Main.Run()
 		Program.hasRunOnce = true
 		client.SetGameExtraPadding(0, Constants.Graphics.UP_GAP, Constants.Graphics.RIGHT_GAP, Constants.Graphics.DOWN_GAP)
 		gui.defaultTextBackground(0)
-		-- Allow emulation until something needs to happen. Run main loop only every 10 frames. Input detection shoudld be run every frame for better responsiveness.
+		Program.Load()
+		-- Allow emulation until something needs to happen. Run main loop only every 10 frames. Input and should be run every frame for better responsiveness.
 		while not (Main.forceRestart) do
 			if Main.frames%10 == 0 then
 				Program.mainLoop()
 			end
-			Battle.update()
 			Input.update()
 			Main.frameAdvance()
 			Main.frames = Main.frames + 1
@@ -276,10 +276,4 @@ function Main.LoadSettings()
         end
     end
 	return true
-end
-
-function Main.advance10Frames()
-	for i = 0, 10, 1 do
-		emu.frameadvance()
-	end
 end

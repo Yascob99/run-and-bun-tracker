@@ -55,19 +55,22 @@ function Drawing.drawPokemonIcon(id, x, y, selectedPokemon, isShiny)
 		if isShiny then
 			path = FileManager.prependDir(FileManager.Folders.ShinySprite, true)
 		end
-		gui.drawImage(path .. name .. ".png", x- 16, y - 24)
+		gui.drawImage(path .. name .. ".png", x- 16, y - 18)
 	end
 end
 
 function Drawing.drawPokemonIconByName(name, x, y)
-	
-	if Encounters.encounters[Battle.location] == name then
-		gui.drawRectangle(x,y,36,36, Constants.Graphics.SELECTEDCOLOR[1], Constants.Graphics.SELECTEDCOLOR[2])
+	if Encounters.encounter ~= nil then
+		if Encounters.encounters[Battle.location] == name then
+			gui.drawRectangle(x,y,36,36, Constants.Graphics.SELECTEDCOLOR[1], Constants.Graphics.SELECTEDCOLOR[2])
+		else
+			gui.drawRectangle(x,y,36,36, Constants.Graphics.NONSELECTEDCOLOR, 0xFF222222)
+		end
 	else
 		gui.drawRectangle(x,y,36,36, Constants.Graphics.NONSELECTEDCOLOR, 0xFF222222)
 	end
 	local path = FileManager.prependDir(FileManager.Folders.RegularSprite, true)
-	gui.drawImage(path .. name .. ".png", x- 16, y - 24)
+	gui.drawImage(path .. name .. ".png", x- 16, y - 18)
 end
 
 function Drawing.drawStatusIcon(status, x, y)
@@ -242,10 +245,10 @@ function Drawing.drawPokemonView()
 	end
 	gui.drawRectangle(Constants.Graphics.SCREEN_WIDTH + 5, 185, Constants.Graphics.RIGHT_GAP - 11, 65,0xFFAAAAAA, 0xFF222222)
 	if Program.selectedPokemon.moves[1] then
-		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 205, PokemonData.move[Program.selectedPokemon.moves[1] + 1])
-		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 215, PokemonData.move[Program.selectedPokemon.moves[2] + 1])
-		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 225, PokemonData.move[Program.selectedPokemon.moves[3] + 1])
-		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 235, PokemonData.move[Program.selectedPokemon.moves[4] + 1])
+		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 205, GameSettings.moves['names'][Program.selectedPokemon.moves[1] + 1])
+		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 215, GameSettings.moves['names'][Program.selectedPokemon.moves[2] + 1])
+		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 225, GameSettings.moves['names'][Program.selectedPokemon.moves[3] + 1])
+		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 10, 235, GameSettings.moves['names'][Program.selectedPokemon.moves[4] + 1])
 	end
 	
 	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 90, 190, "PP")
@@ -274,15 +277,18 @@ function Drawing.drawMap()
 		end
 		gui.drawImage(FileManager.prependDir(FileManager.Folders.Player, true) .. gender .. ".png", position[1] + (coords[1] - 1)*8, position[2] + (coords[2] - 1)*8, 16, 16)
 	end
-	gui.drawText(
-		2,
-		Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 19,
-		Battle.location,
-		"white",
-		0x00000000,
-		9,
-		"Lucida Console"
-	)
+	if Battle.location ~= nil then
+		local location = tostring(Battle.location);
+		gui.drawText(
+			2,
+			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 19,
+			location,
+			"white",
+			0x00000000,
+			9,
+			"Lucida Console"
+		)
+	end
 end
 
 function Drawing.drawEncounterTab(encounters, encounterType, map, numEncounters)
@@ -300,7 +306,7 @@ function Drawing.drawEncounterTab(encounters, encounterType, map, numEncounters)
 			half = math.floor(numEncounters/2)
 			bottomOffset = offset * 6 / half
 			topOffset = bottomOffset
-			bottomleftGap = (Constants.Graphics.SCREEN_WIDTH - offset * half)/2
+			bottomleftGap = (Constants.Graphics.SCREEN_WIDTH - offset * half - 1 )/2
 			if isOdd then
 				half = half + 1
 				topOffset = offset * 6 / half
@@ -350,23 +356,60 @@ function Drawing.drawEncounterTab(encounters, encounterType, map, numEncounters)
 	end
 end
 
+function Drawing.drawGameCorner()
+	local badges = Program.getBadgesObtained()
+	local encounters = nil
+	local prevencounters = nil
+	if badges > 0 then --This shouldn't happen, but just making sure.
+		if badges == 1 then
+			encounters = Encounters.routeEncounters.gamecorner[1]
+		else
+			encounters =  Encounters.routeEncounters.gamecorner[badges]
+			prevencounters = Encounters.routeEncounters.gamecorner[badges - 1]
+		end
+		for i = 1, #encounters, 1 do
+			Drawing.drawPokemonIconByName(encounters[i], 5 + (i - 1) * 39, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 60)
+			gui.drawText(5, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 46, "Badge " .. tostring(badges), "white", 0x00000000, 10, "Lucida Console")
+		end
+		if prevencounters ~= nil then
+			for i = 1, #prevencounters, 1 do
+				Drawing.drawPokemonIconByName(prevencounters[i], 5 + (i - 1) *39, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 130)
+				gui.drawText(5, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 116, "Badge " .. tostring(badges - 1), "white", 0x00000000, 10, "Lucida Console")
+			end
+		end
+	end
+end
+
 function Drawing.drawEncounters()
 	local mapID = Battle.mapID
+	local regionID = Battle.regionID
 	local map = Battle.location
 	local encounters = nil
 	local output = ""
 	local length = 0
 	if Encounters.doesMapHaveEncounters(map) then
 		for i, encounterType in ipairs(LayoutSettings.menus.encounters.types) do
-			encounters = Encounters.routeEncounters[Encounters.routeEncounters.Keys[i]][mapID]
-			length = Encounters.routeEncounters[Encounters.routeEncounters.Keys[i]]['lengths'][mapID]
-			if LayoutSettings.menus.encounters.selecteditem == i then
-				Drawing.drawEncounterTab(encounters, encounterType, map, length)
+			if i ~= 5 then
+				encounters = Encounters.routeEncounters[Encounters.routeEncounters.Keys[i]][mapID]
+				length = Encounters.routeEncounters[Encounters.routeEncounters.Keys[i]]['lengths'][mapID]
+				if LayoutSettings.menus.encounters.selecteditem == i then
+					Drawing.drawEncounterTab(encounters, encounterType, map, length)
+				end
+			elseif LayoutSettings.menus.encounters.selecteditem == i then
+				if regionID == 10 then -- If Mauvile for Game Center
+					Drawing.drawGameCorner()
+				else
+					encounters = Encounters.routeEncounters.other[mapID]
+					length = Encounters.routeEncounters.other['lengths'][mapID]
+					if LayoutSettings.menus.encounters.selecteditem == i then
+						Drawing.drawEncounterTab(encounters, encounterType, map, length)
+					end
+				end
 			end
 		end
 	else
 		gui.drawText(
-			Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output) + 5) * 3),
+			Constants.Graphics.SCREEN_WIDTH / 2 - ((30) * 3),
 			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 34) / 2,
 			"This route has no Encounters",
 			"white",

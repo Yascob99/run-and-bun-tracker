@@ -9,7 +9,7 @@ Encounters.encounterGroups = {
     ["fishing_mons"] = {20, 20, 10, 10, 10, 10, 10, 5, 4, 1}
 }
 Encounters.routeEncounters = {}
-Encounters.routeEncounters.Keys = {'land', 'surf', 'rock', 'fish'}
+Encounters.routeEncounters.Keys = {'land', 'surf', 'rock', 'fish', 'other'}
 Encounters.routeEncounters.land = {
     ['Keys'] = {},
     ['lengths'] = {}
@@ -26,6 +26,177 @@ Encounters.routeEncounters.fish = {
     ['Keys'] = {},
     ['lengths'] = {}
 }
+Encounters.routeEncounters.other = { -- Hardcoded due to no easy way to get this data.
+    ['Keys'] = {
+        185,
+        35, 
+        5, 
+        36,
+        144,
+        7
+},
+    ['lengths'] = {
+        [185] = 2,
+        [35] = 1,
+        [5] = 1,
+        [36] = 1,
+        [144] = 1,
+        [7] = 1
+},
+    [185] = { -- New Mauville static encounters
+        ["Voltorb-Hisui"] = {
+            ['rate'] = 50,
+            ['highlevel'] = 40,
+            ['lowlevel'] = 40
+        },
+        ["Electrode-Hisui"] = {
+            ['rate'] = 50,
+            ['highlevel'] = 50,
+            ['lowlevel'] = 50
+        },
+    },
+    [35] = { -- Route 119 gift castform
+        ["Castform"] = {
+            ['rate'] = 100,
+            ['lowlevel'] = 25,
+            ['highlevel'] = 25
+        }
+    },
+    [5] = { -- Fortree city static kecleon
+        ["Kecleon"] = {
+            ['rate'] = 100,
+            ['lowlevel'] = 55,
+            ['highlevel'] = 55
+        }
+    },
+    [36] = { -- Route 120 static kecleon
+        ["Kecleon"] = {
+            ['rate'] = 100,
+            ['lowlevel'] = 55,
+            ['highlevel'] = 55
+        }
+    },
+    [144] = { -- Aqua Hideout B1F static Electrode-H
+        ["Electrode-Hisui"] = {
+            ['rate'] = 100,
+            ['highlevel'] = 75,
+            ['lowlevel'] = 75
+        }
+    },
+    [7] = { -- Gift Mossdeep Kubfu
+        ["Kubfu"] = {
+            ['rate'] = 100,
+            ['highlevel'] = 5,
+            ['lowlevel'] = 5
+        }
+    },   
+}
+-- Game Corner is too much data to handle cleanly with the current display. Will look to improve.
+Encounters.routeEncounters.gamecorner = {
+    {"Smoochum", "Elekid", "Magby"},
+    {"Tauros", "Miltank"},
+    {"Throh", "Sawk"},
+    {"Pinsir", "Heracross"},
+    {"Larvitar", "Beldum"},
+    {"Dratini", "Bagon", "Deino"},
+    {"Gible", "Goomy", "Jangmo-o", "Dreepy"},
+    {"Mew", "Celebi", "Jirachi", "Victini"}
+}
+
+-- For a later updated Encounters view
+Encounters.routeEncounters.sublocations ={
+    ["Granite Cave"] = {
+        {132, "Granite Cave 1F"},
+        {133, "Granite Cave B1F"},
+        {134, "Granite Cave B2F"},
+        {288, "Granite Cave Steven"}
+    },
+    ["Mirage Tower"] = {
+        {381,"Mirage Tower 1F"},
+        {382,"Mirage Tower 2F"},
+        {383,"Mirage Tower 3F"},
+        {388,"Mirage Tower 4F"},
+    },
+    ["Meteor Falls"] = {
+        {125, "Meteor Falls 1F 1R"},
+        {126, "Meteor Falls 1F 2R"},
+        {127, "Meteor Falls B1F 1R"},
+        {431, "Meteor Falls Steven"}
+    },
+    ["New Mauville"] = {
+        {184, "New Mauville 1"},
+        {184, "New Mauville 2"}
+    },
+    ["Safari Zone"] = {
+        {238, "Safari Zone NW"},
+        {239, "Safari Zone NE"},
+        {240, "Safari Zone SW"},
+        {241, "Safari Zone SE"}
+    },
+    ["Mt. Pyre"] = {
+        {137, "Mt. Pyre 1F"},
+        {138, "Mt. Pyre 2F"},
+        {139, "Mt. Pyre 3F"},
+        {140, "Mt. Pyre 4F"},
+        {141, "Mt. Pyre 5F"},
+        {142, "Mt. Pyre 6F"},
+        {302, "Mt. Pyre Ext."},
+        {303, "Mt. Pyre Summit"}
+    },
+    ["Magma Hideout"] = { -- Needs verifying
+        {336, "Magma Hideout 1R"},
+        {337, "Magma Hideout 2R"},
+        {338, "Magma Hideout 3R"},
+        {339, "Magma Hideout 4R"},
+        {340, "Magma Hideout 5R"},
+        {341, "Magma Hideout 6R"},
+        {379, "Magma Hideout 7R"},
+        {380, "Magma Hideout 8R"},
+    },
+    ["Shoal Cave"] = {
+        {164, "Shoal Cave Lo-1"},
+        {165, "Shoal Cave Lo-2"},
+        {166, "Shoal Cave Lo-3"},
+        {167, "Shoal Cave Lo-4"},
+        {168, "Shoal Cave Hi-1"},
+        {169, "Shoal Cave Hi-2"}
+    },
+    ["Seafloor Cavern"] = {
+        {147, "Seafloor Cavern Entrance"},
+        {148, "Seafloor Cavern 1"},
+        {149, "Seafloor Cavern 2"},
+        {150, "Seafloor Cavern 3"},
+        {151, "Seafloor Cavern 4"},
+        {152, "Seafloor Cavern 5"},
+        {153, "Seafloor Cavern 6"},
+        {154, "Seafloor Cavern 7"},
+        {155, "Seafloor Cavern 8"},
+    },
+    ["Cave of Origin"] = {
+        {157, "Cave of Origin Entrance"},
+        {158, "Cave of Origin 1F"}
+    },
+    ["Sky Pillar"] = {
+        {322, "Sky Pillar 1F"},
+        {324, "Sky Pillar 3F"},
+        {330, "Sky Pillar 5F"},
+    },
+    ["Victory Road"] = {
+        {163, "Victory Road 1F"},
+        {285, "Victory Road B1F"},
+        {286, "Victory Road B2F"}
+    },
+    ["Game Corner"] = {
+        "Knuckle Badge",
+        "Stone Badge",
+        "Dynamo Badge",
+        "Balance Badge",
+        "Heat Badge",
+        "Feather Badge",
+        "Mind Badge",
+        "Rain Badge"
+    }
+}
 
 
 
@@ -35,19 +206,27 @@ function Encounters.findPreviousEncounters()
     local boxAddress = GameSettings.gPokemonStorage + 4
     local mon = nil;
     local id = 0
+    local starters = {387, 390, 393}
+    local location = ""
     -- Party
     if Encounters.encounters == nil then
         Encounters.encounters = {}
     end
     for i = 1, Memory.readword(GameSettings.gPlayerPartyCount) do
-        id = Program.getMonID(partyAddress)
-        -- Excludes starters due to potential route overlap.
-        if id > 386 and id < 396 then
-            Encounters.encounters["starter"] = GameSettings.names[id]
-        elseif (id ~=0) then
+        mon = Program.trainerPokemonTeam[i]
+        if mon ~= nil then
+            id = mon.id
+        end
+        if (id ~=0) then
             mon = Program.readPartyMon(partyAddress)
-            if Encounters.encounters[Encounters.getSanitizedLocation(mon.metLocation)] ~= nil then
-                Encounters.encounters[Encounters.getSanitizedLocation(mon.metLocation)] = GameSettings.names[id]
+            location = Encounters.getSanitizedLocation(mon.metLocation)
+            if location == "Starter" then
+                local starter = starters[Program.getStarterChoice()] or nil
+                if starter ~= nil then
+                    Encounters.tryAddEncounter("Starter",starters[Program.getStarterChoice()])
+                end
+            else
+                Encounters.tryAddEncounter(location, id)
             end
 		end
 	end
@@ -57,10 +236,14 @@ function Encounters.findPreviousEncounters()
         id = Program.getMonID(boxAddress)
 		if (id ~=0) then 
 			mon = Program.readBoxMon(boxAddress)
-            local location = Encounters.encounters[Encounters.getSanitizedLocation(mon.metLocation)]
-            if location ~= nil then
-                location = Encounters.getSanitizedLocation(mon.metLocation)
-                Encounters.encounters[location] = GameSettings.names[id]
+            location = Encounters.getSanitizedLocation(mon.metLocation)
+             if location == "Starter" then
+                local starter = starters[Program.getStarterChoice()] or nil
+                if starter ~= nil then
+                    Encounters.tryAddEncounter("Starter",starters[Program.getStarterChoice()])
+                end
+            else
+                Encounters.tryAddEncounter(location, id)
             end
 		end
 		i = i+1
@@ -69,35 +252,36 @@ function Encounters.findPreviousEncounters()
 end
 
 --- Checks if the encounter is available for this location based on the location provided
+--- @param location string The name of the region for this encounter.
+--- @returns boolean isEncounterAvailable 
 function Encounters.isEncounterAvailable(location)
-    if Encounters.encounters == nil then
-        if Memory.readword(GameSettings.gPlayerPartyCount) > 0 then
-            Encounters.findPreviousEncounters()
-        else
-            if not Utils.isInTable(PokemonData.encounterRoutes, location) then
-                return false
+    if Encounters.doesMapHaveEncounters(location) and Battle.hasFoughtRival then
+        if Encounters.encounters ~= nil then
+            if #Encounters.encounters == 1 then
+                return true
+            elseif Encounters.encounters[location] == nil then
+                return true
             end
-            return true
         end
-    elseif Encounters.encounters[location] ~= nil then
-        return false
-    else
         return true
     end
+    return false
 end
 
---- LoadsEncounters from the Encounters File (if it exists)
-function Encounters.loadEncounterFile()
-    local encounters = FileManager.readTableFromFile(FileManager.Files.ENCOUNTER_LOG)
-    if encounters ~= nil then
-        Encounters.encounters = encounters
-    end
-end
 --- Writes the current encounter list to file
-function Encounters.updateEncounterTracker()
-    FileManager.writeTableToFile(Encounters.encounters, FileManager.Files.ENCOUNTER_LOG)
-    -- writes to a CSV file as well for easier tracking in the order that routes are accessible.
-    FileManager.writeTabletoCSV(Encounters.encounters, FileManager.Files.ENCOUNTER_CSV, PokemonData.encounterRoutes)
+function Encounters.updateEncounterTracker(force)
+    force = force or Battle.hasFoughtRival
+    -- Don't write anything until 
+    if force then
+        FileManager.writeTableToFile(Encounters.encounters, FileManager.Files.ENCOUNTER_LOG)
+        -- writes to a CSV file as well for easier tracking in the order that routes are accessible.
+        local encounters = Encounters.encounters or {}
+        -- Remove the pool element as it will cause issues.
+        if encounters['pool'] ~= nil then
+            encounters['pool'] = nil
+        end
+        FileManager.writeTabletoCSV(encounters, FileManager.Files.ENCOUNTER_CSV, PokemonData.encounterRoutes)
+    end
 end
 
 --- Clears the encounter list. (For use in starting a new run)
@@ -295,9 +479,42 @@ function Encounters.getMonFromReference(address)
      return Memory.readbyte(address) | Memory.readbyte(address + 2) << 8 -- get each byte individually, then shift the second byte 3 places to the right
 end
 
+-- checks if a map has encounters
 function Encounters.doesMapHaveEncounters(location)
     if location ~= nil then
         return Utils.isInTable(PokemonData.encounterRoutes, location)
+    end
+    return false
+end
+
+-- Tries to add an encounter to encounter tracker
+function Encounters.tryAddEncounter(location, id, missed, beatRival)
+    missed = missed or false
+    beatRival = beatRival or Battle.hasFoughtRival
+    local inPool = Encounters.isInPool(id)
+    if Encounters.isEncounterAvailable(Battle.location) and not inPool then
+        local name = GameSettings.names[id]
+        if missed then
+            if Encounters.encounters == nil then
+                Encounters.encounters = {}  
+            end
+            name = name .. "-Missed"
+            Encounters.encounters[location] = name
+        else
+            if Encounters.encounters == nil then
+                Encounters.encounters = {}  
+                Encounters.encounters['pool'] = GameSettings.evolutionPool[id]
+            end
+            Encounters.encounters[location] = name
+        end
+    end
+end
+
+function Encounters.isInPool(id)
+    if Encounters.encounters ~= nil then
+        if Encounters.encounters['pool'] ~= nil then
+            return Utils.isInTable(Encounters.encounters['pool'], id)
+        end
     end
     return false
 end

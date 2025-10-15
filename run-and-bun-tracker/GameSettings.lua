@@ -15,7 +15,7 @@ GameSettings = {
 	language = 0,
 	trainerpointer = 0,
 	coords = 0,
-	roamerpokemonoffset = 0
+	evolutionPool = {}
 }
 GameSettings.VERSIONS = {
 	RS = 1,
@@ -29,6 +29,41 @@ GameSettings.LANGUAGES = {
 	S = 4,
 	G = 5,
 	I = 6
+}
+GameSettings.evolutionMethods = {
+	[0] = "None",
+	[1] = "Happiness",
+	[2] = "Happiness during day",
+	[3] = "Happiness during Night",
+	[4] = "Level",
+	[5] = "Trade",
+	[6] = "Trade Item",
+	[7] = "Stone",
+	[8] = "Level High Attack",
+	[9] = "Level Attack Matches Defense",
+	[10] = "Level High Defense",
+	[11] = "Level Odd Personality",
+	[12] = "Level Even Personality",
+	[13] = "Level and New Pokemon", -- Honestly not sure
+	[14] = "Level but New Pokemon", -- Honestly not sure
+	[15] = "Beauty",
+	[16] = "Change to Male Form", -- Cases for variants
+	[17] = "Change to Female form", -- Cases for variants
+	[18] = "Level Up During Night", -- Might have been swapped for Moon Stone
+	[19] = "Level Up During Day", -- Might have been swapeed for Sun stone
+	[20] = "Level Up During Dusk", -- Might have been swapped for Dusk stone
+	[23] = "Level up with with move", -- Arg1 is the moveID
+	[24] = "Level up with fairy move and 2 levels of affection",
+	[25] = "Level up at location", -- Probopass at New Mauville for example. Arg 1 is regionID
+	[28] = "Level up holding item", 
+	[29] = "Evolves with other mon in party", -- Mantyke specific evolution
+	[32] = "Near specific rocks", -- Glaceon and Leafeon
+	[33] = "Level up and by Nature",  -- Nature is Hardy, Brave, Adamant, Naughty, Docile, Impish, Lax, Hasty, Jolly, Naive, Rash, Sassy, or Quirky.
+	[34] = "Level up and by Nature", -- Nature is Lonely, Bold, Relaxed, Timid, Serious, Modest, Mild, Quiet, Bashful, Calm, Gentle, or Careful.
+	[36] = "Have lost X or more HP and walk under stone sculpture in Dusty Bowl", -- arg is the HP. Hisuian Yamask specific
+	[65533] = "Primal", -- Mega equivilent for groudon Kyogre
+	[65534] = "Mega by move", -- Rayquaza is the only mega that mega evolves this way
+	[65535] = "Mega"
 }
 
 function GameSettings.initialize()
@@ -69,7 +104,7 @@ function GameSettings.initialize()
 		GameSettings.gPlayerPartyCount = 0x2023a95
 		GameSettings.encounterTable = 0x862863C
 		GameSettings.gBattleOpponentA = 0x20381AE -- confirmed to be the opponent's trainer ID
-		GameSettings.gSaveBlock1ptr = 0x3005D8C -- save block1 pointer
+		GameSettings.gSaveBlock1ptr = 0x3005D9C -- save block1 pointer
 		GameSettings.trainerStatsTable = 0x8398880
 		GameSettings.mapbankAddress =  0x8552AB4
 		GameSettings.mapDetailsAddress = 0x86A1960
@@ -77,12 +112,70 @@ function GameSettings.initialize()
 		GameSettings.layoutBank = 0x854E2EC
 		GameSettings.trainerStatsTable = 0x8398880 -- 40 bytes per entry
 		GameSettings.trainerClassNames = 0x8398524 -- 13 byte string names
-		local monData = GameSettings.populatePokemonDetails()
-		GameSettings.mons = monData[1] -- Probably should move this to the Data section.
-		GameSettings.names =  monData[2] -- Probably should move this to the Data section. 
+		GameSettings.movesByLevelUp = 0x83EC73C -- list of 4 byte pointers to the level up moves links to a list of 2byte moveIDs followed by 2byte levels. FFFF as a terminator
+		GameSettings.monEvolutions = 0x83D459C -- 80 bytes per (FFFF method is mega evo not terminator) 10x(2[method] 2[arg 1] 2[species 2] 2[unused])
+		GameSettings.loadData()
+	end
+end
+
+function GameSettings.loadData()
+	local namesPath = FileManager.Folders.Data .. FileManager.slash .. "PokemonNames.txt"
+	local monStatsPath = FileManager.Folders.Data .. FileManager.slash .. "PokemonStats.txt"
+	local movesPath = FileManager.Folders.Data .. FileManager.slash .. "Moves.txt"
+	local trainerClassesPath = FileManager.Folders.Data .. FileManager.slash .. "TrainerClassNames.txt"
+	local trainersPath = FileManager.Folders.Data .. FileManager.slash .. "Trainers.txt"
+	local trainersByNamePath = FileManager.Folders.Data .. FileManager.slash .. "TrainersByName.txt"
+	local evolutionPoolPath = FileManager.Folders.Data .. FileManager.slash .. "EvolutionPool.txt"
+	
+	-- Second options should only matter in the case data is wrong or corrupt. Or if randomizers get involved.
+	if FileManager.fileExists(movesPath) then
+		GameSettings.moves = FileManager.readTableFromFile(movesPath)
+	else
+		console.log("Gathering Move Data")
 		GameSettings.populateMoveData()
+		FileManager.writeTableToFile(GameSettings.moves, movesPath)
+		console.log(GameSettings.moves.names)
+	end
+
+	if FileManager.fileExists(namesPath) and FileManager.fileExists(monStatsPath) then
+		GameSettings.names = FileManager.readTableFromFile(namesPath)
+		GameSettings.mons = FileManager.readTableFromFile(monStatsPath)
+	else
+		console.log("Gathering Pokemon Names and Data")
+		GameSettings.populatePokemonDetails()
+		console.log("Gathering Pokemon Evolutions")
+		GameSettings.populateEvolutions()
+		console.log("Gathering Pokemon Level Up Moves")
+		GameSettings.populateLevelUpMoves()
+		console.log("Storing Pokemon Names")
+		FileManager.writeTableToFile(GameSettings.names, namesPath)
+		console.log("Storing Pokemon Data")
+		FileManager.writeTableToFile(GameSettings.mons, monStatsPath)
+	end
+	if FileManager.fileExists(evolutionPoolPath) then
+		GameSettings.evolutionPool = FileManager.readTableFromFile(evolutionPoolPath)
+	else
+		console.log("Mapping Evolution Data")
+		GameSettings.mapEvolutions()
+		FileManager.writeTableToFile(GameSettings.evolutionPool, evolutionPoolPath)
+	end
+
+	if FileManager.fileExists(trainerClassesPath) then
+		GameSettings.trainerClassList = FileManager.readTableFromFile(trainerClassesPath)
+	else
+		console.log("Gathering Trainer Data 1/2")
 		GameSettings.populateTrainerClassNames()
+		FileManager.writeTableToFile(GameSettings.trainerClassList, trainerClassesPath)
+	end
+	
+	if FileManager.fileExists(trainersPath) and FileManager.fileExists(trainersByNamePath) then
+		GameSettings.trainers = FileManager.readTableFromFile(trainersPath)
+		GameSettings.trainersByName = FileManager.readTableFromFile(trainersByNamePath)
+	else
+		console.log("Gathering Trainer Data 2/2")
 		GameSettings.populateTrainerStats()
+		FileManager.writeTableToFile(GameSettings.trainers, trainersPath)
+		FileManager.writeTableToFile(GameSettings.trainersByName, trainersByNamePath)
 	end
 end
 
@@ -90,7 +183,7 @@ end
 function GameSettings.populatePokemonDetails()
 	local mons = {}
 	local names = {}
-	local numMons = 1234
+	local numMons = 1233
 	local monNameLength = 11
 	local monDataLength = 36
 	local nameOffset = 0
@@ -136,16 +229,16 @@ function GameSettings.populatePokemonDetails()
 		mon.unknown4 = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 35) -- Unsure values 0-39
 		-- Create a way of tracking variants
 		mon.isVariant = i > 905
-		address = GameSettings.pokemonNameTable + nameOffset
+		address = GameSettings.pokemonNameTable + nameOffset 
 		
 		if mon.isVariant then
-			mon.variant = variantCounter
 			if name == prevName then
 				variantCounter = variantCounter + 1
 			else
 				variantCounter = 1
 			end
 			name = PokemonData.variants[i - 905]
+			mon.variant = variantCounter
 		else
 			name = Utils.toString(address, monNameLength)
 			mon.variant = 0
@@ -154,7 +247,19 @@ function GameSettings.populatePokemonDetails()
 		names[i] = name
 		prevName = name
 	end
-	return {mons, names}
+	GameSettings.mons = mons
+	GameSettings.names = names
+end
+function GameSettings.populateEvolutions()
+	for i = 1, #GameSettings.mons, 1 do
+		GameSettings.mons[i].evolutions = GameSettings.getEvolutions(i)
+	end
+	GameSettings.mapEvolutions()
+end
+function GameSettings.populateLevelUpMoves()
+	for i = 1, #GameSettings.mons, 1 do
+		GameSettings.mons[i].levelUpMoves = GameSettings.getLevelUpMoves(i)
+	end
 end
 
 ---Gets the ROM name as defined by the emulator, or an empty string if not found
@@ -175,13 +280,13 @@ function GameSettings.populateMoveData()
 	local moveNameAddress = GameSettings.moveNameTable
 	local moveDataAddress = GameSettings.moveDataTable
 	local name = ""
-	local data = {}
 	local nameAddress =  moveNameAddress
 	local moveAddress = moveDataAddress
 	local iNameOffset = 0
 	local iMoveOffset = 0
-	GameSettings.moves = {}
-	GameSettings.moves.names = {}
+	GameSettings.moves = {
+		['names'] = {}
+	}
 	for i = 1, moveCount, 1 do
 		iNameOffset = (i-1) * nameLength
 		nameAddress = moveNameAddress + iNameOffset
@@ -267,4 +372,87 @@ function GameSettings.populateTrainerStats()
 	end
 	GameSettings.trainers = trainers
 	GameSettings.trainersByName = trainersByName
+end
+
+function GameSettings.getEvolutions(id)
+	local evolutions = {}
+	local baseAddress = GameSettings.monEvolutions + id * 80
+	local method = Memory.readword(baseAddress)
+	local i = 0
+	local monid = 0
+	local arg1 = 0
+	local methodtext = ""
+	while method > 0  and i < 10 do
+		monid = Memory.readword(baseAddress + 4 + i * 8)
+		arg1 = Memory.readword(baseAddress + 2 + i * 8)
+		method = Memory.readword(baseAddress + i * 8)
+		if GameSettings.evolutionMethods[method] ~= nil then
+			methodtext = GameSettings.evolutionMethods[method]
+		else
+			methodtext = tostring(method) -- failsafe
+		end
+		if method > 0 then
+			table.insert(evolutions,  {
+				['id'] = monid,
+				['method'] = methodtext,
+				['arg1'] = arg1
+			})
+		end
+		i = i + 1
+	end
+	return evolutions
+end
+
+function GameSettings.getLevelUpMoves(id)
+	local moves = {}
+	local baseAddress = Memory.readdword(GameSettings.movesByLevelUp + id * 4)
+	local moveID = Memory.readword(baseAddress)
+	local level = 0
+	local i = 0
+	while moveID <= 780 do
+		moveID = Memory.readword(baseAddress + i * 4)
+		if moveID <= 780 then
+			level = Memory.readbyte(baseAddress + 2 + i * 4)
+			if moves[level] == nil then
+				moves[level] = {}
+			end
+			table.insert(moves,{
+				[level] = moveID})
+			i = i + 1
+		end
+	end
+	return moves
+end
+
+function GameSettings.mapEvolutions()
+	local ids = {}
+	for i, mon in ipairs(GameSettings.mons) do
+		ids = {}
+			GameSettings.mapMonEvolutions(mon, i, ids)
+		table.insert(GameSettings.evolutionPool, ids)
+	end
+	for id, pool in ipairs(GameSettings.evolutionPool) do
+		if not Utils.isInTable(pool, id - 1) then
+			for _,currID in ipairs(pool) do
+				ids = {}
+				for _, monID in ipairs(pool) do
+					table.insert(ids, monID)
+				end
+				GameSettings.evolutionPool[currID] = ids
+			end
+		end
+	end
+end
+
+function GameSettings.mapMonEvolutions(mon, id, ids)
+	local evolutions = mon.evolutions
+	if #evolutions > 0 then
+		for _, evolution in ipairs(evolutions) do
+			if evolution.id ~= id  and evolution.id ~= 0 then
+				ids = GameSettings.mapMonEvolutions(GameSettings.mons[evolution.id], evolution.id, ids)
+			end
+		end
+	end
+	table.insert(ids, id)
+	return ids
 end

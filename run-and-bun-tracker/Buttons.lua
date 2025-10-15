@@ -85,7 +85,10 @@ Buttons = {
 		team = 1,
 		position = {4, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 40},
 		selectable = function(slot)
-			return Program.trainerPokemonTeam[slot].pkmID ~= 0
+			if Program.trainerPokemonTeam[slot] ~= nil then
+				return Program.trainerPokemonTeam[slot].pkmID ~= 0
+			end
+			return false
 		end
 	},
 	{

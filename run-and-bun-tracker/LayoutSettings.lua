@@ -22,13 +22,14 @@ LayoutSettings.menus = {
 		ENCOUNTERS = 3
 	},
 	encounters = {
-		items = {'GRASS', 'WATER', 'R.SMASH', 'FISHING'},
-		types = {'grass', 'water', 'rock Smash', 'fishing'},
+		items = {'GRASS', 'WATER', 'R.SMASH', 'FISHING', 'OTHER'},
+		types = {'grass', 'water', 'rock Smash', 'fishing', 'other'},
 		selecteditem = 1,
 		
 		GRASS = 1,
 		WATER = 2,
 		ROCKSMASH = 3,
-		FISHING = 4
+		FISHING = 4,
+		OTHER = 5
 	},
 }

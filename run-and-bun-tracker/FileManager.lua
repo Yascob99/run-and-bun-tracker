@@ -9,6 +9,7 @@ FileManager.Folders = {}
 
 FileManager.Folders.TrackerCode = "run-and-bun-tracker"
 FileManager.Folders.Images = FileManager.Folders.TrackerCode .. FileManager.slash .. "images"
+FileManager.Folders.Data = FileManager.Folders.TrackerCode .. FileManager.slash .. "data"
 FileManager.Folders.Pokemon = FileManager.Folders.Images .. FileManager.slash .. "pokemon"
 FileManager.Folders.RegularSprite = FileManager.Folders.Pokemon .. FileManager.slash .. "regular"
 FileManager.Folders.ShinySprite = FileManager.Folders.Pokemon .. FileManager.slash .. "shiny"
@@ -16,6 +17,7 @@ FileManager.Folders.Maps = FileManager.Folders.Images .. FileManager.slash .. "m
 FileManager.Folders.Player = FileManager.Folders.Images .. FileManager.slash .. "player"
 FileManager.Folders.Status = FileManager.Folders.Images .. FileManager.slash .. "status"
 FileManager.Folders.Type = FileManager.Folders.Images .. FileManager.slash .. "types"
+FileManager.Folders.Attempts =  FileManager.Folders.TrackerCode .. FileManager.slash .. "attempts"
 
 FileManager.Files = {
 	SETTINGS = "Settings.ini",
@@ -26,6 +28,7 @@ FileManager.Files = {
 	KNOWN_WORKING_DIR = FileManager.Folders.TrackerCode .. FileManager.slash .. "knownworkingdir.txt",
 	ENCOUNTER_LOG = FileManager.Folders.TrackerCode .. FileManager.slash .. "encounters.txt",
 	ENCOUNTER_CSV = FileManager.Folders.TrackerCode .. FileManager.slash .. "encounters.csv",
+	ATTEMPTS_LOG = FileManager.Folders.TrackerCode .. FileManager.slash .. "attempts.txt",
 	}
 	FileManager.LuaCode = {
 	-- First set of core files
@@ -101,7 +104,7 @@ function FileManager.getPartyPrint(mon)
 	str = str .. string.format("%s", PokemonData.nature[mon.nature] .. " Nature" .. string.format("\n"))
 	str = str .. string.format("IVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe", mon.hpIV, mon.attackIV, mon.defenseIV, mon.spAttackIV, mon.spDefenseIV, mon.speedIV) .. string.format("\n")
 	for i=1,4 do
-		local mv = PokemonData.move[mon.moves[i] + 1]
+		local mv = GameSettings.moves[mon.moves[i] + 1]
 		if(mv == "Hidden Power") then
             
 			str = str .. string.format("- Hidden Power %s\n", Program.getHP(mon))
@@ -128,7 +131,7 @@ function FileManager.getPCPrint(mon)
 	str = str .. string.format("%s", PokemonData.nature[mon.nature]) .. " Nature" .. string.format("\n")
 	str = str .. string.format("IVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe", mon.hpIV, mon.attackIV, mon.defenseIV, mon.spAttackIV, mon.spDefenseIV, mon.speedIV) .. string.format("\n")
 	for i=1,4 do
-		local mv = PokemonData.move[mon.moves[i] + 1]
+		local mv = GameSettings.moves[mon.moves[i] + 1]
 		if(mv == "Hidden Power") then
 			str = str .. string.format("- Hidden Power %s\n", Program.getHP(mon))
 			else
@@ -739,14 +742,19 @@ function FileManager.setupEncounterLog()
 end
 
 --- Writes a table in dictionary formatting to a CSV file
----@param t table The table to write to a CSV. Should be in a {[string] = string,...} format. If not, the data will be converted to that format regardless of whether that makes sense or not.
+---@param t table? The table to write to a CSV if it's not empty. Should be in a {[string] = string,...} format. If not, the data will be converted to that format regardless of whether that makes sense or not.
 ---@param filepath string The filepath of the CSV to write to
 ---@param orderby? table Optional, an indexed list of strings(one dimensional) that is used to define the order that the dict is written to the CSV
 function FileManager.writeTabletoCSV(t, filepath, orderby)
   	orderby = orderby or nil
+	t = t or nil
 	-- if the file path is not proper, or the filepath has the wrong extensions, write to the error log and exit.
 	if filepath == nil or filepath == "" or string.lower(FileManager.extractFileExtensionFromPath(filepath)) ~= "csv" then
 		FileManager.logError("Invalid Path for CSV: " .. filepath)
+		return
+	end
+	if t == nil then
+		FileManager.logError("Provided table is empty cannote write nothing to a file")
 		return
 	end
 	-- Use the absolute path of the file to prevent errors.
@@ -818,4 +826,21 @@ function FileManager.escapeCharsCSV(str)
 		return '"' .. str .. '"'
 	end
 	return str
+end
+--- Saves values to a file to be loaded later on.
+---@param filepath string
+---@param ... any
+function FileManager.SaveValues(filepath, ...)
+	local values = table.pack(...)
+	if #values > 0 then
+		FileManager.writeTableToFile(values, filepath)
+	end
+end
+
+--- Loads values from a file.
+---@param filepath string
+---@return ... unpacked list of values from the first level of a table
+function FileManager.loadValues(filepath)
+	local values = FileManager.readTableFromFile(filepath) or {}
+	return table.unpack(values)
 end

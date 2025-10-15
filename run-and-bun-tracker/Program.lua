@@ -5,10 +5,13 @@ Program = {
 	trainerPokemonTeam = {},
 	enemyPokemonTeam = {},
 	trainerInfo = {},
-	isInBattle = false,
 	inTrainersView = false,
-	isWildEncounter = false,
-	hasRunOnce = false
+	hasRunOnce = false,
+	runCounter = 0,
+	startingNewRun = false,
+	lostRun = false,
+	awaitingLoad = false,
+	isNewRun = false,
 }
 Program.rng = {
 	current = 0,
@@ -48,28 +51,60 @@ Program.catchdata = {
 
 -- Main loop for the program. This is run every 10 frames currently (called in Main.).
 function Program.mainLoop()
-	if GameSettings.isRomLoaded() then
-		Program.trainerPokemonTeam = Program.getTrainerData(1)
-		Program.trainerInfo = Program.getTrainerInfo()
+	if GameSettings.isRomLoaded() then -- wait until the rom is loaded
+		Battle.update()
+		if Program.isValidMapLocation() then
+			if Program.isNewRun then
+				if Memory.readword(GameSettings.gPlayerPartyCount) > 0 then
+					Program.isNewRun = false
+				end
+			end
+			Program.trainerPokemonTeam = Program.getTrainerData(1)
+			Program.trainerInfo = Program.getTrainerInfo()
 
-		-- Displays pokemon data on the right if there is a pokemon in the party in slot 1.
-		if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then 
-			local pokemonaux = Program.getPokemonData(LayoutSettings.pokemonIndex)
-			Program.selectedPokemon = pokemonaux
-			Drawing.drawPokemonView()
+			-- Displays pokemon data on the right if there is a pokemon in the party in slot 1.
+			if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then 
+				local pokemonaux = Program.getPokemonData(LayoutSettings.pokemonIndex)
+				Program.selectedPokemon = pokemonaux
+				Drawing.drawPokemonView()
+			end
+			-- Draws the Map if required.
+			if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.MAP then
+				Drawing.drawMap()
+			end
+			-- Draws encounters if on tab
+			if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.ENCOUNTERS then
+				Drawing.drawEncounters()
+			end
+			Drawing.drawButtons()
+			Drawing.drawLayout()
+		else
+			Drawing.drawLayout()
 		end
-		-- Draws the Map if required.
-		if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.MAP then
-			Drawing.drawMap()
+		if not Program.hasRunOnce then
+			if Program.isValidMapLocation() and not Program.isNewRun then
+				local dataLoaded = Program.Load()
+				if (dataLoaded) then
+					Program.hasRunOnce = true
+					Program.awaitingLoad = false
+				end
+				console.log("Attempt Data Loaded")
+			elseif not Program.awaitingLoad and not Program.isNewRun then
+				Program.awaitingLoad = true
+				Program.hasRunOnce = true
+				console.log("Waiting for Save File to be loaded")
+			elseif Program.isNewRun then
+				Program.hasRunOnce = true
+			end
+		elseif Program.isValidMapLocation() and not Program.isNewRun and Program.awaitingLoad then
+			local dataLoaded = Program.Load()
+			if (dataLoaded) then
+				Program.awaitingLoad = false
+			end
+			console.log("Attempt Data Loaded")
 		end
-		-- Draws encounters if on tab
-		if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.ENCOUNTERS then
-			Drawing.drawEncounters()
-		end
-		Drawing.drawButtons()
-		Drawing.drawLayout()
 	else
-		print ("No rom currently loaded")
+		console.log("No rom currently loaded")
 	end
 end
 
@@ -484,30 +519,30 @@ function Program.getMonID(address)
 	return Utils.getbits(growth, 0, 16)
 end
 
---- Returns true if the trainer has been defeated by the player; false otherwise
---- @param trainerId number
---- @param saveBlock1Addr number? (Optional) Include the SaveBlock 1 address if known to avoid extra memory reads
---- @return boolean isDefeated
-function Program.hasDefeatedTrainer(trainerId, saveBlock1Addr)
-	-- Don't reveal defeated trainers if player isn't actively playing the game (e.g. title screen w/ old save data)
-	if not Map.isValidMapLocation() then
-		return false
-	end
-	saveBlock1Addr = saveBlock1Addr or Utils.getSaveBlock1Addr()
-	local idAddrOffset = math.floor((0x500 + trainerId) / 8)
-	local idBit = (0x500 + trainerId) % 8
-	local trainerFlagAddr = saveBlock1Addr + 1270 + idAddrOffset
-	local result = Memory.readbyte(trainerFlagAddr)
-	return Utils.getbits(result, idBit, 1) ~= 0
-end
+--- Returns true if the trainer has been defeated by the player; false otherwise (couldn't get this to work, probably some offset changes)
+-- function Program.hasDefeatedTrainer(trainerId, saveBlock1Addr)
+-- 	-- Don't reveal defeated trainers if player isn't actively playing the game (e.g. title screen w/ old save data)
+-- 	-- if not Map.isValidMapLocation() then
+-- 	--	return false
+-- 	-- end
+-- 	saveBlock1Addr = saveBlock1Addr or Utils.getSaveBlock1Addr()
+-- 	local idAddrOffset = math.floor((0x500 + trainerId) / 8)
+-- 	local idBit = (0x500 + trainerId) % 8
+-- 	local trainerFlagAddr = saveBlock1Addr + 4720 + idAddrOffset
+-- 	console.log(string.format("%X", trainerFlagAddr))
+-- 	local result = Memory.readbyte(trainerFlagAddr)
+-- 	return Utils.getbits(result, idBit, 1) ~= 0
+-- end
 
 ---Returns 1, 2, or 3 depending on game.
----FRLG: 1=Bulbasaur (left), 2=Squirtle (middle), 3=Charmander (right)
----RSE: 1=Treecko (left), 2=Torchic (middle), 3=Mudkip (right)
+---1==Piplup (right), 2=Turtwig (left), 3=Chimchar (middle) (the order gets real fucked up by the mod)
 ---@return number starterChoice
 function Program.getStarterChoice()
-	local saveblock1Addr = Utils.getSaveBlock1Addr()
-	return 1 + Memory.readbyte(saveblock1Addr + 5090)
+	local starters = {393, 387, 390}
+	if  Utils.isInTable(starters, Battle.starterChoice) then
+		return Utils.indexOf(starters, Battle.starterChoice)
+	end
+	return 0
 end
 
 --- Returns the Rivals trainer ID for the first fight. Depends on playergender and the starterChoice
@@ -560,4 +595,136 @@ function Program.checkForBalls()
 		return true
 	end
 	return false
+end
+
+---Returns a byte such that each badge is a bit packed into the byte. 1st badge is least-significant bit (position 0)
+---@return number badgeBits
+function Program.readBadgeBits()
+	-- Don't bother checking badge data if in the pre-game intro screen (where old data exists)
+	if not Program.isValidMapLocation() then
+		return 0
+	end
+	local saveblock1Addr = Utils.getSaveBlock1Addr()
+	return Utils.getbits(Memory.readword(saveblock1Addr + 4988), 7, 8)
+end
+
+--- Returns the total number of badges obtained.
+---@return number badgeCount
+function Program.getBadgesObtained()
+	-- Don't bother checking badge data if in the pre-game intro screen (where old data exists)
+	if not Program.isValidMapLocation() then
+		return 0
+	end
+
+	local badgeBits = Program.readBadgeBits()
+	local badgecount = 0
+	for index = 1, 8, 1 do
+		local badgeState = Utils.getbits(badgeBits, index - 1, 1)
+		if badgeState == 1 then
+			badgecount = badgecount + 1
+		end
+	end
+	return badgecount
+end
+
+-- More or less used to determine if the player has begun playing the game, returns true if so.
+function Program.isValidMapLocation()
+	return Battle.mapID ~= nil and Battle.mapID ~= 0
+end
+
+function Program.Save()
+	if Encounters.encounters ~= nil then
+		Encounters.updateEncounterTracker(true)
+	end
+	local battle = {}
+	for key, value in pairs(Battle) do
+		if type(value) ~= "function" then
+			battle[key] = value
+		end
+	end
+	FileManager.writeTableToFile(table.pack(battle, Program.runCounter), FileManager.Files.CURRENT_ATTEMPT_DATA)
+end
+function Program.Load()
+	local attemptFolder = FileManager.Folders.Attempts .. FileManager.slash .. tostring(Program.runCounter)
+	if FileManager.folderExists(attemptFolder) then
+		FileManager.Folders.CurrentAttempt = attemptFolder
+		FileManager.Files.ENCOUNTER_LOG = attemptFolder .. FileManager.slash .. "Encounters.txt"
+		FileManager.Files.ENCOUNTER_CSV = attemptFolder .. FileManager.slash .. "Encounters.CSV"
+		FileManager.Files.CURRENT_ATTEMPT_DATA = attemptFolder ..  FileManager.slash .. "Attempt.txt"
+		local attemptData = FileManager.readTableFromFile(FileManager.Files.CURRENT_ATTEMPT_DATA)
+		if attemptData ~= nil then
+			local battle = attemptData[1]
+			local attempts = attemptData[2]
+			local matches = true
+			for key, value in Battle do
+				if key ~= "hasFoughtRival" and value ~=nil and key ~= "starterChoice" then
+					if battle ~= nil then
+						if battle[key] ~= value then
+							matches = false
+						else
+							matches = false
+						end
+					end
+				else
+					if battle ~= nil then
+						Battle[key] = battle[key]
+					end
+				end
+			end
+			if not matches then
+				console.log("Attempting to restore state due to mismatch with stored values")
+				Program.Save()
+			end
+			if Battle.hasFoughtRival then
+				Encounters.encounters = FileManager.readTableFromFile(FileManager.Files.ENCOUNTER_LOG)
+				if not matches then
+					Encounters.findPreviousEncounters()
+					Encounters.updateEncounterTracker(true)
+				end
+			end
+			if attempts ~= nil then
+				Program.runCOunter = attempts
+			else
+				local filepaths = FileManager.getFilesFromDirectory(FileManager.Folders.Attempts)
+				local attemptNumber = 0
+				local attemptFolder = nil
+				for _, file in ipairs(filepaths) do
+					attemptFolder = tonumber(file)
+					if attemptFolder ~= nil then
+						if attemptFolder > attemptNumber then
+							attemptNumber = attemptFolder
+						end
+					end
+				end
+				if attemptNumber == 0 then
+					console.log("No attempt data currently written, unable to load current attempt, starting new attempt")
+					Program.startNewAttempt()
+				end
+			end
+		else
+			console.log("No attempt data currently written, unable to load current attempt, starting new attempt")
+			Program.startNewAttempt()
+		end
+		
+	else
+		Program.startNewAttempt()
+		Program.Save()
+	end
+
+	return false
+end
+
+function Program.startNewAttempt()
+	if Program.hasRunOnce then
+		Program.hasRunOnce = false
+	end
+	Program.isNewRun = true
+	Program.runCounter = Program.runCounter + 1
+	local attemptFolder = FileManager.Folders.Attempts .. FileManager.slash .. tostring(Program.runCounter)
+	FileManager.Folders.CurrentAttempt = attemptFolder
+	FileManager.Files.ENCOUNTER_LOG = attemptFolder .. FileManager.slash .. "Encounters.txt"
+	FileManager.Files.ENCOUNTER_CSV = attemptFolder .. FileManager.slash .. "Encounters.CSV"
+	FileManager.Files.CURRENT_ATTEMPT_DATA = attemptFolder ..  FileManager.slash .. "Attempt.txt"
+	FileManager.createFolder(attemptFolder)
+	Program.Save()
 end
