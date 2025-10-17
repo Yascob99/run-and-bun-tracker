@@ -18,10 +18,10 @@ function Drawing.drawLayout()
 		0x00000000
 	) 
 	local location = PokemonData.map[Battle.regionID]
-	local encounterstatus = "Encounter Available"
+	local encounterstatus = "Encounter Available" .. " | Runs: " .. Program.runCounter
 	local color = 0xFF009D07
 	if not Encounters.isEncounterAvailable(location) then
-		encounterstatus = "Encounter Not Available"
+		encounterstatus = "Encounter Not Available" .. " | Runs: " .. Program.runCounter
 		color = 0xFF004D07
 	end
 	gui.drawRectangle(
@@ -301,18 +301,16 @@ function Drawing.drawEncounterTab(encounters, encounterType, map, numEncounters)
 	local bottomleftGap = 5
 	local topleftGap = 5
 	if encounters ~= nil then
+		local topOffset = offset * 6 /numEncounters
 		if numEncounters > 6 then
 			local isOdd = numEncounters%2 == 1
 			half = math.floor(numEncounters/2)
 			bottomOffset = offset * 6 / half
 			topOffset = bottomOffset
-			bottomleftGap = (Constants.Graphics.SCREEN_WIDTH - offset * half - 1 )/2
 			if isOdd then
 				half = half + 1
 				topOffset = offset * 6 / half
 			end
-			bottomShift = half - numEncounters - 1
-			topleftGap = (Constants.Graphics.SCREEN_WIDTH - offset * half)/2
 		end
 		
 		local i = 0
@@ -323,31 +321,22 @@ function Drawing.drawEncounterTab(encounters, encounterType, map, numEncounters)
 				levels = levels .. "-" .. data.highlevel
 			end
 			if i < half then
-				Drawing.drawPokemonIconByName(name, topleftGap + (i) * topOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 60)
-				gui.drawText(topleftGap + (i) * topOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 46,levels  ,"white", 0x00000000, 10,"Lucida Console")
-				gui.drawText(topleftGap + (i) * topOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 100,data.rate .. "%" ,"white", 0x00000000, 10,"Lucida Console")
+				Drawing.drawPokemonIconByName(name, 5+ (i) * topOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 60)
+				gui.drawText(5 + (i) * topOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 46,levels  ,"white", 0x00000000, 10,"Lucida Console")
+				gui.drawText(5 + (i) * topOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 100,data.rate .. "%" ,"white", 0x00000000, 10,"Lucida Console")
 			else
-				Drawing.drawPokemonIconByName(name, bottomleftGap + (i-6) * bottomOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 130)
-				gui.drawText(bottomleftGap + (i + bottomShift) * bottomOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 116,levels  ,"white", 0x00000000, 10,"Lucida Console")
-				gui.drawText(bottomleftGap + (i + bottomShift) * bottomOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 170,data.rate .. "%" ,"white", 0x00000000, 10,"Lucida Console")
+				Drawing.drawPokemonIconByName(name, 5+ (i-half) * bottomOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 130)
+				gui.drawText(5 + (i - half) * bottomOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 116,levels  ,"white", 0x00000000, 10,"Lucida Console")
+				gui.drawText(5 + (i - half) * bottomOffset, Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + 170,data.rate .. "%" ,"white", 0x00000000, 10,"Lucida Console")
 			end
 			i = i + 1
 		end
 	else
-		output = "No ".. encounterType .. " encounters in" 
+		output = "No ".. encounterType .. " encounters" 
 		gui.drawText(
 			Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output) + 5) * 3),
 			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2,
 			output,
-			"white",
-			0x00000000,
-			10,
-			"Lucida Console"
-		)
-		gui.drawText(
-			Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(map) + 5) * 3),
-			12 + Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2,
-			map,
 			"white",
 			0x00000000,
 			10,
@@ -525,3 +514,21 @@ function Drawing.drawButtons()
 end
 
 
+function Drawing.drawNewRunScreen()
+	output = "New Run Started! To start a new attempt" 
+		gui.drawText(
+			Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output) + 5) * 3),
+			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2,
+			output,
+			"white",
+			0x00000000,
+			10,
+			"Lucida Console"
+		)
+end
+
+function Drawing.drawGameOverScreen()
+end
+
+function Drawing.drawAwaitingLoad()
+end

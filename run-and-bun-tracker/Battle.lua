@@ -21,10 +21,12 @@ function Battle.update()
     Battle.regionID = Map.regionDict[Battle.mapID]
     Battle.prevLocation = Battle.location
     Battle.location = Map.names[Battle.regionID]
+    if Battle.prevLocation ~= Battle.location then -- on moving regions
+        Battle.lastLocation = Battle.prevLocation
+    end
     -- None of this needs to run until an event happens.
-    if Program.isValidMapLocation() and not Program.isNewRun then
+    if Program.isValidMapLocation() and not Program.isNewRun and not Program.awaitingLoad then
         if Battle.prevLocation ~= Battle.location then -- on moving regions
-            Battle.lastLocation = Battle.prevLocation 
             if (Battle.lastLocation == "Mauville City" and Encounters.encounters["Mauville City"] == nil) or (Battle.lastLocation == "Route 119" and Encounters.encounters["Route 119"]) then -- Handle gift mons
                 Encounters.findPreviousEncounters() -- No way to do this cleanly other than fully checking each mon.
                 Encounters.updateEncounterTracker()
@@ -46,13 +48,14 @@ function Battle.update()
             Program.outOfBattleLoop()
         end
     end
-end
+ end
 
 --- Runs once after a battle has started.
 function Battle.battleStart()
     Battle.isInBattle = true
 	Battle.isWildEncounter = Utils.getbits(Battle.battleFlags, 3, 1) == 0
 	Program.enemyPokemonTeam = Program.getTrainerData(2)
+    Program.Save()
 end
 
 --- Runs once at the end of a battle

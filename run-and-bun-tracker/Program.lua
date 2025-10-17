@@ -8,46 +8,11 @@ Program = {
 	inTrainersView = false,
 	hasRunOnce = false,
 	runCounter = 0,
-	startingNewRun = false,
 	lostRun = false,
-	awaitingLoad = false,
+	awaitingLoad = true,
 	isNewRun = false,
-	frames = 0
-}
-Program.rng = {
-	current = 0,
-	previous = 0,
-	grid = {}
-}
-Program.map = {
-	id = 0,
-	encounters = {
-		{
-			encrate = -1,
-			SLOTS = 12,
-			RATES = {20,20,10,10,10,10,5,5,4,4,1,1}
-		},
-		{
-			encrate = -1,
-			SLOTS = 5,
-			RATES = {60,30,5,4,1}
-		},
-		{
-			encrate = -1,
-			SLOTS = 5,
-			RATES = {60,30,5,4,1}
-		}
-	}
-}
-Program.catchdata = {
-	pokemon = 1,
-	curHP = 20,
-	maxHP = 20,
-	level = 5,
-	ball = 4,
-	status = 0,
-	rng = 0,
-	rate = 0
+	frames = 0,
+	initialLoad
 }
 
 -- Main loop for the program. This is run every 10 frames currently (called in Main.).
@@ -55,57 +20,73 @@ function Program.mainLoop()
 	if GameSettings.isRomLoaded() then -- wait until the rom is loaded
 		Battle.update()
 		if Program.isValidMapLocation() then
-			if Program.isNewRun then
-				if Memory.readword(GameSettings.gPlayerPartyCount) > 0 then
-					Program.isNewRun = false
-				end
-			end
 			Program.trainerPokemonTeam = Program.getTrainerData(1)
 			Program.trainerInfo = Program.getTrainerInfo()
-
-			-- Displays pokemon data on the right if there is a pokemon in the party in slot 1.
-			if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then 
-				local pokemonaux = Program.getPokemonData(LayoutSettings.pokemonIndex)
-				Program.selectedPokemon = pokemonaux
-				Drawing.drawPokemonView()
+			if (Program.awaitingLoad and Battle.lastLocation == 0) or (Program.initialLoad and Program.awaitingLoad) then
+        		local dataLoaded = Program.Load()
+        		if (dataLoaded) then
+            		Program.hasRunOnce = true
+           	 		Program.awaitingLoad = false
+					Program.initialLoad = false
+				end
 			end
-			-- Draws the Map if required.
-			if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.MAP then
-				Drawing.drawMap()
+			if Program.isNewRun then
+				Drawing.drawLayout()
+				Drawing.drawNewRunScreen()
+			else
+				-- Displays pokemon data on the right if there is a pokemon in the party in slot 1.
+				if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then 
+					local pokemonaux = Program.getPokemonData(LayoutSettings.pokemonIndex)
+					Program.selectedPokemon = pokemonaux
+					Drawing.drawPokemonView()
+				end
+				-- Draws the Map if required.
+				if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.MAP then
+					Drawing.drawMap()
+				end
+				-- Draws encounters if on tab
+				if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.ENCOUNTERS then
+					Drawing.drawEncounters()
+				end
+				Drawing.drawButtons()
+				Drawing.drawLayout()
 			end
-			-- Draws encounters if on tab
-			if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.ENCOUNTERS then
-				Drawing.drawEncounters()
-			end
-			Drawing.drawButtons()
-			Drawing.drawLayout()
 		else
-			Drawing.drawLayout()
+			if Program.isNewRun then
+				Drawing.drawLayout()
+				Drawing.drawNewRunScreen()
+			else
+				Drawing.drawLayout()
+				Drawing.drawAwaitingLoad()
+			end
 		end
 		if not Program.hasRunOnce then
-			if Program.isValidMapLocation() and not Program.isNewRun then
+			if not Program.awaitingLoad and Program.isNewRun then
+				Program.awaitingLoad = true
+				Program.hasRunOnce = true
+				console.log("Waiting for Save File to be loaded")
+			elseif Program.isValidMapLocation() and not Program.isNewRun and Program.awaitingLoad then
 				local dataLoaded = Program.Load()
 				if (dataLoaded) then
 					Program.hasRunOnce = true
 					Program.awaitingLoad = false
 				end
-				console.log("Attempt Data Loaded")
-			elseif not Program.awaitingLoad and not Program.isNewRun then
-				Program.awaitingLoad = true
-				Program.hasRunOnce = true
-				console.log("Waiting for Save File to be loaded")
 			elseif Program.isNewRun then
 				Program.hasRunOnce = true
 			end
-		elseif Program.isValidMapLocation() and not Program.isNewRun and Program.awaitingLoad then
-			local dataLoaded = Program.Load()
-			if (dataLoaded) then
-				Program.awaitingLoad = false
-			end
-			console.log("Attempt Data Loaded")
 		end
 	else
 		console.log("No rom currently loaded")
+	end
+end
+
+function Program.loadNewFile()
+	if Program.awaitingLoad and Program.isNewRun then
+		local dataLoaded = Program.Load()
+		if (dataLoaded) then
+			Program.awaitingLoad = false
+			Program.isNewRun = false
+		end
 	end
 end
 
@@ -119,10 +100,10 @@ function Program.getTrainerInfo()
 	local trainer = GameSettings.trainerpointer
 	if Memory.readbyte(trainer) == 0 then
 		return {
-			gender = -1,
+			gender = -1, -- Set to negative to clarify that it is not set
 			tid = 0,
 			sid = 0,
-			sKey = nil
+			sKey = nil -- The security key (used for specific decryptions)
 		}
 	else
 		return {
@@ -135,50 +116,50 @@ function Program.getTrainerInfo()
 end
 
 -- Not currently used, but maintained for if it's wanted as a feature later.
-function Program.updateCatchData()
-	if LayoutSettings.menus.catch.selecteditem == LayoutSettings.menus.catch.AUTO then
-		local pokemonaux = Program.getPokemonData({player = 2, slot = 1})
-		Program.catchdata.pokemon = pokemonaux.pokemonID
-		Program.catchdata.curHP = pokemonaux.curHP 
-		Program.catchdata.maxHP = pokemonaux.maxHP 
-		Program.catchdata.level = pokemonaux.level
-		Program.catchdata.status = pokemonaux.status
-	end
+-- function Program.updateCatchData()
+-- 	if LayoutSettings.menus.catch.selecteditem == LayoutSettings.menus.catch.AUTO then
+-- 		local pokemonaux = Program.getPokemonData({player = 2, slot = 1})
+-- 		Program.catchdata.pokemon = pokemonaux.pokemonID
+-- 		Program.catchdata.curHP = pokemonaux.curHP 
+-- 		Program.catchdata.maxHP = pokemonaux.maxHP 
+-- 		Program.catchdata.level = pokemonaux.level
+-- 		Program.catchdata.status = pokemonaux.status
+-- 	end
 	
-	local m = Program.catchdata.maxHP
-	local h = Program.catchdata.curHP
-	local c = PokemonData.catchrate[Program.catchdata.pokemon + 1]
+-- 	local m = Program.catchdata.maxHP
+-- 	local h = Program.catchdata.curHP
+-- 	local c = PokemonData.catchrate[Program.catchdata.pokemon + 1]
 	
-	local s = 1
-	if Program.catchdata.status == 1 or Program.catchdata.status == 4 then
-		s = 2
-	elseif Program.catchdata.status > 1 then
-		s = 1.5
-	end
+-- 	local s = 1
+-- 	if Program.catchdata.status == 1 or Program.catchdata.status == 4 then
+-- 		s = 2
+-- 	elseif Program.catchdata.status > 1 then
+-- 		s = 1.5
+-- 	end
 	
-	local b = 1
-	if Program.catchdata.ball == 2 then
-	elseif Program.catchdata.ball == 2 then
-		b = 1.5
-	elseif Program.catchdata.ball == 3 then
-		b = 1.5
-	elseif Program.catchdata.ball == 5 then
-		b = 1.5
-	end
+-- 	local b = 1
+-- 	if Program.catchdata.ball == 2 then
+-- 	elseif Program.catchdata.ball == 2 then
+-- 		b = 1.5
+-- 	elseif Program.catchdata.ball == 3 then
+-- 		b = 1.5
+-- 	elseif Program.catchdata.ball == 5 then
+-- 		b = 1.5
+-- 	end
 	
-	local x = math.floor((3 * m - 2 * h) * math.floor(c * b))
-	x = math.floor(x / (3*m))
-	x = math.floor(x * s)
+-- 	local x = math.floor((3 * m - 2 * h) * math.floor(c * b))
+-- 	x = math.floor(x / (3*m))
+-- 	x = math.floor(x * s)
 	
-	local y = 65536
-	if (x < 255 and Program.catchdata.ball > 1) then		
-		y = math.floor(math.sqrt(16711680 / x))
-		y = math.floor(math.sqrt(y))
-		y = math.floor(1048560 / y)
-	end
-	Program.catchdata.rng = y
-	Program.catchdata.rate = (y/65536) * (y/65536) * (y/65536) * (y/65536)
-end
+-- 	local y = 65536
+-- 	if (x < 255 and Program.catchdata.ball > 1) then		
+-- 		y = math.floor(math.sqrt(16711680 / x))
+-- 		y = math.floor(math.sqrt(y))
+-- 		y = math.floor(1048560 / y)
+-- 	end
+-- 	Program.catchdata.rng = y
+-- 	Program.catchdata.rate = (y/65536) * (y/65536) * (y/65536) * (y/65536)
+-- end
 
 -- gets a blank trainer with blank pokemon data
 function Program.getBlankTrainerData()
@@ -197,7 +178,7 @@ function Program.getBlankTrainerData()
 	return trainerdata
 end
 
--- Based on the original tracker with some code from Ironmon tracker for determining Shinyness
+-- -- Based on the original tracker with some code from Ironmon tracker for determining Shinyness
 function Program.getTrainerData(index)
 	local trainerdata = {}
 	local st = 0
@@ -540,6 +521,8 @@ end
 ---@return number starterChoice
 function Program.getStarterChoice()
 	local starters = {393, 387, 390}
+	for _, starter in pairs(starters) do
+		if Encounter.isInPool()
 	if  Utils.isInTable(starters, Battle.starterChoice) then
 		return Utils.indexOf(starters, Battle.starterChoice)
 	end
@@ -643,9 +626,25 @@ function Program.Save()
 			battle[key] = value
 		end
 	end
-	FileManager.writeTableToFile(table.pack(battle, Program.runCounter), FileManager.Files.CURRENT_ATTEMPT_DATA)
+	FileManager.writeTableToFile(table.pack(battle), FileManager.Files.CURRENT_ATTEMPT_DATA)
 end
 function Program.Load()
+	local filepaths = FileManager.getFilesFromDirectory(FileManager.Folders.Attempts)
+	local attemptNumber = 0
+	local attemptFolder = nil
+	for _, file in ipairs(filepaths) do
+		attemptFolder = tonumber(file)
+		if attemptFolder ~= nil then
+			if attemptFolder > attemptNumber then
+				attemptNumber = attemptFolder
+			end
+		end
+	end
+	if attemptNumber > 0 then
+		Program.runCounter = attemptNumber
+	else
+		Program.runCounter = 1
+	end
 	local attemptFolder = FileManager.Folders.Attempts .. FileManager.slash .. tostring(Program.runCounter)
 	if FileManager.folderExists(attemptFolder) then
 		FileManager.Folders.CurrentAttempt = attemptFolder
@@ -655,25 +654,19 @@ function Program.Load()
 		local attemptData = FileManager.readTableFromFile(FileManager.Files.CURRENT_ATTEMPT_DATA)
 		if attemptData ~= nil then
 			local battle = attemptData[1]
-			local attempts = attemptData[2]
 			local matches = true
-			for key, value in Battle do
-				if key ~= "hasFoughtRival" and value ~=nil and key ~= "starterChoice" then
-					if battle ~= nil then
-						if battle[key] ~= value then
-							matches = false
-						else
+			if battle ~= nil then
+				for key, value in pairs(battle) do
+					if key ~= "hasFoughtRival" and value ~=nil and key ~= "starterChoice" then
+						if Battle[key] ~= value then
 							matches = false
 						end
-					end
-				else
-					if battle ~= nil then
+					else
 						Battle[key] = battle[key]
 					end
 				end
 			end
 			if not matches then
-				console.log("Attempting to restore state due to mismatch with stored values")
 				Program.Save()
 			end
 			if Battle.hasFoughtRival then
@@ -683,49 +676,41 @@ function Program.Load()
 					Encounters.updateEncounterTracker(true)
 				end
 			end
-			if attempts ~= nil then
-				Program.runCOunter = attempts
-			else
-				local filepaths = FileManager.getFilesFromDirectory(FileManager.Folders.Attempts)
-				local attemptNumber = 0
-				local attemptFolder = nil
-				for _, file in ipairs(filepaths) do
-					attemptFolder = tonumber(file)
-					if attemptFolder ~= nil then
-						if attemptFolder > attemptNumber then
-							attemptNumber = attemptFolder
-						end
-					end
-				end
-				if attemptNumber == 0 then
-					console.log("No attempt data currently written, unable to load current attempt, starting new attempt")
-					Program.startNewAttempt()
-				end
-			end
 		else
-			console.log("No attempt data currently written, unable to load current attempt, starting new attempt")
-			Program.startNewAttempt()
+			console.log("No attempt data currently written, unable to load current attempt.")
+			Program.startNewAttempt(true)
+			return true
 		end
 		
 	else
-		Program.startNewAttempt()
-		Program.Save()
+		console.log("No attempt data currently written, unable to load current attempt.")
+		Program.startNewAttempt(true)
+		return true
 	end
 
 	return false
 end
 
-function Program.startNewAttempt()
-	if Program.hasRunOnce then
-		Program.hasRunOnce = false
+function Program.startNewAttempt(firstAttempt)
+	firstAttempt = firstAttempt or false
+	console.log("Starting new run")
+	if not firstAttempt then
+		Program.isNewRun = true
+		Program.runCounter = Program.runCounter + 1
 	end
-	Program.isNewRun = true
-	Program.runCounter = Program.runCounter + 1
+	Program.hasRunOnce = false
 	local attemptFolder = FileManager.Folders.Attempts .. FileManager.slash .. tostring(Program.runCounter)
 	FileManager.Folders.CurrentAttempt = attemptFolder
 	FileManager.Files.ENCOUNTER_LOG = attemptFolder .. FileManager.slash .. "Encounters.txt"
 	FileManager.Files.ENCOUNTER_CSV = attemptFolder .. FileManager.slash .. "Encounters.CSV"
 	FileManager.Files.CURRENT_ATTEMPT_DATA = attemptFolder ..  FileManager.slash .. "Attempt.txt"
 	FileManager.createFolder(attemptFolder)
+	if Memory.readword(GameSettings.gPlayerPartyCount) > 1 then
+		Battle.hasFoughtRival = true
+	end
+	if Program.trainerPokemonTeam[1].pkmID ~= 0 then
+		console.log("Trying to load previous Encounters")
+		Encounters.findPreviousEncounters()
+	end
 	Program.Save()
 end

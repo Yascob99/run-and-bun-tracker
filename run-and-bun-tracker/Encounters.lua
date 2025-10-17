@@ -224,6 +224,8 @@ function Encounters.findPreviousEncounters()
                 local starter = starters[Program.getStarterChoice()] or nil
                 if starter ~= nil then
                     Encounters.tryAddEncounter("Starter",starters[Program.getStarterChoice()])
+                else
+                    Encounters.tryAddEncounter()
                 end
             else
                 Encounters.tryAddEncounter(location, id)
@@ -345,7 +347,8 @@ function Encounters.getEncounterData()
                     length = 3
                 end
                 grassAddress = Memory.readdword(grassAddress + 4) -- get the address the initial address points to
-                for j = 0, length, 1 do
+                local trueLength = length
+                for j = 0, length -1, 1 do
                     lowlevel = Memory.readbyte(grassAddress + 4 * j) -- 1 byte integer representing the lowest level the mon can appear at
                     highlevel = Memory.readbyte(grassAddress + 1 + 4 * j) -- 1 byte integer representing the highest level the mon can appear at
                     monName = GameSettings.names[Memory.readword(grassAddress + 2 + 4 * j)] -- 2 byte integer representing the mon's ID
@@ -353,6 +356,7 @@ function Encounters.getEncounterData()
                     if data ~= nil and monName ~= nil then
                         if data[monName] ~= nil then
                             data[monName]['rate'] = data[monName]['rate'] + rate -- if already storing mon coalate encounter rates.
+                            trueLength = trueLength -1
                         else
                             data[monName] = {}
                             data[monName]['rate'] = rate
@@ -369,8 +373,7 @@ function Encounters.getEncounterData()
                             }
                     end
                 end
-
-                Encounters.routeEncounters.land['lengths'][route] = length
+                Encounters.routeEncounters.land['lengths'][route] = trueLength
                 Encounters.routeEncounters.land['Keys'] = route
                 Encounters.routeEncounters.land[route] = data -- add the land encounters to the land table
             end
@@ -378,6 +381,7 @@ function Encounters.getEncounterData()
             surfAddress = Memory.readdword(addr + 8) -- 4 byte address that points to a location on rom
             if surfAddress ~= 0 then
                 surfAddress = Memory.readdword(surfAddress + 4) -- get the address the initial address points to
+                local trueLength = #Encounters.encounterGroups['surf_mons']
                 for j = 0, #Encounters.encounterGroups['surf_mons'] - 1, 1 do
                     lowlevel = Memory.readbyte(surfAddress + 4 * j) -- 2 byte integer representing the lowest level the mon can appear at
                     highlevel = Memory.readbyte(surfAddress + 1 + 4 * j) -- 2 byte integer representing the highest level the mon can appear at
@@ -386,6 +390,7 @@ function Encounters.getEncounterData()
                     if data ~= nil then
                         if data[monName] ~= nil then
                             data[monName]['rate'] = data[monName]['rate'] + rate -- if already storing mon coalate encounter rates.
+                             trueLength = trueLength -1
                         else
                             data[monName] = {}
                             data[monName]['rate'] = rate
@@ -402,13 +407,14 @@ function Encounters.getEncounterData()
                     end
                 end
                 Encounters.routeEncounters.surf[route] = data -- add the surf encounters to the surf table
-                Encounters.routeEncounters.surf['lengths'][route] = #Encounters.encounterGroups['surf_mons']
+                Encounters.routeEncounters.surf['lengths'][route] = trueLength
                 Encounters.routeEncounters.surf['keys'] = route
             end
             data = nil
             rockAddress = Memory.readdword(addr + 12) -- 4 byte address that points to a location on rom
             if rockAddress ~= 0 then
                 rockAddress = Memory.readdword(rockAddress + 4) -- get the address the initial address points to
+                local trueLength = #Encounters.encounterGroups['rock_smash_mons']
                 for j = 0, #Encounters.encounterGroups['rock_smash_mons'] - 1, 1 do
                     lowlevel = Memory.readbyte(rockAddress + 4 * j) -- 2 byte integer representing the lowest level the mon can appear at
                     highlevel = Memory.readbyte(rockAddress + 1 + 4 * j) -- 2 byte integer representing the highest level the mon can appear at
@@ -417,6 +423,7 @@ function Encounters.getEncounterData()
                     if data ~= nil then
                         if data[monName] ~= nil then
                             data[monName]['rate'] = data[monName]['rate'] + rate -- if already storing mon coalate encounter rates.
+                            trueLength = trueLength -1
                         else
                             data[monName] = {}
                             data[monName]['rate'] = rate
@@ -433,13 +440,14 @@ function Encounters.getEncounterData()
                     end
                 end
                 Encounters.routeEncounters.rock[route] = data -- add the rock smash encounters to the rock table
-                Encounters.routeEncounters.rock['lengths'][route] = #Encounters.encounterGroups['rock_smash_mons']
+                Encounters.routeEncounters.rock['lengths'][route] = trueLength
                 Encounters.routeEncounters.rock['Keys'] = route
             end
             data = nil
             fishAddress = Memory.readdword(addr + 16)
             if fishAddress ~= 0 then
                 fishAddress = Memory.readdword(fishAddress + 4) -- get the address the initial address points to
+                local trueLength = #Encounters.encounterGroups['fishing_mons']
                 for j = 0, #Encounters.encounterGroups['fishing_mons'] - 1, 1 do
                     lowlevel = Memory.readbyte(fishAddress + 4 * j) -- 2 byte integer representing the lowest level the mon can appear at
                     highlevel = Memory.readbyte(fishAddress + 1 + 4 * j) -- 2 byte integer representing the highest level the mon can appear at
@@ -448,6 +456,7 @@ function Encounters.getEncounterData()
                     if data ~= nil then
                         if data[monName] ~= nil then
                             data[monName]['rate'] = data[monName]['rate'] + rate -- if already storing mon coalate encounter rates.
+                            trueLength = trueLength -1
                         else
                             data[monName] = {}
                             data[monName]['rate'] = rate
@@ -464,7 +473,7 @@ function Encounters.getEncounterData()
                     end
                 end
                 Encounters.routeEncounters.fish[route] = data -- add the fishing encounters to the fish table
-                Encounters.routeEncounters.fish['lengths'][route] = #Encounters.encounterGroups['fishing_mons']
+                Encounters.routeEncounters.fish['lengths'][route] = trueLength
                 Encounters.routeEncounters.fish['Keys'] = route
             end
         else
@@ -488,9 +497,8 @@ function Encounters.doesMapHaveEncounters(location)
 end
 
 -- Tries to add an encounter to encounter tracker
-function Encounters.tryAddEncounter(location, id, missed, beatRival)
+function Encounters.tryAddEncounter(location, id, missed)
     missed = missed or false
-    beatRival = beatRival or Battle.hasFoughtRival
     local inPool = Encounters.isInPool(id)
     if Encounters.isEncounterAvailable(Battle.location) and not inPool then
         local name = GameSettings.names[id]

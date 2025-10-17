@@ -23,7 +23,7 @@ LayoutSettings.menus = {
 	},
 	encounters = {
 		items = {'GRASS', 'WATER', 'R.SMASH', 'FISHING', 'OTHER'},
-		types = {'grass', 'water', 'rock Smash', 'fishing', 'other'},
+		types = {'grass', 'water', 'rock smash', 'fishing', 'other'},
 		selecteditem = 1,
 		
 		GRASS = 1,
