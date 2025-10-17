@@ -16,7 +16,6 @@ Main.EMU = {
 	BIZHAWK29 = "Bizhawk 2.9", -- Lua 5.4
 	BIZHAWK_FUTURE = "Bizhawk Future", -- Lua 5.4
 }
-Main.frames = 0
 
 -- Returns false if an error occurs that completely prevents the Tracker from functioning; otherwise, returns true
 function Main.Initialize()
@@ -117,12 +116,12 @@ function Main.Run()
 		Program.Load()
 		-- Allow emulation until something needs to happen. Run main loop only every 10 frames. Input and should be run every frame for better responsiveness.
 		while not (Main.forceRestart) do
-			if Main.frames%10 == 0 then
+			if Program.frames%10 == 0 then
 				Program.mainLoop()
 			end
 			Input.update()
 			Main.frameAdvance()
-			Main.frames = Main.frames + 1
+			Program.frames = Program.frames + 1
 		end
 		if Main.forceRestart then
 			RunAndBunTracker.startTracker()

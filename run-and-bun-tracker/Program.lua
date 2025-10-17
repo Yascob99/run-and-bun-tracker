@@ -12,6 +12,7 @@ Program = {
 	lostRun = false,
 	awaitingLoad = false,
 	isNewRun = false,
+	frames = 0
 }
 Program.rng = {
 	current = 0,

@@ -1,7 +1,14 @@
 Input = {
 	mousetab = {},
-	mousetab_prev = {}
+	mousetab_prev = {},
+	prevJoypadInput = {},
+	allowNewRunCombo = false, -- Disable button combo for 1 second to prevents accidental, consecutive triggers
+	allowJoypad = true, -- Accepts input from Joypad controller; false will ignore joystick/buttons
+	resumeJoypad = false, -- Set to true to enable corresponding input on the next frame
+	TimeoutFrame = nil
+	
 }
+Input.OrderedControllerInputs = { "A", "B",  "Select",  "Start",  "Right",  "Left",  "Up",  "Down",  "R",  "L" }
 
 function Input.update()
 	Input.mousetab = input.getmouse()
@@ -11,6 +18,15 @@ function Input.update()
 		Input.check(xmouse, ymouse)
 	end
 	Input.mousetab_prev = Input.mousetab
+	if Input.allowJoypad then
+		Input.checkJoypadInput()
+	end
+
+	-- If instructed to resume input, do so after 1 frame of input checks, to prevent "resume into immediate input trigger"
+	if Input.resumeJoypad then
+		Input.resumeJoypad = false
+		Input.allowJoypad = true
+	end
 end
 
 function Input.check(xmouse, ymouse)
@@ -86,4 +102,29 @@ function Input.isInRange(xmouse,ymouse,x,y,xregion,yregion)
 		end
 	end
 	return false
+end
+
+function Input.checkJoypadInput()
+local joypad = Input.getJoypadInput()
+	if not Program.startingNewRun and Input.allowNewRunCombo then
+		local allpressed = true
+		for _, button in ipairs({"A", "B", "Start"}) do
+			if not joypad[button] then
+				allpressed = false
+				break -- breakout of loop if one of the buttons is currently not pressed.
+			end
+		end
+		if allpressed then
+			Input.TimeoutFrame = Program.frames + 60
+			Program.startNewAttempt()
+		end
+	end
+	Input.prevJoypadInput = joypad
+	-- 1 second timeout for the new run combo.
+	if not Input.allowNewRunCombo and Input.TimeoutFrame <= Program.frames then
+		Input.allowNewRunCombo  = true
+	end
+end
+function Input.getJoypadInput()
+	return joypad.get()
 end
