@@ -295,11 +295,7 @@ function Drawing.drawEncounterTab(encounters, encounterType, map, numEncounters)
 	local output = ""
 	local half = 6
 	local offset = 39
-	local topOffset = 39
 	local bottomOffset = 0
-	local bottomShift = 0
-	local bottomleftGap = 5
-	local topleftGap = 5
 	if encounters ~= nil then
 		local topOffset = offset * 6 /numEncounters
 		if numEncounters > 6 then
@@ -515,20 +511,51 @@ end
 
 
 function Drawing.drawNewRunScreen()
-	output = "New Run Started! To start a new attempt" 
-		gui.drawText(
-			Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output) + 5) * 3),
-			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2,
-			output,
-			"white",
-			0x00000000,
-			10,
-			"Lucida Console"
-		)
+	local output = "New Run Started!" 
+	gui.drawText(
+		Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output)) * 3),
+		Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2 - 20,
+		output,
+		"white",
+		0x00000000,
+		10,
+		"Lucida Console"
+	)
+	output = "Please reset or load a savestate."
+	gui.drawText(
+		Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output)) * 3),
+		Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2 - 8,
+		output,
+		"white",
+		0x00000000,
+		10,
+		"Lucida Console"
+	)
 end
 
 function Drawing.drawGameOverScreen()
+	local output = "Run Over"
+	gui.drawText(
+		Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output) + 5) * 3),
+		Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2,
+		output,
+		"white",
+		0x00000000,
+		10,
+		"Lucida Console"
+	)
+	
 end
 
 function Drawing.drawAwaitingLoad()
+	local output = "Please start/load a run" 
+	gui.drawText(
+		Constants.Graphics.SCREEN_WIDTH / 2 - ((string.len(output) + 5) * 3),
+		Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + (Constants.Graphics.DOWN_GAP + 12) / 2,
+		output,
+		"white",
+		0x00000000,
+		10,
+		"Lucida Console"
+	)
 end

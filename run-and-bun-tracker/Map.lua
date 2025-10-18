@@ -61,7 +61,7 @@ function Map.initialize()
 		local data = FileManager.readTableFromFile(mapPath) or {{}, {}, 0, {}}
 		Map.banks, Map.regionDict, Map.numMaps, Map.bankLengths = table.unpack(data)
 	else
-		console.log("Gathering Map Data")
+		print("Gathering Map Data")
 		Map.populateMapData()
 		FileManager.writeTableToFile(table.pack(Map.banks, Map.regionDict, Map.numMaps, Map.bankLengths), mapPath)
 	end
@@ -69,7 +69,7 @@ function Map.initialize()
 		local data = FileManager.readTableFromFile(mapDetailsPath) or {{}, {}}
 		Map.names, Map.details = table.unpack(data)
 	else
-		console.log("Gathering Map Details")
+		print("Gathering Map Details")
 		Map.populateMapDetails()
 		FileManager.writeTableToFile(table.pack(Map.names, Map.details), mapDetailsPath)
 	end

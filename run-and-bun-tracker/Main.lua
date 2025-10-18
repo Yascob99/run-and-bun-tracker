@@ -82,7 +82,7 @@ function Main.Run()
 			Main.frameAdvance()
 		end
 	end
-	console.log("Please wait, initializing Data")
+	print("Please wait, initializing Data")
 	GameSettings.initialize()
 
 	-- If the loaded game is unsupported, remove the Tracker padding but continue to let the game play.
@@ -113,6 +113,7 @@ function Main.Run()
 		client.SetGameExtraPadding(0, Constants.Graphics.UP_GAP, Constants.Graphics.RIGHT_GAP, Constants.Graphics.DOWN_GAP)
 		gui.defaultTextBackground(0)
 		event.onloadstate(Program.loadNewFile)
+		Program.runCounter = Program.readCurrentRuns()
 		-- Allow emulation until something needs to happen. Run main loop only every 10 frames. Input and should be run every frame for better responsiveness.
 		while not (Main.forceRestart) do
 			if Program.frames%10 == 0 then

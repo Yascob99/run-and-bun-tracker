@@ -29,6 +29,7 @@ FileManager.Files = {
 	ENCOUNTER_LOG = FileManager.Folders.TrackerCode .. FileManager.slash .. "encounters.txt",
 	ENCOUNTER_CSV = FileManager.Folders.TrackerCode .. FileManager.slash .. "encounters.csv",
 	ATTEMPTS_LOG = FileManager.Folders.TrackerCode .. FileManager.slash .. "attempts.txt",
+	RUNS_LOG = FileManager.Folders.TrackerCode .. FileManager.slash .. "Runs.txt"
 	}
 	FileManager.LuaCode = {
 	-- First set of core files
@@ -84,7 +85,7 @@ end
 function FileManager.getParty()
 	local party = {}
 	local monStart = GameSettings.pstats
-	for i = 1, Memory.readword(GameSettings.gPlayerPartyCount) do
+	for i = 1, Program.getPartyCount() do
 		party[i] = Program.getPokemonData({player = 1,slot = i})
 		monStart = monStart + 100
 	end
@@ -551,7 +552,7 @@ function FileManager.CopyFile(filepath, filepathCopy, overwriteOrAppend)
 
 	-- If the file exists but the option to overwrite/append was not specified, avoid altering the file
 	if FileManager.fileExists(filepathCopy) and not (overwriteOrAppend == "overwrite" or overwriteOrAppend == "append") then
-		-- print(string.format('Error: Unable to modify file "%s", no overwrite/append option specified.', filepathCopy))
+		print(string.format('Error: Unable to modify file "%s", no overwrite/append option specified.', filepathCopy))
 		return false
 	end
 
@@ -661,6 +662,32 @@ function FileManager.readLinesFromFile(filename)
 	file:close()
 
 	return lines
+end
+
+--- Writes a table of lines to a file
+---@param lines table A list of strings in the order that they should be printed.
+---@param filepath string The filepath of the file to write to.
+---@return boolean Success Returns true if successfully wrote lines to file.
+function FileManager.writeLinesToFile(lines, filepath)
+	if lines == nil then
+		return false -- no lines in file
+	end
+	local file = io.open(filepath, "w")
+	if file == nil then -- Filepath is invalid
+		return false
+	end
+	for i = 1, #lines, 1 do
+		-- only write lines that are strings
+		if type(lines[i]) == "string" then
+			file:write(lines[i])
+			if i ~= #lines then
+				file:write("\n")
+			end
+		end
+	end
+	file:flush()
+	file:close()
+	return true
 end
 
 --- Returns true if data is written to file, false if resulting json is empty, or nil if no file
@@ -802,16 +829,7 @@ function FileManager.writeTabletoCSV(t, filepath, orderby)
     	end
   	end
 	-- Writes to the csv file, erroring if there is an issue.
-	local file = io.open(filepath, "w")
-	if file == nil then
-		FileManager.logError("Error opening file:" .. filepath)
-		return
-	end
-	file:write(line1)
-	file:write("\n")
-	file:write(line2)
-	file:flush()
-	file:close()
+	FileManager.writeLinesToFile({line1, line2}, filepath)
 end
 
 --- Escapes any characters that require escaping before outputing to a csv file (commas and double quotes, and newlines)

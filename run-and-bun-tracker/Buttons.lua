@@ -53,7 +53,7 @@ Buttons = {
 	{
 		type = ButtonType.horizontalMenu,
 		visible = function()
-			return true
+			return not Program.lostRun
 		end,
 		model = 'main',
 		box = {
@@ -79,7 +79,7 @@ Buttons = {
 	{
 		type = ButtonType.pokemonteamMenu,
 		visible = function()
-			return LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.TRAINER
+			return LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.TRAINER and not Program.lostRun
 		end,
 		text = 'Player Data',
 		team = 1,
@@ -94,7 +94,7 @@ Buttons = {
 	{
 		type = ButtonType.pokemonteamMenu,
 		visible = function()
-			return LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.TRAINER and Battle.isInBattle
+			return LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.TRAINER and Battle.isInBattle and not Program.lostRun
 		end,
 		text = 'Enemy Data',
 		team = 2,
@@ -102,5 +102,47 @@ Buttons = {
 		selectable = function(slot)
 			return Program.enemyPokemonTeam[slot].pkmID ~= 0
 		end
-	}
+	},
+	{
+		type = ButtonType.singleButton,
+		visible = function()
+			return Program.lostRun
+		end,
+		text = 'Continue',
+		box = {
+			Constants.Graphics.SCREEN_WIDTH / 2 + 5,
+			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + Constants.Graphics.DOWN_GAP - 17,
+			70,
+			13
+		},
+		backgroundcolor = {0xFF00AAFF, 0xFF000055},
+		textcolor = 0xFF00AAFF,
+		onclick = function()
+			Program.lostRun = false
+			return
+		end
+	},
+	{
+		type = ButtonType.singleButton,
+		visible = function()
+			return Program.lostRun
+		end,
+		text = 'Start New Run',
+		box = {
+			Constants.Graphics.SCREEN_WIDTH / 2 - 75,
+			Constants.Graphics.UP_GAP + Constants.Graphics.SCREEN_HEIGHT + Constants.Graphics.DOWN_GAP - 17,
+			70,
+			13
+		},
+		backgroundcolor = {0xFF00AAFF, 0xFF000055},
+		textcolor = 0xFF00AAFF,
+		onclick = function()
+			Program.lostRun = false
+			Battle.update()
+			if Program.isValidMapLocation() then
+				Program.startNewAttempt()
+			end
+			return
+		end
+	},
 }			

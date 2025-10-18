@@ -212,20 +212,20 @@ function Encounters.findPreviousEncounters()
     if Encounters.encounters == nil then
         Encounters.encounters = {}
     end
-    for i = 1, Memory.readword(GameSettings.gPlayerPartyCount) do
-        mon = Program.trainerPokemonTeam[i]
+    for i = 1, Program.getPartyCount() do
+        mon = Program.getPokemonData({player = 1, slot = i})
         if mon ~= nil then
-            id = mon.id
+            id = mon.pokemonID
         end
-        if (id ~=0) then
+        if id ~=0 and id ~= nil then
             mon = Program.readPartyMon(partyAddress)
             location = Encounters.getSanitizedLocation(mon.metLocation)
             if location == "Starter" then
-                local starter = starters[Program.getStarterChoice()] or nil
-                if starter ~= nil then
-                    Encounters.tryAddEncounter("Starter",starters[Program.getStarterChoice()])
+                local starter = starters[Program.getStarterChoice()] or Program.getStarterbyEvolution(id)
+                if starter ~= 0 then
+                    Encounters.tryAddEncounter("Starter",starter)
                 else
-                    Encounters.tryAddEncounter()
+                   print("Error adding starter. Id did not match possible starters.") 
                 end
             else
                 Encounters.tryAddEncounter(location, id)
@@ -236,13 +236,15 @@ function Encounters.findPreviousEncounters()
     -- Boxes
     while i<420 do
         id = Program.getMonID(boxAddress)
-		if (id ~=0) then 
+		if id ~=0 and id ~= nil then 
 			mon = Program.readBoxMon(boxAddress)
             location = Encounters.getSanitizedLocation(mon.metLocation)
              if location == "Starter" then
-                local starter = starters[Program.getStarterChoice()] or nil
-                if starter ~= nil then
-                    Encounters.tryAddEncounter("Starter",starters[Program.getStarterChoice()])
+                local starter = starters[Program.getStarterChoice()] or Program.getStarterbyEvolution(id)
+                if starter ~= 0 then
+                    Encounters.tryAddEncounter("Starter",starter)
+                else
+                   print("Error adding starter. Id did not match possible starters.") 
                 end
             else
                 Encounters.tryAddEncounter(location, id)
@@ -255,9 +257,11 @@ end
 
 --- Checks if the encounter is available for this location based on the location provided
 --- @param location string The name of the region for this encounter.
+--- @param force? boolean Optional. If not provided defaults to if the rival has been fought
 --- @returns boolean isEncounterAvailable 
-function Encounters.isEncounterAvailable(location)
-    if Encounters.doesMapHaveEncounters(location) and Battle.hasFoughtRival then
+function Encounters.isEncounterAvailable(location, force)
+    local force = force or Battle.hasFoughtRival
+    if force and Encounters.doesMapHaveEncounters(location) then
         if Encounters.encounters ~= nil then
             if #Encounters.encounters == 1 then
                 return true
@@ -500,7 +504,7 @@ end
 function Encounters.tryAddEncounter(location, id, missed)
     missed = missed or false
     local inPool = Encounters.isInPool(id)
-    if Encounters.isEncounterAvailable(Battle.location) and not inPool then
+    if (location == "Starter" or Encounters.isEncounterAvailable(location)) and not inPool then
         local name = GameSettings.names[id]
         if missed then
             if Encounters.encounters == nil then
@@ -509,9 +513,11 @@ function Encounters.tryAddEncounter(location, id, missed)
             name = name .. "-Missed"
             Encounters.encounters[location] = name
         else
-            if Encounters.encounters == nil then
+            if Encounters.encounters == nil  or Encounters.encounters['pool'] == nil then
                 Encounters.encounters = {}  
                 Encounters.encounters['pool'] = GameSettings.evolutionPool[id]
+            else
+                 Encounters.addToPool(GameSettings.evolutionPool[id])
             end
             Encounters.encounters[location] = name
         end
@@ -525,4 +531,12 @@ function Encounters.isInPool(id)
         end
     end
     return false
+end
+
+function Encounters.addToPool(t)
+    if t ~= nil then
+        for _,id in ipairs(t) do
+           table.insert(Encounters.encounters["pool"], id)
+        end
+    end
 end

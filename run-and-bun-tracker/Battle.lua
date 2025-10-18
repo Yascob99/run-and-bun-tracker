@@ -6,7 +6,7 @@ Battle = {
     isWildEncounter = false, -- If the encounter is a wild encounter
     regionID = 0,
     mapID = 0,
-    location = "",
+    location = nil,
     hasFoughtRival = false,
     opponent1ID = nil,
     prevLocation = nil,
@@ -25,8 +25,12 @@ function Battle.update()
         Battle.lastLocation = Battle.prevLocation
     end
     -- None of this needs to run until an event happens.
-    if Program.isValidMapLocation() and not Program.isNewRun and not Program.awaitingLoad then
+    if Program.isValidMapLocation() and not Program.isNewRun and not Program.awaitingLoad and not Program.lostRun then
         if Battle.prevLocation ~= Battle.location then -- on moving regions
+            if not Battle.hasFoughtRival then
+                -- failsafe for if the player made a save after beating rival, but before getting balls
+                Battle.hasFoughtRival = Program.checkForBalls()
+            end
             if (Battle.lastLocation == "Mauville City" and Encounters.encounters["Mauville City"] == nil) or (Battle.lastLocation == "Route 119" and Encounters.encounters["Route 119"]) then -- Handle gift mons
                 Encounters.findPreviousEncounters() -- No way to do this cleanly other than fully checking each mon.
                 Encounters.updateEncounterTracker()
@@ -70,8 +74,8 @@ function Battle.battleEnd()
             Encounters.tryAddEncounter(Battle.location, Program.enemyPokemonTeam[1].pkmID)
             Program.Save()
         else
-            console.log("An unexpected error occured. Attempting to rebuild encounters manually")
-            Battle.hasFoughtRival = true -- Failsafe for if something unexpected occurs like attempt data getting corrupted.
+            print("An unexpected error occured. Attempting to rebuild encounters")
+            Battle.hasFoughtRival = true -- Failsafe for if something unexpected occurs like attempt data getting corrupted, or the player made progress with the tracker off.
             Encounters.findPreviousEncounters() -- Should run this once to ensure encounters is up to date
             Encounters.tryAddEncounter(Battle.location, Program.enemyPokemonTeam[1].pkmID)
             Program.Save()
@@ -97,7 +101,7 @@ function Battle.battleEnd()
        end
     end
     if Battle.battleOutcome == 2 and Battle.hasFoughtRival then
-        -- start new run
+        Program.lostRun = true
     end
     Program.enemyPokemonTeam = Program.getBlankTrainerData()
 end

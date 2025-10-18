@@ -131,31 +131,30 @@ function GameSettings.loadData()
 	if FileManager.fileExists(movesPath) then
 		GameSettings.moves = FileManager.readTableFromFile(movesPath)
 	else
-		console.log("Gathering Move Data")
+		print("Gathering Move Data")
 		GameSettings.populateMoveData()
 		FileManager.writeTableToFile(GameSettings.moves, movesPath)
-		console.log(GameSettings.moves.names)
 	end
 
 	if FileManager.fileExists(namesPath) and FileManager.fileExists(monStatsPath) then
 		GameSettings.names = FileManager.readTableFromFile(namesPath)
 		GameSettings.mons = FileManager.readTableFromFile(monStatsPath)
 	else
-		console.log("Gathering Pokemon Names and Data")
+		print("Gathering Pokemon Names and Data")
 		GameSettings.populatePokemonDetails()
-		console.log("Gathering Pokemon Evolutions")
+		print("Gathering Pokemon Evolutions")
 		GameSettings.populateEvolutions()
-		console.log("Gathering Pokemon Level Up Moves")
+		print("Gathering Pokemon Level Up Moves")
 		GameSettings.populateLevelUpMoves()
-		console.log("Storing Pokemon Names")
+		print("Storing Pokemon Names")
 		FileManager.writeTableToFile(GameSettings.names, namesPath)
-		console.log("Storing Pokemon Data")
+		print("Storing Pokemon Data")
 		FileManager.writeTableToFile(GameSettings.mons, monStatsPath)
 	end
 	if FileManager.fileExists(evolutionPoolPath) then
 		GameSettings.evolutionPool = FileManager.readTableFromFile(evolutionPoolPath)
 	else
-		console.log("Mapping Evolution Data")
+		print("Mapping Evolution Data")
 		GameSettings.mapEvolutions()
 		FileManager.writeTableToFile(GameSettings.evolutionPool, evolutionPoolPath)
 	end
@@ -163,7 +162,7 @@ function GameSettings.loadData()
 	if FileManager.fileExists(trainerClassesPath) then
 		GameSettings.trainerClassList = FileManager.readTableFromFile(trainerClassesPath)
 	else
-		console.log("Gathering Trainer Data 1/2")
+		print("Gathering Trainer Data 1/2")
 		GameSettings.populateTrainerClassNames()
 		FileManager.writeTableToFile(GameSettings.trainerClassList, trainerClassesPath)
 	end
@@ -172,7 +171,7 @@ function GameSettings.loadData()
 		GameSettings.trainers = FileManager.readTableFromFile(trainersPath)
 		GameSettings.trainersByName = FileManager.readTableFromFile(trainersByNamePath)
 	else
-		console.log("Gathering Trainer Data 2/2")
+		print("Gathering Trainer Data 2/2")
 		GameSettings.populateTrainerStats()
 		FileManager.writeTableToFile(GameSettings.trainers, trainersPath)
 		FileManager.writeTableToFile(GameSettings.trainersByName, trainersByNamePath)

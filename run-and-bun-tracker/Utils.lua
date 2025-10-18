@@ -254,9 +254,11 @@ end
 
 --- Iterates over a table to find a value and returns true if that value is present.
 function Utils.isInTable(table, value)
-	for _, item in pairs(table) do
-		if item == value then
-			return true
+	if table ~= nil then
+		for _, item in pairs(table) do
+			if item == value then
+				return true
+			end
 		end
 	end
 	return false
