@@ -27,7 +27,7 @@ function Battle.setDefaults()
     Battle.opponent1ID = nil
     Battle.prevLocation = nil
     Battle.lastLocation = nil
-    Battla.starterChoice = 0
+    Battle.starterChoice = 0
 end
 
 --- Updates all battle related data, and runs code relevant to battle.

@@ -97,7 +97,7 @@ end
 function Input.checkJoypadInput()
 	local joypad = Input.getJoypadInput()
     -- handles the Start New Run Combo
-	if not Program.isNewRun and not Program.awaitingLoad and Input.allowNewRunCombo and Program.isValidMapLocation() then
+	if not Program.isNewRun and and Input.allowNewRunCombo and Program.isValidMapLocation() then
 		local allpressed = true
 		for _, button in ipairs({"A", "B", "Start"}) do
 			
