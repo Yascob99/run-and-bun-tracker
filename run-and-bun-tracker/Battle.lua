@@ -14,6 +14,22 @@ Battle = {
     starterChoice = 0
 }
 
+function Battle.setDefaults()
+    Battle.isInBattle = false
+    Battle.battleOutcome = nil -- BattleStatus [0 = In battle, 1 = Won the match, 2 = Lost the match, 4 = Fled, 7 = Caught]
+    Battle.battleFlags = nil -- Contains extra battle information, needs to be further divided based on needs.
+    Battle.prevbattleFlags = nil
+    Battle.isWildEncounter = false -- If the encounter is a wild encounter
+    Battle.regionID = 0
+    Battle.mapID = 0
+    Battle.location = nil
+    Battle.hasFoughtRival = false
+    Battle.opponent1ID = nil
+    Battle.prevLocation = nil
+    Battle.lastLocation = nil
+    Battla.starterChoice = 0
+end
+
 --- Updates all battle related data, and runs code relevant to battle.
 function Battle.update()
 	Battle.battleOutcome = Memory.readbyte(GameSettings.gBattleOutcome)

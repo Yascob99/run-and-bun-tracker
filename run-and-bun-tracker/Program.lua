@@ -767,6 +767,8 @@ function Program.Load()
 			end
 		end
 	elseif partyCount > 0 then
+		Battle.setDefaults()
+		Encounters.encounters = {}
 		Encounters.findPreviousEncounters()
 		Encounters.updateEncounterTracker(true)
 		Battle.hasFoughtRival = Program.hasDefeatedTrainer(Program.getRivalID())
