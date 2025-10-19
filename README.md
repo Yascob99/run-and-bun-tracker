@@ -29,6 +29,7 @@ That's it for now.
 - The script can take a while to load on first runs a new runs. This is due to certain functions having to run console commands due to lua not having the functionality natively. If I can get those functions working with a library then I can mitigate most of this issue.
 - The Pokemon sprites can be bigger than the box. I am looking into alternative sprite sets or some way of refining this sprite set to work.
 - A lot of the things I have tested are in the early parts of runs. While I expect there to be no issues, issues may arise, if they do please message me on discord or create an issue on github
+- Roamers are not properly accounted for in the area encounters. This requires some extra work I have not done yet.
 
 ## Installation Guide
 
