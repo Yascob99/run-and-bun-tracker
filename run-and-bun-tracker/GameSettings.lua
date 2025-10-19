@@ -83,13 +83,12 @@ function GameSettings.initialize()
 	if GameSettings.game > 0 then
 		GameSettings.pstats  = 0x2023a98
 		GameSettings.estats  = 0x2023CF0
-		GameSettings.inventoryAddress = 0x2023CF8
+		GameSettings.inventoryOffset = 4492 -- Seems to be an expanded inventory.
 		GameSettings.rng = 0x3005D90
 		GameSettings.wram = 0x2020000
 		GameSettings.mapbank = 0x203BC80
 		GameSettings.regionID = 0x20368F0 -- The current overall region
 		GameSettings.mapid = 0x20368EE -- the current map ID
-		GameSettings.trainerpointer = 0x202401F
 		GameSettings.coords = 0x2005E6C
 		GameSettings.gBattlersCount = 0x20233E4 -- 0 by default, changes to 2 on first battle. DOES NOT REVERT AFTER Battle. Goes to 4 in double battles
 		GameSettings.pokemonDataTable = 0x83B7CE0
@@ -104,7 +103,8 @@ function GameSettings.initialize()
 		GameSettings.gPlayerPartyCount = 0x2023a95
 		GameSettings.encounterTable = 0x862863C
 		GameSettings.gBattleOpponentA = 0x20381AE -- confirmed to be the opponent's trainer ID
-		GameSettings.gSaveBlock1ptr = 0x3005D9C -- save block1 pointer
+		GameSettings.gSaveBlock1ptr = 0x3005DA0 -- save block1 pointer. The structure of this data is drasitically different than the usual save structure.
+		GameSettings.trainerIDptr = 0x2000000 -- Trainer ID is stored in a different location than usual
 		GameSettings.trainerStatsTable = 0x8398880
 		GameSettings.mapbankAddress =  0x8552AB4
 		GameSettings.mapDetailsAddress = 0x86A1960
@@ -114,6 +114,7 @@ function GameSettings.initialize()
 		GameSettings.trainerClassNames = 0x8398524 -- 13 byte string names
 		GameSettings.movesByLevelUp = 0x83EC73C -- list of 4 byte pointers to the level up moves links to a list of 2byte moveIDs followed by 2byte levels. FFFF as a terminator
 		GameSettings.monEvolutions = 0x83D459C -- 80 bytes per (FFFF method is mega evo not terminator) 10x(2[method] 2[arg 1] 2[species 2] 2[unused])
+		GameSettings.securityKeyOffset = 492
 		GameSettings.loadData()
 	end
 end
@@ -126,6 +127,7 @@ function GameSettings.loadData()
 	local trainersPath = FileManager.Folders.Data .. FileManager.slash .. "Trainers.txt"
 	local trainersByNamePath = FileManager.Folders.Data .. FileManager.slash .. "TrainersByName.txt"
 	local evolutionPoolPath = FileManager.Folders.Data .. FileManager.slash .. "EvolutionPool.txt"
+	local abilityNamePath = FileManager.Folders.Data .. FileManager.slash .. "AbilityNames.txt"
 	
 	-- Second options should only matter in the case data is wrong or corrupt. Or if randomizers get involved.
 	if FileManager.fileExists(movesPath) then
@@ -176,6 +178,14 @@ function GameSettings.loadData()
 		FileManager.writeTableToFile(GameSettings.trainers, trainersPath)
 		FileManager.writeTableToFile(GameSettings.trainersByName, trainersByNamePath)
 	end
+
+	if FileManager.fileExists(abilityNamePath) then
+		GameSettings.abilityNames = FileManager.readTableFromFile(abilityNamePath)
+	else
+		print("Gathering Abilty Data")
+		GameSettings.populateAbilityNames()
+		FileManager.writeTableToFile(GameSettings.abilityNames, abilityNamePath)
+	end
 end
 
 --- populates tables from the pokemon data on the ROM and assigns it to global variables. Needs changes to handle pokemon variants starting at 1009
@@ -202,8 +212,8 @@ function GameSettings.populatePokemonDetails()
 		mon.bSpeed = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 3)
 		mon.bSpAttack = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 4)
 		mon.bSpDefense = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 5)
-		mon.type1 = PokemonData.type[Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 6) + 1]
-		mon.type2 = PokemonData.type[Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 7) + 1] -- Same as type 1 if mono-type
+		mon.type1 = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 6) + 1
+		mon.type2 = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 7) + 1 -- Same as type 1 if mono-type
 		mon.catchrate = Memory.readbyte(GameSettings.pokemonDataTable + dataOffset + 8)
 		-- 1 byte of padding
 		mon.bXP = Memory.readword(GameSettings.pokemonDataTable + dataOffset + 10) -- now 2 bytes to represent higher base experience yields
@@ -455,3 +465,13 @@ function GameSettings.mapMonEvolutions(mon, id, ids)
 	table.insert(ids, id)
 	return ids
 end
+
+function GameSettings.populateAbilityNames()
+	local numNames = 268
+	local nameLength = 17
+	local abilityNameAddress = GameSettings.abilityNameTable
+	GameSettings.abilityNames = {}
+	for i = 1, numNames, 1 do
+		table.insert(GameSettings.abilityNames, Utils.toString(abilityNameAddress + (i-1) * nameLength, nameLength))
+	end
+end	

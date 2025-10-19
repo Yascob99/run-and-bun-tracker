@@ -50,7 +50,7 @@ function Drawing.drawPokemonIcon(id, x, y, selectedPokemon, isShiny)
 		gui.drawRectangle(x,y,36,36, Constants.Graphics.NONSELECTEDCOLOR, 0xFF222222)
 	end
 	if id ~= nil and id ~= 0 and GameSettings.names[id] ~= nil and type(GameSettings.names[id]) == "string" then
-		local name = GameSettings.names[id]:gsub(" ", "-"):lower()
+		local name = GameSettings.names[id]:gsub(" ", "-"):lower():gsub("’", "")
 		local path = FileManager.prependDir(FileManager.Folders.RegularSprite, true)
 		if isShiny then
 			path = FileManager.prependDir(FileManager.Folders.ShinySprite, true)
@@ -70,6 +70,7 @@ function Drawing.drawPokemonIconByName(name, x, y)
 		gui.drawRectangle(x,y,36,36, Constants.Graphics.NONSELECTEDCOLOR, 0xFF222222)
 	end
 	local path = FileManager.prependDir(FileManager.Folders.RegularSprite, true)
+	local name = name:gsub(" ", "-"):lower():gsub("’", "")
 	gui.drawImage(path .. name .. ".png", x- 16, y - 18)
 end
 
@@ -110,9 +111,9 @@ function Drawing.drawPokemonView()
 	Drawing.drawPokemonIcon(Program.selectedPokemon.pokemonID, Constants.Graphics.SCREEN_WIDTH + 5, 5, Program.selectedPokemon, Program.selectedPokemon.isShiny)
 	local colorbar = "white"
 	local types = Program.getPokemonTypes(Program.selectedPokemon.pokemonID)
-	Drawing.drawTypeIcon(types[1],  Constants.Graphics.SCREEN_WIDTH + 100, 32)
+	Drawing.drawTypeIcon(PokemonData.type[types[1]],  Constants.Graphics.SCREEN_WIDTH + 100, 32)
 	if types[1] ~= types[2] and types[2] ~= nil then
-		Drawing.drawTypeIcon(types[2],  Constants.Graphics.SCREEN_WIDTH + 100, 44)
+		Drawing.drawTypeIcon(PokemonData.type[types[2]],  Constants.Graphics.SCREEN_WIDTH + 100, 44)
 	end
 	if Program.selectedPokemon["hp"] / Program.selectedPokemon["maxHP"] <= 0.2 then
 		colorbar = "red"
@@ -155,7 +156,7 @@ function Drawing.drawPokemonView()
 	if Program.selectedPokemon.isEnemy and Battle.isWildEncounter then
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 42, 53, "???", "yellow")
 	else	
-		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 42, 53, Program.getAbility(Program.selectedPokemon), "yellow")
+		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 42, 53, GameSettings.abilityNames[Program.getAbility(Program.selectedPokemon) + 1], "yellow")
 	end	
 	local tid = Utils.getbits(Program.selectedPokemon["otId"], 0, 16)
 	local sid = Utils.getbits(Program.selectedPokemon["otId"], 16, 16)

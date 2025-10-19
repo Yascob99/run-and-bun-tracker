@@ -752,22 +752,6 @@ function FileManager.copyTable(source, destination)
 	return destination
 end
 
---- Initializes the encounter log for 
-function FileManager.setupEncounterLog()
-	local filepath =FileManager.prependDir(FileManager.Files.ENCOUNTER_LOG)
-	local encounterLog = io.open(filepath, "r")
-	if encounterLog ~= nil then
-		Encounters.encounters = FileManager.readTableFromFile(filepath)
-	else
-		encounterLog = io.open(filepath, "w")
-		if encounterLog then
-			encounterLog:write('{}')
-			encounterLog:flush()
-			encounterLog:close()
-		end
-	end
-end
-
 --- Writes a table in dictionary formatting to a CSV file
 ---@param t table? The table to write to a CSV if it's not empty. Should be in a {[string] = string,...} format. If not, the data will be converted to that format regardless of whether that makes sense or not.
 ---@param filepath string The filepath of the CSV to write to

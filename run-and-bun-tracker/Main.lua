@@ -95,7 +95,6 @@ function Main.Run()
 	-- After a game is successfully loaded, then initialize the remaining Tracker files
 	FileManager.setupErrorLog()
 	FileManager.executeEachFile("initialize") -- initialize all tracker files
-	FileManager.setupEncounterLog() -- Initialize the encounter log
 	Map.initialize()
 	Encounters.getEncounterData()
 	Main.tempQuickloadFiles = nil -- From now on, quickload files should be re-checked

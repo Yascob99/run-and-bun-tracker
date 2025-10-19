@@ -213,12 +213,11 @@ function Encounters.findPreviousEncounters()
         Encounters.encounters = {}
     end
     for i = 1, Program.getPartyCount() do
-        mon = Program.getPokemonData({player = 1, slot = i})
+        mon = Program.readPartyMon(partyAddress + (i-1) * 100)
         if mon ~= nil then
             id = mon.pokemonID
         end
         if id ~=0 and id ~= nil then
-            mon = Program.readPartyMon(partyAddress)
             location = Encounters.getSanitizedLocation(mon.metLocation)
             if location == "Starter" then
                 local starter = starters[Program.getStarterChoice()] or Program.getStarterbyEvolution(id)
@@ -263,10 +262,10 @@ function Encounters.isEncounterAvailable(location, force)
     local force = force or Battle.hasFoughtRival
     if force and Encounters.doesMapHaveEncounters(location) then
         if Encounters.encounters ~= nil then
-            if #Encounters.encounters == 1 then
+            if Encounters.encounters[location] == nil then
                 return true
-            elseif Encounters.encounters[location] == nil then
-                return true
+            else
+                return false
             end
         end
         return true
@@ -506,6 +505,9 @@ function Encounters.tryAddEncounter(location, id, missed)
     local inPool = Encounters.isInPool(id)
     if (location == "Starter" or Encounters.isEncounterAvailable(location)) and not inPool then
         local name = GameSettings.names[id]
+        if location == "Starter" then
+            Battle.starterChoice = id
+        end
         if missed then
             if Encounters.encounters == nil then
                 Encounters.encounters = {}  
@@ -513,8 +515,10 @@ function Encounters.tryAddEncounter(location, id, missed)
             name = name .. "-Missed"
             Encounters.encounters[location] = name
         else
-            if Encounters.encounters == nil  or Encounters.encounters['pool'] == nil then
-                Encounters.encounters = {}  
+            if Encounters.encounters == nil then 
+                Encounters.encounters = {}
+            end
+            if Encounters.encounters['pool'] == nil then  
                 Encounters.encounters['pool'] = GameSettings.evolutionPool[id]
             else
                  Encounters.addToPool(GameSettings.evolutionPool[id])

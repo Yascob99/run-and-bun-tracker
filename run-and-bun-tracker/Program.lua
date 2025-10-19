@@ -13,6 +13,7 @@ Program = {
 	frames = 0,
 	initialLoad = true,
 	awaitingStateLoad = false,
+	isSaveStateLoad = false
 }
 
 -- Main loop for the program. This is run every 10 frames currently (called in Main.).
@@ -24,14 +25,18 @@ function Program.mainLoop()
 			Program.trainerInfo = Program.getTrainerInfo()
 			if (Program.awaitingLoad and Battle.lastLocation == nil and not Program.awaitingStateLoad and not Program.isNewRun) or (Program.initialLoad and Program.awaitingLoad) then
 				print("Loading run data")
-        		Program.Load()
-				Program.awaitingLoad = false
+        		if Program.Load() then
+					Program.awaitingLoad = false
+					Program.isNewRun = false
+				end
 				Program.initialLoad = false
-				Program.isNewRun = false
 			end
 			if Program.isNewRun then
 				Drawing.drawLayout()
 				Drawing.drawNewRunScreen()
+			elseif Program.awaitingLoad  then
+				Drawing.drawLayout()
+				Drawing.drawAwaitingLoad()
 			elseif Program.lostRun then
 				Drawing.drawLayout()
 				Drawing.drawButtons()
@@ -73,12 +78,13 @@ function Program.mainLoop()
 end
 
 function Program.loadNewFile()
-	if Program.awaitingLoad or Program.awaitingStateLoad then
+	if (Program.awaitingLoad or Program.awaitingStateLoad) and Program.isValidMapLocation() then
+		Program.isSaveStateLoad = true
 		print("Loading run data")
-		Program.awaitingStateLoad = false -- declare this first in case the load is also incorrect.
-		Program.Load()
-		Program.awaitingLoad = false
-		Program.isNewRun = false
+		if Program.Load() then
+			Program.awaitingLoad = false
+			Program.isNewRun = false
+		end
 	else
 		-- run the mainloop once to update the current state immediately
 		Program.mainLoop()
@@ -92,22 +98,24 @@ end
 
 -- gets the information on the player character for the map and other functions
 function Program.getTrainerInfo()
-	local trainer = GameSettings.trainerpointer
-	if Memory.readbyte(trainer) == 0 then
+	local trainer = Utils.getSaveBlock1Addr()
+	if trainer == 0 then
 		return {
 			gender = -1, -- Set to negative to clarify that it is not set
 			tid = 0,
 			sid = 0,
-			sKey = nil -- The security key (used for specific decryptions)
 		}
 	else
 		return {
 			gender = Memory.readbyte(trainer + 8),
 			tid = Memory.readword(trainer + 10),
-			sid = Memory.readword(trainer + 12),
-			skey = Memory.readdword(trainer + 24)
+			sid = Memory.readword(trainer + 12)
 		}
 	end
+end
+
+function Program.getSecurityKey()
+	return Memory.readword(Utils.getSaveBlock1Addr() + 492)
 end
 
 -- Not currently used, but maintained for if it's wanted as a feature later.
@@ -395,9 +403,9 @@ end
 function Program.getAbility(mon)
 	local speciesData = GameSettings.mons[mon.pokemonID]
 	if speciesData == nil then
-		return "None"
+		return 0
 	end
-    local current = speciesData.abilities[mon.altAbility]
+    local current = speciesData.abilities[mon.altAbility + 1]
     if (current == "None") then
         current = speciesData.ability1
     end
@@ -486,7 +494,7 @@ function Program.getPokemonTypes(ID)
 		if mon.type2 == nil then
 			mon.type2 = ""
 		end
-		return {mon["type1"]:lower(), mon["type2"]:lower()}
+		return {mon["type1"], mon["type2"]}
 	else
 		return {"", ""}
 	end
@@ -501,31 +509,30 @@ function Program.getMonID(address)
 	return Utils.getbits(growth, 0, 16)
 end
 
---- Returns true if the trainer has been defeated by the player; false otherwise (couldn't get this to work, probably some offset changes)
--- function Program.hasDefeatedTrainer(trainerId, saveBlock1Addr)
--- 	-- Don't reveal defeated trainers if player isn't actively playing the game (e.g. title screen w/ old save data)
--- 	-- if not Map.isValidMapLocation() then
--- 	--	return false
--- 	-- end
--- 	saveBlock1Addr = saveBlock1Addr or Utils.getSaveBlock1Addr()
--- 	local idAddrOffset = math.floor((0x500 + trainerId) / 8)
--- 	local idBit = (0x500 + trainerId) % 8
--- 	local trainerFlagAddr = saveBlock1Addr + 4720 + idAddrOffset
--- 	print(string.format("%X", trainerFlagAddr))
--- 	local result = Memory.readbyte(trainerFlagAddr)
--- 	return Utils.getbits(result, idBit, 1) ~= 0
--- end
+--- Returns true if the trainer has been defeated by the player; false otherwise (unsure if this works as intended. Does appear to work for rival for now)
+function Program.hasDefeatedTrainer(trainerId, saveBlock1Addr)
+	-- Don't reveal defeated trainers if player isn't actively playing the game (e.g. title screen w/ old save data)
+	if not Program.isValidMapLocation() then
+		return false
+	end
+	saveBlock1Addr = saveBlock1Addr or Utils.getSaveBlock1Addr()
+	local idAddrOffset = math.floor((1840 + trainerId) / 8)
+	local idBit = (1840 + trainerId) % 8
+	local trainerFlagAddr = saveBlock1Addr + 4720 + idAddrOffset
+	console.log(trainerId)
+	console.log(string.format("%x", trainerFlagAddr))
+	local result = Memory.readbyte(trainerFlagAddr)
+	return Utils.getbits(result, idBit, 1) ~= 0
+end
 
 ---Returns 1, 2, or 3 depending on game.
 ---1==Piplup (right), 2=Turtwig (left), 3=Chimchar (middle) (the order gets real fucked up by the mod)
 ---@return number starterChoice
 function Program.getStarterChoice()
 	local starters = {393, 387, 390}
-	for _, starter in pairs(starters) do
-		if Encounters.isInPool(starter) then
-			if Utils.isInTable(starters, Battle.starterChoice) then
-				return Utils.indexOf(starters, Battle.starterChoice)
-			end
+	for i, starter in ipairs(starters) do
+		if Battle.starterChoice == starter then
+			return i
 		end
 	end
 	return 0
@@ -546,7 +553,7 @@ end
 
 --- Returns the Rivals trainer ID for the first fight. Depends on playergender and the starterChoice
 function Program.getRivalID()
-	local starterChoice = Program.getStarterChoice() or 1
+	local starterChoice = Program.getStarterChoice()
 	local gender = Program.trainerInfo.gender or 0
 	local id = 520
 	return id + (1 - gender) * 9 + (starterChoice - 1) * 3 -- 520 is the first rival for if the player is a girl, 529 is the first for if the player is a boy, then there are variants for each starter choice 
@@ -557,9 +564,9 @@ end
 --- @param size number
 --- @return table? data Or nil if for some reason this data is not accessible
 function Program.checkInventory(offset, size)
-	local address = GameSettings.inventoryAddress + offset
+	local address = Utils.getSaveBlock1Addr() + GameSettings.inventoryOffset + offset
 	-- check that the offset is divisible by 4. If it isn't, the offset will result in invalid data.
-	if offset % 4 ~= 0  or Program.trainerInfo.sKey == nil then
+	if offset % 4 ~= 0 then
 		return nil
 	end
 	if size % 4 ~= 0 then
@@ -569,15 +576,16 @@ function Program.checkInventory(offset, size)
 	local itemID = 0
 	local quantity = 0
 	local iOffset = 0
+	local sKey = Program.getSecurityKey()
 	for i = 1, size/4, 1 do
 		iOffset = (i-1) * 4
 		itemID = Memory.readword(address + iOffset)
 		if itemID ~= 0 then
-			quantity = Utils.bit_xor(Memory.readword(address + 2 + iOffset), Program.trainerInfo.sKey)
+			quantity = Utils.bit_xor(Memory.readword(address + 2 + iOffset), sKey)
 		else
 			quantity = 0
 		end
-		if itemID ~= 0 and quantity ~= 0 then
+		if itemID ~= 0 or quantity ~= 0 then
 			table.insert(data, {itemID, quantity})
 		end
 	end
@@ -587,7 +595,8 @@ end
 --- Checks the first slot of the ball inventory for balls, if there is balls, returns true.
 ---@return boolean
 function Program.checkForBalls()
-	if Program.checkInventory(440, 4) ~= nil then
+	local data = Program.checkInventory(700, 4)
+	if data ~= nil then
 		return true
 	end
 	return false
@@ -639,7 +648,7 @@ function Program.Save()
 			battle[key] = value
 		end
 	end
-	FileManager.writeTableToFile(battle, FileManager.Files.CURRENT_ATTEMPT_DATA)
+	FileManager.writeTableToFile(table.pack(battle, Program.trainerInfo), FileManager.Files.CURRENT_ATTEMPT_DATA)
 end
 
 -- Reads the current run number from the Runs.txt file. If that file doesn't exist, the data in that file is invalid, or the attemptFolder doesn't exist, use a fallback
@@ -706,67 +715,68 @@ end
 
 -- Attempts to load the current Run and loads any missed data into 
 function Program.Load()
+	Program.trainerInfo = Program.getTrainerInfo()
 	Program.setAttemptsFolder(Program.runCounter)
-	if FileManager.folderExists(FileManager.Folders.CurrentAttempt) then
-		local attemptData = FileManager.readTableFromFile(FileManager.Files.CURRENT_ATTEMPT_DATA)
-		local partyCount = Program.getPartyCount()
-		if attemptData ~= nil then
-			local battle = attemptData
-			local matches = true
-			if battle ~= nil then
-				for key, value in pairs(battle) do
-					if key ~= "hasFoughtRival" and value ~=nil and key ~= "starterChoice" then
-						if Battle[key] ~= value then
-							matches = false
-						end
-					-- handling with an elseif for if I add extra stored data in later versions
-					elseif key == "hasFoughtRival" then
-						-- If the player has no pokemon in party then there is no way they could have beaten the rival
-						if partyCount == 1 then
-							-- check inventory for is balls are present. This may be incorrect if the player saved after beating rival but before lab. It should self-correct after getting balls.
-							if Program.checkForBalls() then
-								Battle[key] = battle[key]
-							else
-								matches = false
-							end
-						elseif partyCount > 1 then
+	local attemptData = FileManager.readTableFromFile(FileManager.Files.CURRENT_ATTEMPT_DATA)
+	local partyCount = Program.getPartyCount()
+	if attemptData ~= nil then
+		local trainerData = attemptData[2]
+		-- Check trainer id, secret ID and gender to determine if the loaded file is correct for the save data.
+		for key, value in pairs(trainerData) do
+			if Program.trainerInfo[key] ~= value then
+				print("Trainer Data does not match attempt data on file, please load the correct Save")
+				Program.awaitingStateLoad = true
+				return false
+			end
+		end
+		Program.awaitingStateLoad = false
+		local battle = attemptData[1]
+		local matches = true
+		if battle ~= nil then
+			for key, value in pairs(battle) do
+				if key ~= "hasFoughtRival" and value ~=nil and key ~= "starterChoice" then
+					if Battle[key] ~= value then
+						matches = false
+					end
+				-- handling with an elseif for if I add extra stored data in later versions
+				elseif key == "hasFoughtRival" then
+					-- If the player has no pokemon in party then there is no way they could have beaten the rival
+					if partyCount == 1 then
+						matches = false
+						if battle[key] == true then
 							Battle[key] = true
-							matches = false
-						elseif battle[key] then
-							print("Data does not match current attempt, waiting for player to load correct save, or start new run.")
-							Program.awaitingStateLoad = true
-							return
 						end
-					elseif key == "starterChoice" then
-						-- If the player has no pokemon in party then there is no way they could have beaten the tutorial battle 
-						if partyCount == 0 and battle[key] == 0 then
-							Battle[key] = battle[key]	
-						elseif partyCount > 0 and battle[key] == 0 then
-							matches = false
-						elseif battle[key] > 0 then
-							print("Data does not match current attempt, waiting for player to load correct save, or start new run.")
-							Program.awaitingStateLoad = true
-							return
-						end
+					elseif partyCount > 1 then
+						Battle[key] = true
+						matches = false
+					end
+				elseif key == "starterChoice" then
+					-- If the player has no pokemon in party then there is no way they could have beaten the tutorial battle 
+					if partyCount == 0 and battle[key] == 0 then
+						Battle[key] = battle[key]	
+					elseif partyCount > 0 and battle[key] == 0 then
+						matches = false
 					end
 				end
 			end
+		end
+		if not matches then
 			if not matches then
-				if Battle.hasFoughtRival then
-					Encounters.encounters = FileManager.readTableFromFile(FileManager.Files.ENCOUNTER_LOG)
-				end
-				if not matches then
-					Encounters.findPreviousEncounters()
-					Encounters.updateEncounterTracker(true)
-				end
+				Encounters.findPreviousEncounters()
+				Encounters.updateEncounterTracker(true)
 			end
-		elseif partyCount > 0 then
-			Battle.hasFoughtRival = Program.checkForBalls()
-			Encounters.findPreviousEncounters()
-			Encounters.updateEncounterTracker(true)
+		end
+	elseif partyCount > 0 then
+		Encounters.findPreviousEncounters()
+		Encounters.updateEncounterTracker(true)
+		Battle.hasFoughtRival = Program.hasDefeatedTrainer(Program.getRivalID())
+		if partyCount > 1 then
+			Battle.hasFoughtRival = true
 		end
 	end
+	Program.isSaveStateLoad = false
 	Program.Save()
+	return true
 end
 
 function Program.startNewAttempt()

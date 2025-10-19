@@ -19,6 +19,11 @@ I sourced the sprites from [msikma's PokeSprite project](https://github.com/msik
 
 If you would like to contribute please let me know. I am working on this in my free time as a hobbyist. This is my first time working in lua so there may be some weird choices, inneficiencies, or bad practices.
 
+## Controls
+A+B+Start (z+x+enter bizhawk's with default keyboard bindings) - Start New Run
+
+That's it for now.
+
 ## Known issues/bugs
 
 - The script can take a while to load on first runs a new runs. This is due to certain functions having to run console commands due to lua not having the functionality natively. If I can get those functions working with a library then I can mitigate most of this issue.
@@ -52,7 +57,7 @@ Your encounters from the current and previous runs are tracked! To find that dat
 
 The inside of this folder is the bulk of the code that makes up the tracker, however there are some files and folders you might find handy here.
 
-After your first run a Atempts.txt file will appear in the run-and-bun-tracker folder. This tracks your current attempt. If you have runs prior to the tracker you can create or edit and existing Atempts.txt. It only contains the number of attempts.
+After your first run a Runs.txt file will appear in the run-and-bun-tracker folder. This tracks your current attempt. If you have runs prior to the tracker you can create or edit and existing Runs.txt. It only contains the number of attempts.
 
 Next in the attempts folder you can find all of your past attempts in folders titled after their run number. Inside of each of those files is data the tracker uses for keeping track of important data between sessions. It also has a .CSV file with your encounter. 
 

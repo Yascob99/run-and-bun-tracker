@@ -85,7 +85,7 @@ PokemonData = {
 		"Fighting","Flying","Poison","Ground",
 		"Rock","Bug","Ghost","Steel", "Fairy",
 		"Fire","Water","Grass","Electric",
-		"Psychic","Ice","Dragon","Dark"
+		"Psychic","Ice","Dragon","Dark","Fairy"
 	},
 	typeColor = { 0xFF9FA19F,
 		0xFFFF8000, 0xFF81B9EF, 0xFF9141CB, 0xFF915121,
