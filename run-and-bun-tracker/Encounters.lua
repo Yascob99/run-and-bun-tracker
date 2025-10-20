@@ -217,7 +217,7 @@ function Encounters.findPreviousEncounters()
         if mon ~= nil then
             id = mon.pokemonID
         end
-        if id ~=0 and id ~= nil then
+        if id ~=0 and id ~= nil  and mon ~= nil then
             location = Encounters.getSanitizedLocation(mon.metLocation)
             if location == "Starter" then
                 local starter = starters[Program.getStarterChoice()] or Program.getStarterbyEvolution(id)
