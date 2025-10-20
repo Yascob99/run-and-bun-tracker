@@ -3,7 +3,7 @@ Encounters = {}
 Encounters.encounters = {}
 -- Hardcoded encounter rates based on Run and Bun resources since all of these have been changed.
 Encounters.encounterGroups = {
-    ["land_mons"] = {20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1},
+    ["land_mons"] = {20, 10, 10, 10, 10, 10, 10, 5, 5, 5, 4, 1},
     ["surf_mons"] = {30, 30, 20, 10, 10},
     ["rock_smash_mons"] = {60, 30, 5, 4, 1},
     ["fishing_mons"] = {20, 20, 10, 10, 10, 10, 10, 5, 4, 1}
@@ -344,7 +344,7 @@ function Encounters.getEncounterData()
             data = nil
             if grassAddress ~= 0 then
                 zoneRate = Memory.readbyte(grassAddress)
-                length = #Encounters.encounterGroups['land_mons'] - 1
+                length = #Encounters.encounterGroups['land_mons']
                 -- Handle land zones with roamer slots
                 if zoneRate == 4 then
                     length = 3
