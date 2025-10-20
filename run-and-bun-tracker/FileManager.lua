@@ -100,7 +100,7 @@ function FileManager.getPartyPrint(mon)
 		str = str .. string.format(" @ %s", PokemonData.item[mon.heldItem])
 	end
 	str = str .. string.format("\n")
-	str = str .. "Ability: " .. string.format("%s", Program.getAbility(mon) .. string.format("\n"))
+	str = str .. "Ability: " .. string.format("%s", GameSettings.abilityNames[Program.getAbility(mon) + 1] .. string.format("\n"))
 	str = str .. string.format("Level: %d\n", mon.level)
 	str = str .. string.format("%s", PokemonData.nature[mon.nature] .. " Nature" .. string.format("\n"))
 	str = str .. string.format("IVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe", mon.hpIV, mon.attackIV, mon.defenseIV, mon.spAttackIV, mon.spDefenseIV, mon.speedIV) .. string.format("\n")
