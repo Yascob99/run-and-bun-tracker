@@ -105,7 +105,7 @@ function FileManager.getPartyPrint(mon)
 	str = str .. string.format("%s", PokemonData.nature[mon.nature] .. " Nature" .. string.format("\n"))
 	str = str .. string.format("IVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe", mon.hpIV, mon.attackIV, mon.defenseIV, mon.spAttackIV, mon.spDefenseIV, mon.speedIV) .. string.format("\n")
 	for i=1,4 do
-		local mv = GameSettings.moves[mon.moves[i] + 1]
+		local mv = GameSettings.moves['names'][mon.moves[i] + 1]
 		if(mv == "Hidden Power") then
             
 			str = str .. string.format("- Hidden Power %s\n", Program.getHP(mon))
@@ -132,7 +132,7 @@ function FileManager.getPCPrint(mon)
 	str = str .. string.format("%s", PokemonData.nature[mon.nature]) .. " Nature" .. string.format("\n")
 	str = str .. string.format("IVs: %d HP / %d Atk / %d Def / %d SpA / %d SpD / %d Spe", mon.hpIV, mon.attackIV, mon.defenseIV, mon.spAttackIV, mon.spDefenseIV, mon.speedIV) .. string.format("\n")
 	for i=1,4 do
-		local mv = GameSettings.moves[mon.moves[i] + 1]
+		local mv = GameSettings.moves['names'][mon.moves[i] + 1]
 		if(mv == "Hidden Power") then
 			str = str .. string.format("- Hidden Power %s\n", Program.getHP(mon))
 			else

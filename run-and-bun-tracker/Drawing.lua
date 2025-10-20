@@ -152,7 +152,7 @@ function Drawing.drawPokemonView()
 	else
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 42, 43, PokemonData.item[Program.selectedPokemon["heldItem"]], "yellow")
 	end
-	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 5, 53, "Abilty:")
+	Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 5, 53, "Ability:")
 	if Program.selectedPokemon.isEnemy and Battle.isWildEncounter then
 		Drawing.drawText(Constants.Graphics.SCREEN_WIDTH + 42, 53, "???", "yellow")
 	else	

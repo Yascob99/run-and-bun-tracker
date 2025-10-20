@@ -406,7 +406,7 @@ function Program.getAbility(mon)
 		return 0
 	end
     local current = speciesData.abilities[mon.altAbility + 1]
-    if (current == "None") then
+    if (current == 0) then
         current = speciesData.ability1
     end
     return current
