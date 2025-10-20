@@ -30,7 +30,7 @@ That's it for now.
 - The Pokemon sprites can be bigger than the box. I am looking into alternative sprite sets or some way of refining this sprite set to work.
 - A lot of the things I have tested are in the early parts of runs. While I expect there to be no issues, issues may arise, if they do please message me on discord or create an issue on github
 - Roamers are not properly accounted for in the area encounters. This requires some extra work I have not done yet.
-- For some reason duplicate encounters are not working as intended. Will fix this one soon.
+- When loading an existing run as a new run, there will be some inconsistencies with the evolution stage of the mon. The dupe detection should still work. Also any missed encounters will not be accounted for due to there being no way to track missed encounters that occured when the tracker was not running (this is **not** fixable)
 
 ## Installation Guide
 

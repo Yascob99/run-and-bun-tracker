@@ -282,9 +282,6 @@ function Encounters.updateEncounterTracker(force)
         -- writes to a CSV file as well for easier tracking in the order that routes are accessible.
         local encounters = Encounters.encounters or {}
         -- Remove the pool element as it will cause issues.
-        if encounters['pool'] ~= nil then
-            encounters['pool'] = nil
-        end
         FileManager.writeTabletoCSV(encounters, FileManager.Files.ENCOUNTER_CSV, PokemonData.encounterRoutes)
     end
 end
