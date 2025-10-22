@@ -1,0 +1,292 @@
+D2025-10-21T14:04:03.638384:tool/net/redbean.c:5127:redbean-3:5892] (lua) LuaRunAsset("/.init.lua")
+V2025-10-21T14:04:03+003689:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set template 'fmt'
+V2025-10-21T14:04:03+000066:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set template '500'
+V2025-10-21T14:04:03+000178:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set template 'json'
+V2025-10-21T14:04:03+000049:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set template 'sse'
+V2025-10-21T14:04:03+000044:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set template 'fmg'
+V2025-10-21T14:04:03+000042:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set template 'cgi'
+V2025-10-21T14:04:03+000055:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set route '/team/player' (POST) at index 1
+V2025-10-21T14:04:03+000566:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set route '/team/enemy' (POST) at index 2
+V2025-10-21T14:04:03+000054:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set route '/team/player' (GET) at index 3
+V2025-10-21T14:04:03+000047:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set route '/team/enemy' (GET) at index 4
+V2025-10-21T14:04:03+000042:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set route '/Battle' (POST) at index 5
+V2025-10-21T14:04:03+000043:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set route '/Battle' (GET) at index 6
+V2025-10-21T14:04:03+000038:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set route '/Program' (POST) at index 7
+V2025-10-21T14:04:03+000041:/zip/.lua/fullmoon.lua:62:redbean-3:5892] (fm) set route '/Program' (GET) at index 8
+I2025-10-21T14:04:03+001106:tool/net/redbean.c:7052:redbean-3:5892] (srvr) listen http://172.30.128.1:8080
+I2025-10-21T14:04:03+000217:tool/net/redbean.c:7052:redbean-3:5892] (srvr) listen http://172.16.22.36:8080
+I2025-10-21T14:04:03+000188:tool/net/redbean.c:7052:redbean-3:5892] (srvr) listen http://127.0.0.1:8080
+V2025-10-21T14:04:03+000096:tool/net/redbean.c:2085:redbean-3:5892] (ssl) could not find non-CA SSL certificate key pair with -addext keyUsage=digitalSignature -addext extendedKeyUsage=serverAuth
+V2025-10-21T14:04:03+000029:tool/net/redbean.c:2088:redbean-3:5892] (ssl) could not find CA key signing key pair with -addext keyUsage=keyCertSign
+V2025-10-21T14:04:03+000026:tool/net/redbean.c:2090:redbean-3:5892] (ssl) generating self-signed ssl certificates
+D2025-10-21T14:04:03+102290:net/https/logcertificate.c:28:redbean-3:5892] generated EC certificate
+ cert. version     : 3
+ serial number     : 7F:95:FD:59:07:E8:5E:6E:34:69:48:1C:88:D7:26:1B
+ issuer name       : CN=LAPTOP-2MH1B4G5
+ subject name      : CN=LAPTOP-2MH1B4G5
+ issued  on        : 2025-10-20 20:04:03
+ expires on        : 2026-10-22 20:04:03
+ signed using      : ECDSA with SHA256
+ EC key size       : 256 bits
+ basic constraints : CA=false
+ subject alt name  :
+     iPAddress : 172.30.128.1
+     iPAddress : 172.16.22.36
+ key usage         : Digital Signature
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-21T14:04:03+000103:tool/net/redbean.c:687:redbean-3:5892] (ssl) using EC certificate "CN=LAPTOP-2MH1B4G5" for HTTPS server
+D2025-10-21T14:04:03+128536:net/https/logcertificate.c:28:redbean-3:5892] generated RSA certificate
+ cert. version     : 3
+ serial number     : CE:54:FB:2E:B2:C5:10:4B:5C:3E:9F:76:68:7E:48:0F
+ issuer name       : CN=LAPTOP-2MH1B4G5
+ subject name      : CN=LAPTOP-2MH1B4G5
+ issued  on        : 2025-10-20 20:04:03
+ expires on        : 2026-10-22 20:04:03
+ signed using      : RSA with SHA-256
+ RSA key size      : 2048 bits
+ basic constraints : CA=false
+ subject alt name  :
+     iPAddress : 172.30.128.1
+     iPAddress : 172.16.22.36
+ key usage         : Digital Signature, Key Encipherment
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-21T14:04:03+000103:tool/net/redbean.c:687:redbean-3:5892] (ssl) using RSA certificate "CN=LAPTOP-2MH1B4G5" for HTTPS server
+D2025-10-21T14:04:03+078788:tool/net/redbean.c:7091:redbean-3:23236] (repl) event loop
+D2025-10-21T14:05:45.583905:tool/net/redbean.c:5127:redbean-3:6180] (lua) LuaRunAsset("/.init.lua")
+V2025-10-21T14:05:45+003726:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set template 'fmt'
+V2025-10-21T14:05:45+000054:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set template '500'
+V2025-10-21T14:05:45+000161:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set template 'json'
+V2025-10-21T14:05:45+000034:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set template 'sse'
+V2025-10-21T14:05:45+000031:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set template 'fmg'
+V2025-10-21T14:05:45+000030:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set template 'cgi'
+V2025-10-21T14:05:45+000042:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set route '/team/player' (POST) at index 1
+V2025-10-21T14:05:45+000060:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set route '/team/enemy' (POST) at index 2
+V2025-10-21T14:05:45+000046:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set route '/team/player' (GET) at index 3
+V2025-10-21T14:05:45+000044:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set route '/team/enemy' (GET) at index 4
+V2025-10-21T14:05:45+000040:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set route '/Battle' (POST) at index 5
+V2025-10-21T14:05:45+000043:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set route '/Battle' (GET) at index 6
+V2025-10-21T14:05:45+000039:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set route '/Program' (POST) at index 7
+V2025-10-21T14:05:45+000041:/zip/.lua/fullmoon.lua:62:redbean-3:6180] (fm) set route '/Program' (GET) at index 8
+I2025-10-21T14:05:45+001656:tool/net/redbean.c:7052:redbean-3:6180] (srvr) listen http://172.30.128.1:8080
+I2025-10-21T14:05:45+000265:tool/net/redbean.c:7052:redbean-3:6180] (srvr) listen http://172.16.22.36:8080
+I2025-10-21T14:05:45+000125:tool/net/redbean.c:7052:redbean-3:6180] (srvr) listen http://127.0.0.1:8080
+V2025-10-21T14:05:45+000082:tool/net/redbean.c:2085:redbean-3:6180] (ssl) could not find non-CA SSL certificate key pair with -addext keyUsage=digitalSignature -addext extendedKeyUsage=serverAuth
+V2025-10-21T14:05:45+000028:tool/net/redbean.c:2088:redbean-3:6180] (ssl) could not find CA key signing key pair with -addext keyUsage=keyCertSign
+V2025-10-21T14:05:45+000026:tool/net/redbean.c:2090:redbean-3:6180] (ssl) generating self-signed ssl certificates
+D2025-10-21T14:05:47.320254:net/https/logcertificate.c:28:redbean-3:6180] generated EC certificate
+ cert. version     : 3
+ serial number     : 5B:07:54:DC:15:AB:E1:2E:84:4B:72:4D:2F:52:0B:AD
+ issuer name       : CN=LAPTOP-2MH1B4G5
+ subject name      : CN=LAPTOP-2MH1B4G5
+ issued  on        : 2025-10-20 20:05:47
+ expires on        : 2026-10-22 20:05:47
+ signed using      : ECDSA with SHA256
+ EC key size       : 256 bits
+ basic constraints : CA=false
+ subject alt name  :
+     iPAddress : 172.30.128.1
+     iPAddress : 172.16.22.36
+ key usage         : Digital Signature
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-21T14:05:47+000100:tool/net/redbean.c:687:redbean-3:6180] (ssl) using EC certificate "CN=LAPTOP-2MH1B4G5" for HTTPS server
+D2025-10-21T14:05:48.806778:net/https/logcertificate.c:28:redbean-3:6180] generated RSA certificate
+ cert. version     : 3
+ serial number     : AD:6E:99:CB:71:5F:51:75:E0:F5:9F:86:8C:EB:76:C6
+ issuer name       : CN=LAPTOP-2MH1B4G5
+ subject name      : CN=LAPTOP-2MH1B4G5
+ issued  on        : 2025-10-20 20:05:48
+ expires on        : 2026-10-22 20:05:48
+ signed using      : RSA with SHA-256
+ RSA key size      : 2048 bits
+ basic constraints : CA=false
+ subject alt name  :
+     iPAddress : 172.30.128.1
+     iPAddress : 172.16.22.36
+ key usage         : Digital Signature, Key Encipherment
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-21T14:05:48+000102:tool/net/redbean.c:687:redbean-3:6180] (ssl) using RSA certificate "CN=LAPTOP-2MH1B4G5" for HTTPS server
+D2025-10-21T14:05:48+078903:tool/net/redbean.c:7091:redbean-3:26304] (repl) event loop
+D2025-10-21T14:05:48+002749:tool/net/redbean.c:6750:redbean-3:26304] (token) can't acquire accept() token for client
+V2025-10-21T14:05:48+000107:tool/net/redbean.c:6759:redbean-3:26304] (srvr) accept 127.0.0.1:51430 via 127.0.0.1:8080
+D2025-10-21T14:05:48+034800:tool/net/redbean.c:6750:redbean-3:26304] (token) can't acquire accept() token for client
+V2025-10-21T14:05:48+000098:tool/net/redbean.c:6759:redbean-3:26304] (srvr) accept 127.0.0.1:57292 via 127.0.0.1:8080
+D2025-10-21T14:05:48+038225:tool/net/redbean.c:6583:redbean-3:31288] (stat) 127.0.0.1:51430 read 689 bytes
+I2025-10-21T14:05:48+000101:tool/net/redbean.c:6112:redbean-3:31288] (req) received 127.0.0.1:51430 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:05:48+000059:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:05:48+000041:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:05:48+000038:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:05:48+000038:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.html")
+V2025-10-21T14:05:48+007667:tool/net/redbean.c:6343:redbean-3:31288] (rsp) 200 OK
+D2025-10-21T14:05:48+005531:tool/net/redbean.c:6511:redbean-3:31288] (stat) "/" latency r: 13,521µs c: 51,705µs
+D2025-10-21T14:05:49.086723:tool/net/redbean.c:6750:redbean-3:26304] (token) can't acquire accept() token for client
+V2025-10-21T14:05:49+000108:tool/net/redbean.c:6759:redbean-3:26304] (srvr) accept 127.0.0.1:65499 via 127.0.0.1:8080
+D2025-10-21T14:05:56.494536:tool/net/redbean.c:6583:redbean-3:31288] (stat) 127.0.0.1:51430 read 689 bytes
+I2025-10-21T14:05:56+000146:tool/net/redbean.c:6112:redbean-3:31288] (req) received 127.0.0.1:51430 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:05:56+000049:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:05:56+000041:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:05:56+000037:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:05:56+000038:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.html")
+V2025-10-21T14:05:56+010229:tool/net/redbean.c:6343:redbean-3:31288] (rsp) 200 OK
+D2025-10-21T14:05:56+006529:tool/net/redbean.c:6511:redbean-3:31288] (stat) "/" latency r: 17,075µs c: 7,622,966µs
+D2025-10-21T14:05:58.257795:tool/net/redbean.c:6583:redbean-3:31288] (stat) 127.0.0.1:51430 read 689 bytes
+I2025-10-21T14:05:58+000106:tool/net/redbean.c:6112:redbean-3:31288] (req) received 127.0.0.1:51430 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:05:58+000034:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:05:58+000032:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:05:58+000028:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:05:58+000028:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.html")
+V2025-10-21T14:05:58+006297:tool/net/redbean.c:6343:redbean-3:31288] (rsp) 200 OK
+D2025-10-21T14:05:58+005273:tool/net/redbean.c:6511:redbean-3:31288] (stat) "/" latency r: 11,805µs c: 9,380,955µs
+D2025-10-21T14:05:59.137773:tool/net/redbean.c:6583:redbean-3:31288] (stat) 127.0.0.1:51430 read 689 bytes
+I2025-10-21T14:05:59+000103:tool/net/redbean.c:6112:redbean-3:31288] (req) received 127.0.0.1:51430 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:05:59+000029:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:05:59+000026:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:05:59+000024:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:05:59+000032:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.html")
+V2025-10-21T14:05:59+005957:tool/net/redbean.c:6343:redbean-3:31288] (rsp) 200 OK
+D2025-10-21T14:05:59+004619:tool/net/redbean.c:6511:redbean-3:31288] (stat) "/" latency r: 10,796µs c: 10,259,925µs
+D2025-10-21T14:05:59+543321:tool/net/redbean.c:6583:redbean-3:31288] (stat) 127.0.0.1:51430 read 689 bytes
+I2025-10-21T14:05:59+000112:tool/net/redbean.c:6112:redbean-3:31288] (req) received 127.0.0.1:51430 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:05:59+000034:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:05:59+000029:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:05:59+000026:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:05:59+000027:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.html")
+V2025-10-21T14:05:59+008173:tool/net/redbean.c:6343:redbean-3:31288] (rsp) 200 OK
+D2025-10-21T14:05:59+004813:tool/net/redbean.c:6511:redbean-3:31288] (stat) "/" latency r: 13,223µs c: 10,816,465µs
+D2025-10-21T14:06:09.942865:tool/net/redbean.c:6583:redbean-3:31288] (stat) 127.0.0.1:51430 read 689 bytes
+I2025-10-21T14:06:09+000121:tool/net/redbean.c:6112:redbean-3:31288] (req) received 127.0.0.1:51430 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:06:09+000039:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:06:09+000035:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:06:09+000033:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:06:09+000034:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.html")
+V2025-10-21T14:06:09+010121:tool/net/redbean.c:6343:redbean-3:31288] (rsp) 200 OK
+D2025-10-21T14:06:09+004984:tool/net/redbean.c:6511:redbean-3:31288] (stat) "/" latency r: 15,375µs c: 21,069,595µs
+D2025-10-21T14:06:10.900643:tool/net/redbean.c:6583:redbean-3:31288] (stat) 127.0.0.1:51430 read 689 bytes
+I2025-10-21T14:06:10+000120:tool/net/redbean.c:6112:redbean-3:31288] (req) received 127.0.0.1:51430 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:06:10+000034:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:06:10+000024:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:06:10+000024:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:06:10+000023:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.html")
+V2025-10-21T14:06:10+006023:tool/net/redbean.c:6343:redbean-3:31288] (rsp) 200 OK
+D2025-10-21T14:06:10+004966:tool/net/redbean.c:6511:redbean-3:31288] (stat) "/" latency r: 11,221µs c: 22,023,220µs
+D2025-10-21T14:06:25.336743:tool/net/redbean.c:6583:redbean-3:31288] (stat) 127.0.0.1:51430 read 689 bytes
+I2025-10-21T14:06:25+000129:tool/net/redbean.c:6112:redbean-3:31288] (req) received 127.0.0.1:51430 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:06:25+000113:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:06:25+000043:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:06:25+000041:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:06:25+000040:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.html")
+V2025-10-21T14:06:25+006340:tool/net/redbean.c:6343:redbean-3:31288] (rsp) 200 OK
+D2025-10-21T14:06:25+006487:tool/net/redbean.c:6511:redbean-3:31288] (stat) "/" latency r: 13,199µs c: 36,461,298µs
+D2025-10-21T14:06:26.222595:tool/net/redbean.c:6583:redbean-3:31288] (stat) 127.0.0.1:51430 read 689 bytes
+I2025-10-21T14:06:26+000235:tool/net/redbean.c:6112:redbean-3:31288] (req) received 127.0.0.1:51430 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:06:26+000067:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:06:26+000062:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:06:26+000322:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:06:26+000048:tool/net/redbean.c:6157:redbean-3:31288] (srvr) RoutePath("/index.html")
+V2025-10-21T14:06:26+006992:tool/net/redbean.c:6343:redbean-3:31288] (rsp) 200 OK
+D2025-10-21T14:06:26+004560:tool/net/redbean.c:6511:redbean-3:31288] (stat) "/" latency r: 12,295µs c: 37,346,245µs
+D2025-10-21T14:06:48.969697:tool/net/redbean.c:5683:redbean-3:32376] (stat) 127.0.0.1:57292 read timeout with 0 messages handled
+D2025-10-21T14:06:48+000165:tool/net/redbean.c:6802:redbean-3:32376] (stat) 127.0.0.1:57292 closing after 60,046,323µs
+D2025-10-21T14:06:49.127263:tool/net/redbean.c:5683:redbean-3:6324] (stat) 127.0.0.1:65499 read timeout with 0 messages handled
+D2025-10-21T14:06:49+000254:tool/net/redbean.c:6802:redbean-3:6324] (stat) 127.0.0.1:65499 closing after 60,040,687µs
+D2025-10-21T14:07:26.249411:tool/net/redbean.c:5683:redbean-3:31288] (stat) 127.0.0.1:51430 read timeout with 9 messages handled
+D2025-10-21T14:07:26+000187:tool/net/redbean.c:6802:redbean-3:31288] (stat) 127.0.0.1:51430 closing after 97,360,958µs
+D2025-10-21T14:09:40.741790:tool/net/redbean.c:5127:redbean-3:24908] (lua) LuaRunAsset("/.init.lua")
+V2025-10-21T14:09:40+003254:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set template 'fmt'
+V2025-10-21T14:09:40+000048:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set template '500'
+V2025-10-21T14:09:40+000123:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set template 'json'
+V2025-10-21T14:09:40+000030:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set template 'sse'
+V2025-10-21T14:09:40+000028:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set template 'fmg'
+V2025-10-21T14:09:40+000026:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set template 'cgi'
+V2025-10-21T14:09:40+000039:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set route '/team/player' (POST) at index 1
+V2025-10-21T14:09:40+000056:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set route '/team/enemy' (POST) at index 2
+V2025-10-21T14:09:40+000040:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set route '/team/player' (GET) at index 3
+V2025-10-21T14:09:40+000044:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set route '/team/enemy' (GET) at index 4
+V2025-10-21T14:09:40+000048:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set route '/Battle' (POST) at index 5
+V2025-10-21T14:09:40+000048:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set route '/Battle' (GET) at index 6
+V2025-10-21T14:09:40+000053:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set route '/Program' (POST) at index 7
+V2025-10-21T14:09:40+000037:/zip/.lua/fullmoon.lua:62:redbean-3:24908] (fm) set route '/Program' (GET) at index 8
+I2025-10-21T14:09:40+001050:tool/net/redbean.c:7052:redbean-3:24908] (srvr) listen http://172.30.128.1:8080
+I2025-10-21T14:09:40+000121:tool/net/redbean.c:7052:redbean-3:24908] (srvr) listen http://172.16.22.36:8080
+I2025-10-21T14:09:40+000086:tool/net/redbean.c:7052:redbean-3:24908] (srvr) listen http://127.0.0.1:8080
+V2025-10-21T14:09:40+000068:tool/net/redbean.c:2085:redbean-3:24908] (ssl) could not find non-CA SSL certificate key pair with -addext keyUsage=digitalSignature -addext extendedKeyUsage=serverAuth
+V2025-10-21T14:09:40+000024:tool/net/redbean.c:2088:redbean-3:24908] (ssl) could not find CA key signing key pair with -addext keyUsage=keyCertSign
+V2025-10-21T14:09:40+000023:tool/net/redbean.c:2090:redbean-3:24908] (ssl) generating self-signed ssl certificates
+D2025-10-21T14:09:40+035652:net/https/logcertificate.c:28:redbean-3:24908] generated EC certificate
+ cert. version     : 3
+ serial number     : 60:03:AF:4D:46:FC:EB:FC:6F:36:86:15:39:85:72:A1
+ issuer name       : CN=LAPTOP-2MH1B4G5
+ subject name      : CN=LAPTOP-2MH1B4G5
+ issued  on        : 2025-10-20 20:09:40
+ expires on        : 2026-10-22 20:09:40
+ signed using      : ECDSA with SHA256
+ EC key size       : 256 bits
+ basic constraints : CA=false
+ subject alt name  :
+     iPAddress : 172.30.128.1
+     iPAddress : 172.16.22.36
+ key usage         : Digital Signature
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-21T14:09:40+000096:tool/net/redbean.c:687:redbean-3:24908] (ssl) using EC certificate "CN=LAPTOP-2MH1B4G5" for HTTPS server
+D2025-10-21T14:09:40+141838:net/https/logcertificate.c:28:redbean-3:24908] generated RSA certificate
+ cert. version     : 3
+ serial number     : EB:47:C9:B0:84:68:61:6F:2B:AB:AC:93:6D:BB:E6:C8
+ issuer name       : CN=LAPTOP-2MH1B4G5
+ subject name      : CN=LAPTOP-2MH1B4G5
+ issued  on        : 2025-10-20 20:09:40
+ expires on        : 2026-10-22 20:09:40
+ signed using      : RSA with SHA-256
+ RSA key size      : 2048 bits
+ basic constraints : CA=false
+ subject alt name  :
+     iPAddress : 172.30.128.1
+     iPAddress : 172.16.22.36
+ key usage         : Digital Signature, Key Encipherment
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-21T14:09:40+000072:tool/net/redbean.c:687:redbean-3:24908] (ssl) using RSA certificate "CN=LAPTOP-2MH1B4G5" for HTTPS server
+D2025-10-21T14:09:41.001650:tool/net/redbean.c:7091:redbean-3:724] (repl) event loop
+D2025-10-21T14:09:52.217605:tool/net/redbean.c:6750:redbean-3:724] (token) can't acquire accept() token for client
+V2025-10-21T14:09:52+000093:tool/net/redbean.c:6759:redbean-3:724] (srvr) accept 127.0.0.1:51528 via 127.0.0.1:8080
+D2025-10-21T14:09:52+035343:tool/net/redbean.c:6750:redbean-3:724] (token) can't acquire accept() token for client
+V2025-10-21T14:09:52+000130:tool/net/redbean.c:6759:redbean-3:724] (srvr) accept 127.0.0.1:49671 via 127.0.0.1:8080
+D2025-10-21T14:09:52+040089:tool/net/redbean.c:6583:redbean-3:31588] (stat) 127.0.0.1:51528 read 689 bytes
+I2025-10-21T14:09:52+000089:tool/net/redbean.c:6112:redbean-3:31588] (req) received 127.0.0.1:51528 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:09:52+000037:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:09:52+000033:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:09:52+000031:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:09:52+000031:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.html")
+V2025-10-21T14:09:52+007972:tool/net/redbean.c:6343:redbean-3:31588] (rsp) 200 OK
+D2025-10-21T14:09:52+006437:tool/net/redbean.c:6511:redbean-3:31588] (stat) "/" latency r: 14,689µs c: 54,724µs
+D2025-10-21T14:09:52+228299:tool/net/redbean.c:6750:redbean-3:724] (token) can't acquire accept() token for client
+V2025-10-21T14:09:52+000137:tool/net/redbean.c:6759:redbean-3:724] (srvr) accept 127.0.0.1:49775 via 127.0.0.1:8080
+D2025-10-21T14:09:56.667175:tool/net/redbean.c:6583:redbean-3:31588] (stat) 127.0.0.1:51528 read 689 bytes
+I2025-10-21T14:09:56+000132:tool/net/redbean.c:6112:redbean-3:31588] (req) received 127.0.0.1:51528 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:09:56+000043:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:09:56+000039:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:09:56+000037:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:09:56+000124:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.html")
+V2025-10-21T14:09:56+008308:tool/net/redbean.c:6343:redbean-3:31588] (rsp) 200 OK
+D2025-10-21T14:09:56+004937:tool/net/redbean.c:6511:redbean-3:31588] (stat) "/" latency r: 13,628µs c: 4,463,101µs
+D2025-10-21T14:09:57.838327:tool/net/redbean.c:6583:redbean-3:31588] (stat) 127.0.0.1:51528 read 689 bytes
+I2025-10-21T14:09:57+000157:tool/net/redbean.c:6112:redbean-3:31588] (req) received 127.0.0.1:51528 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:09:57+000076:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:09:57+000069:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:09:57+000064:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:09:57+000070:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.html")
+V2025-10-21T14:09:57+006713:tool/net/redbean.c:6343:redbean-3:31588] (rsp) 200 OK
+D2025-10-21T14:09:57+005574:tool/net/redbean.c:6511:redbean-3:31588] (stat) "/" latency r: 12,731µs c: 5,633,356µs
+D2025-10-21T14:09:58.462957:tool/net/redbean.c:6583:redbean-3:31588] (stat) 127.0.0.1:51528 read 689 bytes
+I2025-10-21T14:09:58+000126:tool/net/redbean.c:6112:redbean-3:31588] (req) received 127.0.0.1:51528 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:09:58+000045:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:09:58+000049:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:09:58+000057:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:09:58+000034:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.html")
+V2025-10-21T14:09:58+007991:tool/net/redbean.c:6343:redbean-3:31588] (rsp) 200 OK
+D2025-10-21T14:09:58+005130:tool/net/redbean.c:6511:redbean-3:31588] (stat) "/" latency r: 13,440µs c: 6,258,694µs
+D2025-10-21T14:09:58+271665:tool/net/redbean.c:6583:redbean-3:31588] (stat) 127.0.0.1:51528 read 689 bytes
+I2025-10-21T14:09:58+000120:tool/net/redbean.c:6112:redbean-3:31588] (req) received 127.0.0.1:51528 HTTP11 GET http://localhost:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+D2025-10-21T14:09:58+000044:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/localhost/")
+D2025-10-21T14:09:58+000039:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/www.localhost/")
+D2025-10-21T14:09:58+000038:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.lua")
+D2025-10-21T14:09:58+000039:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.html")
+V2025-10-21T14:09:58+007715:tool/net/redbean.c:6343:redbean-3:31588] (rsp) 200 OK
+D2025-10-21T14:09:58+005796:tool/net/redbean.c:6511:redbean-3:31588] (stat) "/" latency r: 13,799µs c: 6,544,154µs
