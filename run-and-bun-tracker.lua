@@ -12,6 +12,8 @@
 -- Ideally this file should be as small as possible, and should not contain important code that requires maintaining
 
 -- This prevents multiple of the same Tracker script from being loaded into mGBA
+package.path = package.path .. ";" .. "run-and-bun-tracker/lib/share/lua/5.1/?/init.lua" .. ";" .. "run-and-bun-tracker/lib/share/lua/5.1/?.lua"
+
 if RunAndBunTracker == nil then
 	RunAndBunTracker = {
 		isRunning = (RunAndBunTracker ~= nil and RunAndBunTracker.isRunning)

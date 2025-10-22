@@ -1,0 +1,13 @@
+prefix=C:/Users/kuroa/Downloads/zlib-1.3.1/zlib-1.3.1/out/install/x86
+exec_prefix=C:/Users/kuroa/Downloads/zlib-1.3.1/zlib-1.3.1/out/install/x86
+libdir=C:/Users/kuroa/Downloads/zlib-1.3.1/zlib-1.3.1/out/install/x86/lib
+sharedlibdir=C:/Users/kuroa/Downloads/zlib-1.3.1/zlib-1.3.1/out/install/x86/lib
+includedir=C:/Users/kuroa/Downloads/zlib-1.3.1/zlib-1.3.1/out/install/x86/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.3.1
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}

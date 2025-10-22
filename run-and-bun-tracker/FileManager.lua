@@ -52,6 +52,7 @@ FileManager.Files = {
 	{ name = "Program", filepath = "Program.lua", },
 	{ name = "Input", filepath = "Input.lua", },
 	{ name = "Map", filepath = "Map.lua", },
+	{ name = "WebUI", filepath = "WebUI.lua", },
 	-- { name = "RNG", filepath = "RNG.lua", },
 	}
 
