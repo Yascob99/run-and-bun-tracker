@@ -1,4 +1,4 @@
----@diagnostic disable: deprecated, unbalanced-assignments
+---@diagnostic disable: deprecated, unbalanced-assignments, undefined-global
 --
 -- ultralight webframework for [Redbean web server](https://redbean.dev/)
 -- Copyright 2021-23 Paul Kulchenko

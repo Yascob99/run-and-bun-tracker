@@ -71,6 +71,7 @@ function Battle.battleStart()
     Battle.isInBattle = true
 	Battle.isWildEncounter = Utils.getbits(Battle.battleFlags, 3, 1) == 0
 	Program.enemyPokemonTeam = Program.getTrainerData(2)
+    WebUI.updateBattle()
     Program.Save()
 end
 

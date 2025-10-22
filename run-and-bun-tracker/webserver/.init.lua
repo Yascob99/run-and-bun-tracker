@@ -1,9 +1,10 @@
 local fm = require "fullmoon"
+local json = require "Json"
 Data = {
-    trainerteam = "",
-    enemyteam = "",
-    battle = "",
-    program = "",
+    trainerteam = json.encode({}),
+    enemyteam = json.encode({}),
+    battle = json.encode({}),
+    program = json.encode({}),
     time_since_last_request = GetDate()
 }
 
@@ -31,8 +32,9 @@ end)
 -- Battle API
 fm.setRoute(fm.POST{"/Battle", routeName="battle-set"},
 function(r)
+    print(r.body)
     Data.battle = r.body
-    return r
+    return r.body
 end)
 
 fm.setRoute(fm.GET{"/Battle", routeName="battle-get"},
@@ -52,4 +54,13 @@ function(r)
     return Data.program
 end)
 
-fm.run()
+fm.setRoute("/", function(r)
+    return fm.serveAsset("index.html")
+end)
+--fm.setRoute("/*", "/js/*")
+--fm.setRoute("/*", "/css/*")
+
+fm.setRoute(fm.GET"/js/*", fm.serveAsset)
+fm.setRoute(fm.GET"/css/*", fm.serveAsset)
+LaunchBrowser()
+fm.run({uniprocess = true})

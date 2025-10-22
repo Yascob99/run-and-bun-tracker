@@ -304,3 +304,18 @@ function Utils.joinTables(table1,table2)
     end
     return table1
 end
+
+function Utils.isWindows()
+	return FileManager.slash == '\\'
+end
+
+-- Gets just the attributes of a Global for easier storing in files.
+function Utils.getAttributesFromGlobal(Global)
+	local global = {}
+	for key, value in pairs(Global) do
+		if type(value) ~= "function" then
+			global[key] = value
+		end
+	end
+	return global
+end

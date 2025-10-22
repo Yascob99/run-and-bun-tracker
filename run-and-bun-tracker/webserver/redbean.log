@@ -290,3 +290,396 @@ D2025-10-21T14:09:58+000038:tool/net/redbean.c:6157:redbean-3:31588] (srvr) Rout
 D2025-10-21T14:09:58+000039:tool/net/redbean.c:6157:redbean-3:31588] (srvr) RoutePath("/index.html")
 V2025-10-21T14:09:58+007715:tool/net/redbean.c:6343:redbean-3:31588] (rsp) 200 OK
 D2025-10-21T14:09:58+005796:tool/net/redbean.c:6511:redbean-3:31588] (stat) "/" latency r: 13,799µs c: 6,544,154µs
+D2025-10-22T15:33:24.479492:tool/net/redbean.c:5127:redbean-RBT:2204] (lua) LuaRunAsset("/.init.lua")
+V2025-10-22T15:33:24+004378:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set template 'fmt'
+V2025-10-22T15:33:24+000075:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set template '500'
+V2025-10-22T15:33:24+000217:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set template 'json'
+V2025-10-22T15:33:24+000059:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set template 'sse'
+V2025-10-22T15:33:24+000043:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set template 'fmg'
+V2025-10-22T15:33:24+000036:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set template 'cgi'
+V2025-10-22T15:33:24+000606:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/team/player' (POST) at index 1
+V2025-10-22T15:33:24+000060:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/team/enemy' (POST) at index 2
+V2025-10-22T15:33:24+000093:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/team/player' (GET) at index 3
+V2025-10-22T15:33:24+000060:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/team/enemy' (GET) at index 4
+V2025-10-22T15:33:24+000034:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/Battle' (POST) at index 5
+V2025-10-22T15:33:24+000028:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/Battle' (GET) at index 6
+V2025-10-22T15:33:24+000060:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/Program' (POST) at index 7
+V2025-10-22T15:33:24+000035:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/Program' (GET) at index 8
+V2025-10-22T15:33:24+000032:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/' (ANY) at index 9
+V2025-10-22T15:33:24+000034:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/js/*' (GET) at index 10
+V2025-10-22T15:33:24+000041:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) set route '/css/*' (GET) at index 11
+I2025-10-22T15:33:24+000053:/zip/.lua/fullmoon.lua:64:redbean-RBT:2204] (fm) started redbean/3.0.0 fullmoon/0.384
+V2025-10-22T15:33:24+000037:/zip/.lua/fullmoon.lua:63:redbean-RBT:2204] (fm) applied random session secret; set `fm.sessionOptions.secret` to `fm.decodeBase64('p2cNlmLpfd0SInf1cc+RNkSc8cDSLNe1isXnUFlPMHA=')` to continue using this value or to `false` to disable
+I2025-10-22T15:33:24+001042:tool/net/redbean.c:7052:redbean-RBT:2204] (srvr) listen http://192.168.1.244:8080
+I2025-10-22T15:33:24+000140:tool/net/redbean.c:7052:redbean-RBT:2204] (srvr) listen http://127.0.0.1:8080
+V2025-10-22T15:33:24+000058:tool/net/redbean.c:2085:redbean-RBT:2204] (ssl) could not find non-CA SSL certificate key pair with -addext keyUsage=digitalSignature -addext extendedKeyUsage=serverAuth
+V2025-10-22T15:33:24+000017:tool/net/redbean.c:2088:redbean-RBT:2204] (ssl) could not find CA key signing key pair with -addext keyUsage=keyCertSign
+V2025-10-22T15:33:24+000016:tool/net/redbean.c:2090:redbean-RBT:2204] (ssl) generating self-signed ssl certificates
+D2025-10-22T15:33:24+020169:net/https/logcertificate.c:28:redbean-RBT:2204] generated EC certificate
+ cert. version     : 3
+ serial number     : A7:1B:D2:60:67:8B:FA:D4:BD:D8:9E:BA:2A:3E:1A:A8
+ issuer name       : CN=LAPTOP-2MH1B4G5.lan
+ subject name      : CN=LAPTOP-2MH1B4G5.lan
+ issued  on        : 2025-10-21 21:33:24
+ expires on        : 2026-10-23 21:33:24
+ signed using      : ECDSA with SHA256
+ EC key size       : 256 bits
+ basic constraints : CA=false
+ subject alt name  :
+     dNSName : LAPTOP-2MH1B4G5.lan
+     dNSName : *.LAPTOP-2MH1B4G5.lan
+     iPAddress : 192.168.1.244
+ key usage         : Digital Signature
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-22T15:33:24+000092:tool/net/redbean.c:687:redbean-RBT:2204] (ssl) using EC certificate "CN=LAPTOP-2MH1B4G5.lan" for HTTPS server
+D2025-10-22T15:33:24+048419:net/https/logcertificate.c:28:redbean-RBT:2204] generated RSA certificate
+ cert. version     : 3
+ serial number     : E3:4E:E5:C9:5C:9C:33:61:F8:ED:15:00:CC:C3:B4:CA
+ issuer name       : CN=LAPTOP-2MH1B4G5.lan
+ subject name      : CN=LAPTOP-2MH1B4G5.lan
+ issued  on        : 2025-10-21 21:33:24
+ expires on        : 2026-10-23 21:33:24
+ signed using      : RSA with SHA-256
+ RSA key size      : 2048 bits
+ basic constraints : CA=false
+ subject alt name  :
+     dNSName : LAPTOP-2MH1B4G5.lan
+     dNSName : *.LAPTOP-2MH1B4G5.lan
+     iPAddress : 192.168.1.244
+ key usage         : Digital Signature, Key Encipherment
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-22T15:33:24+000057:tool/net/redbean.c:687:redbean-RBT:2204] (ssl) using RSA certificate "CN=LAPTOP-2MH1B4G5.lan" for HTTPS server
+W2025-10-22T15:33:24+275690:tool/net/launch.c:44:redbean-RBT:2204] (srvr) failed to open http://192.168.1.244:8080/ in a browser tab using /c/windows/explorer.exe: process exited with non-zero status
+D2025-10-22T15:33:24+150179:tool/net/redbean.c:7091:redbean-RBT:25196] (repl) event loop
+D2025-10-22T15:33:24+002197:tool/net/redbean.c:6750:redbean-RBT:25196] (token) can't acquire accept() token for client
+V2025-10-22T15:33:24+000058:tool/net/redbean.c:6759:redbean-RBT:25196] (srvr) accept 192.168.1.244:49970 via 192.168.1.244:8080
+D2025-10-22T15:33:24+000032:tool/net/redbean.c:6583:redbean-RBT:25196] (stat) 192.168.1.244:49970 read 433 bytes
+I2025-10-22T15:33:24+000035:tool/net/redbean.c:6112:redbean-RBT:25196] (req) received 192.168.1.244:49970 HTTP11 GET http://192.168.1.244:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+V2025-10-22T15:33:24+000051:tool/net/redbean.c:6343:redbean-RBT:25196] (rsp) 200 OK
+D2025-10-22T15:33:24+000045:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) match 11 route(s) against '/'
+D2025-10-22T15:33:24+000032:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/player' not matched
+D2025-10-22T15:33:24+000020:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/enemy' not matched
+D2025-10-22T15:33:24+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/player' not matched
+D2025-10-22T15:33:24+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/enemy' not matched
+D2025-10-22T15:33:24+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Battle' not matched
+D2025-10-22T15:33:24+000031:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Battle' not matched
+D2025-10-22T15:33:24+000024:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Program' not matched
+D2025-10-22T15:33:24+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Program' not matched
+D2025-10-22T15:33:24+000019:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/' matched
+D2025-10-22T15:33:24+000027:tool/net/redbean.c:2877:redbean-RBT:25196] (srvr) ServeAssetPrecompressed()
+V2025-10-22T15:33:24+000016:tool/net/redbean.c:6343:redbean-RBT:25196] (rsp) 200 OK
+D2025-10-22T15:33:24+000030:tool/net/redbean.c:6511:redbean-RBT:25196] (stat) "/" latency r: 409µs c: 442µs
+D2025-10-22T15:33:24+000080:tool/net/redbean.c:5683:redbean-RBT:25196] (stat) 192.168.1.244:49970 connection closed with 1 messages handled
+D2025-10-22T15:33:24+000020:tool/net/redbean.c:6802:redbean-RBT:25196] (stat) 192.168.1.244:49970 closing after 543µs
+D2025-10-22T15:33:24+000126:tool/net/redbean.c:6750:redbean-RBT:25196] (token) can't acquire accept() token for client
+V2025-10-22T15:33:24+000029:tool/net/redbean.c:6759:redbean-RBT:25196] (srvr) accept 192.168.1.244:52559 via 192.168.1.244:8080
+D2025-10-22T15:33:25.002097:tool/net/redbean.c:6583:redbean-RBT:25196] (stat) 192.168.1.244:52559 read 368 bytes
+I2025-10-22T15:33:25+000054:tool/net/redbean.c:6112:redbean-RBT:25196] (req) received 192.168.1.244:52559 HTTP11 GET http://192.168.1.244:8080/js/main.js "http://192.168.1.244:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+V2025-10-22T15:33:25+000039:tool/net/redbean.c:6343:redbean-RBT:25196] (rsp) 200 OK
+D2025-10-22T15:33:25+000032:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) match 11 route(s) against '/js/main.js'
+D2025-10-22T15:33:25+000027:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/player' not matched
+D2025-10-22T15:33:25+000021:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/enemy' not matched
+D2025-10-22T15:33:25+000038:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/player' not matched
+D2025-10-22T15:33:25+000029:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/enemy' not matched
+D2025-10-22T15:33:25+000027:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Battle' not matched
+D2025-10-22T15:33:25+000025:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Battle' not matched
+D2025-10-22T15:33:25+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Program' not matched
+D2025-10-22T15:33:25+000019:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Program' not matched
+D2025-10-22T15:33:25+000020:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/' not matched
+D2025-10-22T15:33:25+000024:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/js/*' matched
+V2025-10-22T15:33:25+000038:tool/net/redbean.c:6343:redbean-RBT:25196] (rsp) 304 Not Modified
+D2025-10-22T15:33:25+000022:tool/net/redbean.c:6511:redbean-RBT:25196] (stat) "/js/main.js" latency r: 442µs c: 18,217µs
+D2025-10-22T15:33:25+000056:tool/net/redbean.c:5683:redbean-RBT:25196] (stat) 192.168.1.244:52559 connection closed with 1 messages handled
+D2025-10-22T15:33:25+000017:tool/net/redbean.c:6802:redbean-RBT:25196] (stat) 192.168.1.244:52559 closing after 18,291µs
+D2025-10-22T15:33:25+000110:tool/net/redbean.c:6750:redbean-RBT:25196] (token) can't acquire accept() token for client
+V2025-10-22T15:33:25+000022:tool/net/redbean.c:6759:redbean-RBT:25196] (srvr) accept 192.168.1.244:56341 via 192.168.1.244:8080
+D2025-10-22T15:33:25+000020:tool/net/redbean.c:6583:redbean-RBT:25196] (stat) 192.168.1.244:56341 read 385 bytes
+I2025-10-22T15:33:25+000019:tool/net/redbean.c:6112:redbean-RBT:25196] (req) received 192.168.1.244:56341 HTTP11 GET http://192.168.1.244:8080/css/main.css "http://192.168.1.244:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+V2025-10-22T15:33:25+000025:tool/net/redbean.c:6343:redbean-RBT:25196] (rsp) 200 OK
+D2025-10-22T15:33:25+000022:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) match 11 route(s) against '/css/main.css'
+D2025-10-22T15:33:25+000021:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/player' not matched
+D2025-10-22T15:33:25+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/enemy' not matched
+D2025-10-22T15:33:25+000020:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/player' not matched
+D2025-10-22T15:33:25+000040:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/team/enemy' not matched
+D2025-10-22T15:33:25+000024:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Battle' not matched
+D2025-10-22T15:33:25+000024:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Battle' not matched
+D2025-10-22T15:33:25+000021:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Program' not matched
+D2025-10-22T15:33:25+000022:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/Program' not matched
+D2025-10-22T15:33:25+000022:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/' not matched
+D2025-10-22T15:33:25+000024:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/js/*' not matched
+D2025-10-22T15:33:25+000024:/zip/.lua/fullmoon.lua:62:redbean-RBT:25196] (fm) route '/css/*' matched
+V2025-10-22T15:33:25+000036:tool/net/redbean.c:6343:redbean-RBT:25196] (rsp) 304 Not Modified
+D2025-10-22T15:33:25+000028:tool/net/redbean.c:6511:redbean-RBT:25196] (stat) "/css/main.css" latency r: 398µs c: 419µs
+D2025-10-22T15:33:25+000056:tool/net/redbean.c:5683:redbean-RBT:25196] (stat) 192.168.1.244:56341 connection closed with 1 messages handled
+D2025-10-22T15:33:25+000022:tool/net/redbean.c:6802:redbean-RBT:25196] (stat) 192.168.1.244:56341 closing after 498µs
+D2025-10-22T15:34:44.810345:tool/net/redbean.c:5127:redbean-RBT:23568] (lua) LuaRunAsset("/.init.lua")
+V2025-10-22T15:34:44+002847:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set template 'fmt'
+V2025-10-22T15:34:44+000063:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set template '500'
+V2025-10-22T15:34:44+000122:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set template 'json'
+V2025-10-22T15:34:44+000028:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set template 'sse'
+V2025-10-22T15:34:44+000026:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set template 'fmg'
+V2025-10-22T15:34:44+000024:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set template 'cgi'
+V2025-10-22T15:34:44+000457:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/team/player' (POST) at index 1
+V2025-10-22T15:34:44+000178:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/team/enemy' (POST) at index 2
+V2025-10-22T15:34:44+000120:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/team/player' (GET) at index 3
+V2025-10-22T15:34:44+000046:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/team/enemy' (GET) at index 4
+V2025-10-22T15:34:44+000040:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/Battle' (POST) at index 5
+V2025-10-22T15:34:44+000085:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/Battle' (GET) at index 6
+V2025-10-22T15:34:44+000047:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/Program' (POST) at index 7
+V2025-10-22T15:34:44+000048:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/Program' (GET) at index 8
+V2025-10-22T15:34:44+000035:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/' (ANY) at index 9
+V2025-10-22T15:34:44+000034:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/js/*' (GET) at index 10
+V2025-10-22T15:34:44+000038:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) set route '/css/*' (GET) at index 11
+I2025-10-22T15:34:44+000047:/zip/.lua/fullmoon.lua:64:redbean-RBT:23568] (fm) started redbean/3.0.0 fullmoon/0.384
+V2025-10-22T15:34:44+000034:/zip/.lua/fullmoon.lua:63:redbean-RBT:23568] (fm) applied random session secret; set `fm.sessionOptions.secret` to `fm.decodeBase64('FUlorshaARnF6JbmIo59rOjUcSbito9faAO9NmAbFrw=')` to continue using this value or to `false` to disable
+I2025-10-22T15:34:44+000871:tool/net/redbean.c:7052:redbean-RBT:23568] (srvr) listen http://192.168.1.244:8080
+I2025-10-22T15:34:44+000104:tool/net/redbean.c:7052:redbean-RBT:23568] (srvr) listen http://127.0.0.1:8080
+V2025-10-22T15:34:44+000055:tool/net/redbean.c:2085:redbean-RBT:23568] (ssl) could not find non-CA SSL certificate key pair with -addext keyUsage=digitalSignature -addext extendedKeyUsage=serverAuth
+V2025-10-22T15:34:44+000022:tool/net/redbean.c:2088:redbean-RBT:23568] (ssl) could not find CA key signing key pair with -addext keyUsage=keyCertSign
+V2025-10-22T15:34:44+000020:tool/net/redbean.c:2090:redbean-RBT:23568] (ssl) generating self-signed ssl certificates
+D2025-10-22T15:34:44+011834:net/https/logcertificate.c:28:redbean-RBT:23568] generated EC certificate
+ cert. version     : 3
+ serial number     : D7:E7:B5:80:33:83:7F:51:77:C8:25:AA:D8:83:29:EC
+ issuer name       : CN=LAPTOP-2MH1B4G5.lan
+ subject name      : CN=LAPTOP-2MH1B4G5.lan
+ issued  on        : 2025-10-21 21:34:44
+ expires on        : 2026-10-23 21:34:44
+ signed using      : ECDSA with SHA256
+ EC key size       : 256 bits
+ basic constraints : CA=false
+ subject alt name  :
+     dNSName : LAPTOP-2MH1B4G5.lan
+     dNSName : *.LAPTOP-2MH1B4G5.lan
+     iPAddress : 192.168.1.244
+ key usage         : Digital Signature
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-22T15:34:44+000046:tool/net/redbean.c:687:redbean-RBT:23568] (ssl) using EC certificate "CN=LAPTOP-2MH1B4G5.lan" for HTTPS server
+D2025-10-22T15:34:44+080621:net/https/logcertificate.c:28:redbean-RBT:23568] generated RSA certificate
+ cert. version     : 3
+ serial number     : BF:2A:BF:FF:91:B8:9C:C8:E3:32:43:2B:3E:68:B9:A1
+ issuer name       : CN=LAPTOP-2MH1B4G5.lan
+ subject name      : CN=LAPTOP-2MH1B4G5.lan
+ issued  on        : 2025-10-21 21:34:44
+ expires on        : 2026-10-23 21:34:44
+ signed using      : RSA with SHA-256
+ RSA key size      : 2048 bits
+ basic constraints : CA=false
+ subject alt name  :
+     dNSName : LAPTOP-2MH1B4G5.lan
+     dNSName : *.LAPTOP-2MH1B4G5.lan
+     iPAddress : 192.168.1.244
+ key usage         : Digital Signature, Key Encipherment
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-22T15:34:44+000066:tool/net/redbean.c:687:redbean-RBT:23568] (ssl) using RSA certificate "CN=LAPTOP-2MH1B4G5.lan" for HTTPS server
+W2025-10-22T15:34:45.155695:tool/net/launch.c:44:redbean-RBT:23568] (srvr) failed to open http://192.168.1.244:8080/ in a browser tab using /c/windows/explorer.exe: process exited with non-zero status
+D2025-10-22T15:34:45+074157:tool/net/redbean.c:7091:redbean-RBT:5516] (repl) event loop
+D2025-10-22T15:34:45+032840:tool/net/redbean.c:6750:redbean-RBT:5516] (token) can't acquire accept() token for client
+V2025-10-22T15:34:45+000062:tool/net/redbean.c:6759:redbean-RBT:5516] (srvr) accept 192.168.1.244:64228 via 192.168.1.244:8080
+D2025-10-22T15:36:30.004285:tool/net/redbean.c:5127:redbean-RBT:31624] (lua) LuaRunAsset("/.init.lua")
+V2025-10-22T15:36:30+002972:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set template 'fmt'
+V2025-10-22T15:36:30+000058:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set template '500'
+V2025-10-22T15:36:30+000151:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set template 'json'
+V2025-10-22T15:36:30+000037:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set template 'sse'
+V2025-10-22T15:36:30+000025:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set template 'fmg'
+V2025-10-22T15:36:30+000023:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set template 'cgi'
+V2025-10-22T15:36:30+000456:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/team/player' (POST) at index 1
+V2025-10-22T15:36:30+000055:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/team/enemy' (POST) at index 2
+V2025-10-22T15:36:30+000036:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/team/player' (GET) at index 3
+V2025-10-22T15:36:30+000033:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/team/enemy' (GET) at index 4
+V2025-10-22T15:36:30+000032:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/Battle' (POST) at index 5
+V2025-10-22T15:36:30+000032:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/Battle' (GET) at index 6
+V2025-10-22T15:36:30+000141:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/Program' (POST) at index 7
+V2025-10-22T15:36:30+000051:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/Program' (GET) at index 8
+V2025-10-22T15:36:30+000041:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/' (ANY) at index 9
+V2025-10-22T15:36:30+000039:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/js/*' (GET) at index 10
+V2025-10-22T15:36:30+000043:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) set route '/css/*' (GET) at index 11
+I2025-10-22T15:36:30+000053:/zip/.lua/fullmoon.lua:64:redbean-RBT:31624] (fm) started redbean/3.0.0 fullmoon/0.384
+V2025-10-22T15:36:30+000039:/zip/.lua/fullmoon.lua:63:redbean-RBT:31624] (fm) applied random session secret; set `fm.sessionOptions.secret` to `fm.decodeBase64('LZeGW7btxzHoSMKZY5tQp5uhjrBUHgb4JjMsOrYz5yE=')` to continue using this value or to `false` to disable
+I2025-10-22T15:36:30+001040:tool/net/redbean.c:7052:redbean-RBT:31624] (srvr) listen http://192.168.1.244:8080
+I2025-10-22T15:36:30+000104:tool/net/redbean.c:7052:redbean-RBT:31624] (srvr) listen http://127.0.0.1:8080
+V2025-10-22T15:36:30+000056:tool/net/redbean.c:2085:redbean-RBT:31624] (ssl) could not find non-CA SSL certificate key pair with -addext keyUsage=digitalSignature -addext extendedKeyUsage=serverAuth
+V2025-10-22T15:36:30+000021:tool/net/redbean.c:2088:redbean-RBT:31624] (ssl) could not find CA key signing key pair with -addext keyUsage=keyCertSign
+V2025-10-22T15:36:30+000020:tool/net/redbean.c:2090:redbean-RBT:31624] (ssl) generating self-signed ssl certificates
+D2025-10-22T15:36:30+014097:net/https/logcertificate.c:28:redbean-RBT:31624] generated EC certificate
+ cert. version     : 3
+ serial number     : A3:28:87:66:75:D1:32:A3:0B:AC:F8:34:93:E9:E1:EF
+ issuer name       : CN=LAPTOP-2MH1B4G5.lan
+ subject name      : CN=LAPTOP-2MH1B4G5.lan
+ issued  on        : 2025-10-21 21:36:30
+ expires on        : 2026-10-23 21:36:30
+ signed using      : ECDSA with SHA256
+ EC key size       : 256 bits
+ basic constraints : CA=false
+ subject alt name  :
+     dNSName : LAPTOP-2MH1B4G5.lan
+     dNSName : *.LAPTOP-2MH1B4G5.lan
+     iPAddress : 192.168.1.244
+ key usage         : Digital Signature
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-22T15:36:30+000048:tool/net/redbean.c:687:redbean-RBT:31624] (ssl) using EC certificate "CN=LAPTOP-2MH1B4G5.lan" for HTTPS server
+D2025-10-22T15:36:30+080515:net/https/logcertificate.c:28:redbean-RBT:31624] generated RSA certificate
+ cert. version     : 3
+ serial number     : C5:9B:DD:73:91:9B:CC:19:87:75:B3:BD:56:6E:18:D9
+ issuer name       : CN=LAPTOP-2MH1B4G5.lan
+ subject name      : CN=LAPTOP-2MH1B4G5.lan
+ issued  on        : 2025-10-21 21:36:30
+ expires on        : 2026-10-23 21:36:30
+ signed using      : RSA with SHA-256
+ RSA key size      : 2048 bits
+ basic constraints : CA=false
+ subject alt name  :
+     dNSName : LAPTOP-2MH1B4G5.lan
+     dNSName : *.LAPTOP-2MH1B4G5.lan
+     iPAddress : 192.168.1.244
+ key usage         : Digital Signature, Key Encipherment
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-22T15:36:30+000169:tool/net/redbean.c:687:redbean-RBT:31624] (ssl) using RSA certificate "CN=LAPTOP-2MH1B4G5.lan" for HTTPS server
+W2025-10-22T15:36:30+253480:tool/net/launch.c:44:redbean-RBT:31624] (srvr) failed to open http://192.168.1.244:8080/ in a browser tab using /c/windows/explorer.exe: process exited with non-zero status
+D2025-10-22T15:36:30+178476:tool/net/redbean.c:7091:redbean-RBT:25200] (repl) event loop
+D2025-10-22T15:36:30+001701:tool/net/redbean.c:6750:redbean-RBT:25200] (token) can't acquire accept() token for client
+V2025-10-22T15:36:30+000039:tool/net/redbean.c:6759:redbean-RBT:25200] (srvr) accept 192.168.1.244:53362 via 192.168.1.244:8080
+D2025-10-22T15:36:37.176736:tool/net/redbean.c:6583:redbean-RBT:25200] (stat) 192.168.1.244:53362 read 509 bytes
+I2025-10-22T15:36:37+000069:tool/net/redbean.c:6112:redbean-RBT:25200] (req) received 192.168.1.244:53362 HTTP11 GET http://192.168.1.244:8080/ "" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+V2025-10-22T15:36:37+000050:tool/net/redbean.c:6343:redbean-RBT:25200] (rsp) 200 OK
+D2025-10-22T15:36:37+000040:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) match 11 route(s) against '/'
+D2025-10-22T15:36:37+000035:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) route '/team/player' not matched
+D2025-10-22T15:36:37+000120:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) route '/team/enemy' not matched
+D2025-10-22T15:36:37+000029:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) route '/team/player' not matched
+D2025-10-22T15:36:37+000025:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) route '/team/enemy' not matched
+D2025-10-22T15:36:37+000026:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) route '/Battle' not matched
+D2025-10-22T15:36:37+000024:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) route '/Battle' not matched
+D2025-10-22T15:36:37+000025:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) route '/Program' not matched
+D2025-10-22T15:36:37+000025:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) route '/Program' not matched
+D2025-10-22T15:36:37+000035:/zip/.lua/fullmoon.lua:62:redbean-RBT:25200] (fm) route '/' matched
+V2025-10-22T15:36:37+000036:tool/net/redbean.c:6343:redbean-RBT:25200] (rsp) 304 Not Modified
+D2025-10-22T15:36:37+000030:tool/net/redbean.c:6511:redbean-RBT:25200] (stat) "/" latency r: 578µs c: 6,638,931µs
+D2025-10-22T15:36:37+000082:tool/net/redbean.c:5683:redbean-RBT:25200] (stat) 192.168.1.244:53362 connection closed with 1 messages handled
+D2025-10-22T15:36:37+000025:tool/net/redbean.c:6802:redbean-RBT:25200] (stat) 192.168.1.244:53362 closing after 6,639,038µs
+D2025-10-22T15:36:37+000262:tool/net/redbean.c:6750:redbean-RBT:25200] (token) can't acquire accept() token for client
+V2025-10-22T15:36:37+000031:tool/net/redbean.c:6759:redbean-RBT:25200] (srvr) accept 192.168.1.244:61209 via 192.168.1.244:8080
+D2025-10-22T15:37:37.186390:tool/net/redbean.c:5683:redbean-RBT:25200] (stat) 192.168.1.244:61209 read timeout with 0 messages handled
+D2025-10-22T15:37:37+000100:tool/net/redbean.c:6802:redbean-RBT:25200] (stat) 192.168.1.244:61209 closing after 60,008,780µs
+D2025-10-22T15:40:11.862312:tool/net/redbean.c:5127:redbean-RBT:24912] (lua) LuaRunAsset("/.init.lua")
+V2025-10-22T15:40:11+002298:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set template 'fmt'
+V2025-10-22T15:40:11+000079:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set template '500'
+V2025-10-22T15:40:11+000090:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set template 'json'
+V2025-10-22T15:40:11+000020:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set template 'sse'
+V2025-10-22T15:40:11+000024:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set template 'fmg'
+V2025-10-22T15:40:11+000019:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set template 'cgi'
+V2025-10-22T15:40:11+000363:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/team/player' (POST) at index 1
+V2025-10-22T15:40:11+000047:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/team/enemy' (POST) at index 2
+V2025-10-22T15:40:11+000029:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/team/player' (GET) at index 3
+V2025-10-22T15:40:11+000027:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/team/enemy' (GET) at index 4
+V2025-10-22T15:40:11+000026:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/Battle' (POST) at index 5
+V2025-10-22T15:40:11+000026:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/Battle' (GET) at index 6
+V2025-10-22T15:40:11+000024:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/Program' (POST) at index 7
+V2025-10-22T15:40:11+000025:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/Program' (GET) at index 8
+V2025-10-22T15:40:11+000027:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/' (ANY) at index 9
+V2025-10-22T15:40:11+000025:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/js/*' (GET) at index 10
+V2025-10-22T15:40:11+000027:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) set route '/css/*' (GET) at index 11
+I2025-10-22T15:40:11+000035:/zip/.lua/fullmoon.lua:64:redbean-RBT:24912] (fm) started redbean/3.0.0 fullmoon/0.384
+V2025-10-22T15:40:11+000028:/zip/.lua/fullmoon.lua:63:redbean-RBT:24912] (fm) applied random session secret; set `fm.sessionOptions.secret` to `fm.decodeBase64('s+3oTUxZy8a7DlU6rXldRoWgw9/nT+ojh0az4ws7Ytg=')` to continue using this value or to `false` to disable
+I2025-10-22T15:40:11+000857:tool/net/redbean.c:7052:redbean-RBT:24912] (srvr) listen http://192.168.1.244:8080
+I2025-10-22T15:40:11+000099:tool/net/redbean.c:7052:redbean-RBT:24912] (srvr) listen http://127.0.0.1:8080
+V2025-10-22T15:40:11+000062:tool/net/redbean.c:2085:redbean-RBT:24912] (ssl) could not find non-CA SSL certificate key pair with -addext keyUsage=digitalSignature -addext extendedKeyUsage=serverAuth
+V2025-10-22T15:40:11+000025:tool/net/redbean.c:2088:redbean-RBT:24912] (ssl) could not find CA key signing key pair with -addext keyUsage=keyCertSign
+V2025-10-22T15:40:11+000023:tool/net/redbean.c:2090:redbean-RBT:24912] (ssl) generating self-signed ssl certificates
+D2025-10-22T15:40:11+026992:net/https/logcertificate.c:28:redbean-RBT:24912] generated EC certificate
+ cert. version     : 3
+ serial number     : 32:97:3E:2C:58:1F:4D:E1:67:F1:E7:AD:5A:0A:F5:B5
+ issuer name       : CN=LAPTOP-2MH1B4G5.lan
+ subject name      : CN=LAPTOP-2MH1B4G5.lan
+ issued  on        : 2025-10-21 21:40:11
+ expires on        : 2026-10-23 21:40:11
+ signed using      : ECDSA with SHA256
+ EC key size       : 256 bits
+ basic constraints : CA=false
+ subject alt name  :
+     dNSName : LAPTOP-2MH1B4G5.lan
+     dNSName : *.LAPTOP-2MH1B4G5.lan
+     iPAddress : 192.168.1.244
+ key usage         : Digital Signature
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-22T15:40:11+000105:tool/net/redbean.c:687:redbean-RBT:24912] (ssl) using EC certificate "CN=LAPTOP-2MH1B4G5.lan" for HTTPS server
+D2025-10-22T15:40:11+047201:net/https/logcertificate.c:28:redbean-RBT:24912] generated RSA certificate
+ cert. version     : 3
+ serial number     : 0C:FB:82:EA:18:E7:87:62:C2:2F:BB:8A:14:B7:98:EC
+ issuer name       : CN=LAPTOP-2MH1B4G5.lan
+ subject name      : CN=LAPTOP-2MH1B4G5.lan
+ issued  on        : 2025-10-21 21:40:11
+ expires on        : 2026-10-23 21:40:11
+ signed using      : RSA with SHA-256
+ RSA key size      : 2048 bits
+ basic constraints : CA=false
+ subject alt name  :
+     dNSName : LAPTOP-2MH1B4G5.lan
+     dNSName : *.LAPTOP-2MH1B4G5.lan
+     iPAddress : 192.168.1.244
+ key usage         : Digital Signature, Key Encipherment
+ ext key usage     : TLS Web Server Authentication, TLS Web Client Authentication
+V2025-10-22T15:40:11+000144:tool/net/redbean.c:687:redbean-RBT:24912] (ssl) using RSA certificate "CN=LAPTOP-2MH1B4G5.lan" for HTTPS server
+W2025-10-22T15:40:12.162994:tool/net/launch.c:44:redbean-RBT:24912] (srvr) failed to open http://192.168.1.244:8080/ in a browser tab using /c/windows/explorer.exe: process exited with non-zero status
+D2025-10-22T15:40:12+058879:tool/net/redbean.c:7091:redbean-RBT:31700] (repl) event loop
+D2025-10-22T15:40:12+042398:tool/net/redbean.c:6750:redbean-RBT:31700] (token) can't acquire accept() token for client
+V2025-10-22T15:40:12+000195:tool/net/redbean.c:6759:redbean-RBT:31700] (srvr) accept 192.168.1.244:55210 via 192.168.1.244:8080
+D2025-10-22T15:40:12.266878:tool/net/redbean.c:5127:redbean-RBT:29156] (lua) LuaRunAsset("/.init.lua")
+V2025-10-22T15:40:12+002837:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set template 'fmt'
+V2025-10-22T15:40:12+000047:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set template '500'
+V2025-10-22T15:40:12+000086:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set template 'json'
+V2025-10-22T15:40:12+000021:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set template 'sse'
+V2025-10-22T15:40:12+000022:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set template 'fmg'
+V2025-10-22T15:40:12+000019:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set template 'cgi'
+V2025-10-22T15:40:12+000329:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set route '/team/player' (POST) at index 1
+V2025-10-22T15:40:12+000054:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set route '/team/enemy' (POST) at index 2
+V2025-10-22T15:40:12+000029:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set route '/team/player' (GET) at index 3
+V2025-10-22T15:40:12+000027:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set route '/team/enemy' (GET) at index 4D2025-10-22T15:40:12+005911:tool/net/redbean.c:6583:redbean-RBT:31700] 
+(stat) 192.168.1.244:55210 read 368 bytes
+I2025-10-22T15:40:12+000073:tool/net/redbean.c:6112:redbean-RBT:31700] (req) received 192.168.1.244:55210 HTTP11 GET http://192.168.1.244:8080/js/main.js "http://192.168.1.244:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"V2025-10-22T15:40:12+000106:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] 
+(fm) set route '/Battle' (POST) at index 5
+V2025-10-22T15:40:12+000065:tool/net/redbean.c:6343:redbean-RBT:31700] (rsp) 200 OK
+V2025-10-22T15:40:12+000088:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] D2025-10-22T15:40:12+000039:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) set route '/Battle' (GET) at index 6(fm) match 11 route(s) against '/js/main.js'
+
+D2025-10-22T15:40:12+000058:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/team/player' not matched
+D2025-10-22T15:40:12+000032:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/team/enemy' not matched
+D2025-10-22T15:40:12+000024:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/team/player' not matched
+V2025-10-22T15:40:12+000137:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) set route '/Program' (POST) at index 7D2025-10-22T15:40:12+000032:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] 
+(fm) route '/team/enemy' not matched
+D2025-10-22T15:40:12+000031:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/Battle' not matchedV2025-10-22T15:40:12+000058:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] 
+(fm) set route '/Program' (GET) at index 8D2025-10-22T15:40:12+000023:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] 
+(fm) route '/Battle' not matched
+D2025-10-22T15:40:12+000023:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] V2025-10-22T15:40:12+000038:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) route '/Program' not matched(fm) set route '/' (ANY) at index 9
+
+D2025-10-22T15:40:12+000079:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/Program' not matched
+D2025-10-22T15:40:12+000020:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/' not matched
+V2025-10-22T15:40:12+000111:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] D2025-10-22T15:40:12+000021:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) set route '/js/*' (GET) at index 10(fm) route '/js/*' matched
+
+V2025-10-22T15:40:12+000058:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] V2025-10-22T15:40:12+000051:tool/net/redbean.c:6343:redbean-RBT:31700] (fm) set route '/css/*' (GET) at index 11(rsp) 304 Not Modified
+
+D2025-10-22T15:40:12+000034:tool/net/redbean.c:6511:redbean-RBT:31700] (stat) "/js/main.js" latency r: 614µs c: 6,525µs
+I2025-10-22T15:40:12+000068:/zip/.lua/fullmoon.lua:64:redbean-RBT:29156] (fm) started redbean/3.0.0 fullmoon/0.384
+V2025-10-22T15:40:12+000035:/zip/.lua/fullmoon.lua:63:redbean-RBT:29156] (fm) applied random session secret; set `fm.sessionOptions.secret` to `fm.decodeBase64('rTD4L91hYWaD6vBMMdkpwy9YWDwPsu5L3lNms+Htnfc=')` to continue using this value or to `false` to disable
+D2025-10-22T15:40:12+000088:tool/net/redbean.c:5683:redbean-RBT:31700] (stat) 192.168.1.244:55210 connection closed with 1 messages handled
+D2025-10-22T15:40:12+000027:tool/net/redbean.c:6802:redbean-RBT:31700] (stat) 192.168.1.244:55210 closing after 6,641µs
+D2025-10-22T15:40:12+000155:tool/net/redbean.c:6750:redbean-RBT:31700] (token) can't acquire accept() token for client
+V2025-10-22T15:40:12+000023:tool/net/redbean.c:6759:redbean-RBT:31700] (srvr) accept 192.168.1.244:63633 via 192.168.1.244:8080
+D2025-10-22T15:40:12+000113:tool/net/redbean.c:6583:redbean-RBT:31700] (stat) 192.168.1.244:63633 read 385 bytes
+I2025-10-22T15:40:12+000045:tool/net/redbean.c:6112:redbean-RBT:31700] (req) received 192.168.1.244:63633 HTTP11 GET http://192.168.1.244:8080/css/main.css "http://192.168.1.244:8080/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
+V2025-10-22T15:40:12+000028:tool/net/redbean.c:6343:redbean-RBT:31700] (rsp) 200 OK
+D2025-10-22T15:40:12+000024:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) match 11 route(s) against '/css/main.css'
+D2025-10-22T15:40:12+000023:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/team/player' not matched
+D2025-10-22T15:40:12+000019:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/team/enemy' not matched
+D2025-10-22T15:40:12+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/team/player' not matched
+D2025-10-22T15:40:12+000017:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/team/enemy' not matched
+D2025-10-22T15:40:12+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/Battle' not matched
+D2025-10-22T15:40:12+000017:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/Battle' not matched
+D2025-10-22T15:40:12+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/Program' not matched
+D2025-10-22T15:40:12+000020:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/Program' not matched
+D2025-10-22T15:40:12+000017:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/' not matched
+D2025-10-22T15:40:12+000018:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/js/*' not matched
+D2025-10-22T15:40:12+000021:/zip/.lua/fullmoon.lua:62:redbean-RBT:31700] (fm) route '/css/*' matched
+V2025-10-22T15:40:12+000028:tool/net/redbean.c:6343:redbean-RBT:31700] (rsp) 304 Not Modified
+D2025-10-22T15:40:12+000020:tool/net/redbean.c:6511:redbean-RBT:31700] (stat) "/css/main.css" latency r: 359µs c: 472µs
+D2025-10-22T15:40:12+000049:tool/net/redbean.c:5683:redbean-RBT:31700] (stat) 192.168.1.244:63633 connection closed with 1 messages handled
+D2025-10-22T15:40:12+000018:tool/net/redbean.c:6802:redbean-RBT:31700] (stat) 192.168.1.244:63633 closing after 539µs
+F2025-10-22T15:40:12+000786:tool/net/redbean.c:7037:redbean-RBT:29156] (srvr) bind error: Address already in use: 192.168.1.244:8080
+exiting due to aforementioned error (host LAPTOP-2MH1B4G5 pid 29156 tid 22164)
