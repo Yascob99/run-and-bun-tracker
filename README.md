@@ -78,7 +78,7 @@ I did want to initially have this copy into your clipboard, but due to limitatio
 ## Future Features
 - A lot of QOL and UI improvements. Right now the tracker is simple because I wanted to get the core functionality working. However now that that is working that will likely be my next priority after bugs.
 - An options menu. I want to add more customizability of where things go. Most of what I've added could be easier to use with some user designated options.
-- Web/External UI. One of the ways I could massively improve the UI would be to give the option for it to be external to the script. The UI via bizhawk is clunky and limited in resolution, additionally an external UI could be useful for seperating out parts of the UI for streaming. However I have yet to look to deeply into the viability of this, so it may not be possible or easy to impliment.
+- Web/External UI. One of the ways I could massively improve the UI would be to give the option for it to be external to the script. The UI via bizhawk is clunky and limited in resolution, additionally an external UI could be useful for seperating out parts of the UI for streaming. Currently Working on this exact functionality.
 - I have thought about adding battle related functionality such as tracking stat drops/raises and estimating the AI's next move. However it would require a lot of reverse engineering of where the game stores things in ram for this mod as it does not often line up with the original version of the game. Since this can be a rather time consuming process, it will be low on my priority list.
 
 ## Notes for Developers
