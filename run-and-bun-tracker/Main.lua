@@ -113,6 +113,9 @@ function Main.Run()
 		gui.defaultTextBackground(0)
 		event.onloadstate(Program.loadNewFile)
 		Program.runCounter = Program.readCurrentRuns()
+		if not WebUI.isStarted then
+			WebUI.start()
+		end
 		-- Allow emulation until something needs to happen. Run main loop only every 10 frames. Input and should be run every frame for better responsiveness.
 		while not (Main.forceRestart) do
 			if Program.frames%10 == 0 then
