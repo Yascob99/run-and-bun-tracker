@@ -39,6 +39,7 @@ function Battle.update()
     Battle.location = Map.names[Battle.regionID]
     if Battle.prevLocation ~= Battle.location then -- on moving regions
         Battle.lastLocation = Battle.prevLocation
+        WebUI.updateBattle()
     end
     -- None of this needs to run until an event happens.
     if Program.isValidMapLocation() and not Program.isNewRun and not Program.awaitingLoad and not Program.lostRun then
@@ -71,6 +72,7 @@ function Battle.battleStart()
     Battle.isInBattle = true
 	Battle.isWildEncounter = Utils.getbits(Battle.battleFlags, 3, 1) == 0
 	Program.enemyPokemonTeam = Program.getTrainerData(2)
+    WebUI.updateBattle()
     Program.Save()
 end
 
@@ -114,6 +116,7 @@ function Battle.battleEnd()
     end
     if Battle.battleOutcome == 2 and Battle.hasFoughtRival then
         Program.lostRun = true
+        WebUI.updateBattle()
     end
     Program.enemyPokemonTeam = Program.getBlankTrainerData()
 end

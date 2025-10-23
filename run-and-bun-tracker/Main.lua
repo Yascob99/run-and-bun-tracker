@@ -81,6 +81,39 @@ function Main.Run()
 			client.SetGameExtraPadding(0, 0, 0, 0)
 			Main.frameAdvance()
 		end
+	else
+		-- mGBA specific callbacks
+		if Main.startCallbackId == nil then
+			Main.startCallbackId = callbacks:add("start", Main.Run)
+		end
+		if Main.resetCallbackId == nil then
+			 -- start doesn't get trigged on-reset
+			Main.resetCallbackId = callbacks:add("reset", function()
+				Main.Run()
+			end)
+		end
+		if Main.stopCallbackId == nil then
+			Main.stopCallbackId = callbacks:add("stop", function()
+				MGBA.removeActiveRunCallbacks()
+			end)
+		end
+		if Main.shutdownCallbackId == nil then
+			Main.shutdownCallbackId = callbacks:add("shutdown", function()
+				MGBA.removeActiveRunCallbacks()
+			end)
+		end
+		if Main.crashedCallbackId == nil then
+			Main.crashedCallbackId = callbacks:add("crashed", function()
+				MGBA.removeActiveRunCallbacks()
+			end)
+		end
+
+		if emu == nil then
+			print("> Waiting for a game ROM to be loaded... (mGBA Emulator -> File -> Load ROM...)")
+			return
+		else
+			MGBA.setupActiveRunCallbacks()
+		end
 	end
 	print("Please wait, initializing Data")
 	GameSettings.initialize()
@@ -98,7 +131,10 @@ function Main.Run()
 	Map.initialize()
 	Encounters.getEncounterData()
 	Main.tempQuickloadFiles = nil -- From now on, quickload files should be re-checked
-
+	WebUI.checkStarted()
+	if WebUI.isStarted then
+		Program.useWebUI = true
+	end
 	-- Final garbage collection prior to game loops beginning
 	collectgarbage()
 
@@ -109,13 +145,13 @@ function Main.Run()
 		end
 
 		Main.hasRunOnce = true
-		client.SetGameExtraPadding(0, Constants.Graphics.UP_GAP, Constants.Graphics.RIGHT_GAP, Constants.Graphics.DOWN_GAP)
-		gui.defaultTextBackground(0)
-		event.onloadstate(Program.loadNewFile)
-		Program.runCounter = Program.readCurrentRuns()
-		if not WebUI.isStarted then
-			WebUI.start()
+		if not Program.useWebUI then
+			client.SetGameExtraPadding(0, Constants.Graphics.UP_GAP, Constants.Graphics.RIGHT_GAP, Constants.Graphics.DOWN_GAP)
+			gui.defaultTextBackground(0)
 		end
+		event.onloadstate(Program.loadNewFile)
+		--WebUI.start()
+		Program.runCounter = Program.readCurrentRuns()
 		-- Allow emulation until something needs to happen. Run main loop only every 10 frames. Input and should be run every frame for better responsiveness.
 		while not (Main.forceRestart) do
 			if Program.frames%10 == 0 then
@@ -128,7 +164,9 @@ function Main.Run()
 		if Main.forceRestart then
 			RunAndBunTracker.startTracker()
         end
-    end
+    else
+		MGBA.Run()
+	end
 end
 
 

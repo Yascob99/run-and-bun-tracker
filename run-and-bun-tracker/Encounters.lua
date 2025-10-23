@@ -276,7 +276,8 @@ end
 --- Writes the current encounter list to file
 function Encounters.updateEncounterTracker(force)
     force = force or Battle.hasFoughtRival
-    -- Don't write anything until 
+    -- Don't write anything until
+    WebUI.updateEncounters() 
     if force then
         FileManager.writeTableToFile(Encounters.encounters, FileManager.Files.ENCOUNTER_LOG)
         -- writes to a CSV file as well for easier tracking in the order that routes are accessible.
