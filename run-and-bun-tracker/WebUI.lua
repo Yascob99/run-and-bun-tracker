@@ -1,20 +1,56 @@
 WebUI = {
-    isStarted = false
+    isStarted = false,
+    lastSentBattle = nil,
+    lastSentTrainerTeam = nil,
+    lastSentEnemyTeam = nil,
 }
 
-function WebUI.start()
-    local webserver = io.popen(".\\run-and-bun-tracker\\webserver\\redbean-RBT.com -vv -d -L redbean.log -P redbean.pid")
-    -- webserver:close()
-    WebUI.isStarted = true
-end
-
-function WebUI.stop()
-    if Utils.isWindows() then
-        os.execute("taskkill /F /IM redbean-RBT.com") -- windows kill
+function WebUI.checkStarted()
+    if comm.socketServerIsConnected then
+        WebUI.isStarted = true
     else
-        os.execute("pkill -15 redbean-RBT.com") -- Should work on linux and mac
+        WebUI.isStarted = false
     end
 end
 
 function WebUI.updateBattle()
+    WebUI.checkStarted()
+    if WebUI.isStarted then
+        local battle = Json.encode(Utils.getAttributesFromGlobal(Battle))
+        if battle ~= WebUI.lastSentBattle then
+            comm.socketServerSend('{"Battle":'.. battle .. '}')
+            WebUI.lastSentBattle = battle
+        end
+    end
+end
+
+function WebUI.updateTrainerTeam()
+    WebUI.checkStarted()
+    if WebUI.isStarted then
+        local team = Json.encode( Program.trainerPokemonTeam)
+        if team ~= WebUI.lastSentTrainerTeam then
+            comm.socketServerSend('{"TrainerTeam":'.. team .. '}')
+            WebUI.lastSentTrainerTeam = team
+        end
+    end
+end
+
+function WebUI.updateEnemyTeam()
+    WebUI.checkStarted()
+    if WebUI.isStarted then
+        local team = Json.encode(Program.trainerPokemonTeam)
+        if team ~= WebUI.lastSentEnemyTeam then
+            comm.socketServerSend('{"EnemyTeam":'.. team .. '}')
+            WebUI.lastSentEnemyTeam = team
+        end
+    end
+end
+
+function WebUI.updateEncounters()
+    WebUI.checkStarted()
+    if WebUI.isStarted then
+        local encounters = Json.encode(Encounters.encounters)
+        comm.socketServerSend('{"Encounters":'.. encounters .. '}')
+        WebUI.lastSentEnemyTeam = encounters
+    end
 end

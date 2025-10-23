@@ -4,8 +4,8 @@ Program = {
 	},
 	trainerPokemonTeam = {},
 	enemyPokemonTeam = {},
+	previousTrainerPokemonTeam = {},
 	trainerInfo = {},
-	inTrainersView = false,
 	runCounter = 0,
 	lostRun = false,
 	awaitingLoad = true,
@@ -14,6 +14,7 @@ Program = {
 	initialLoad = true,
 	awaitingStateLoad = false,
 	isSaveStateLoad = false,
+	useWebUI = false
 }
 
 -- Main loop for the program. This is run every 10 frames currently (called in Main.).
@@ -23,6 +24,7 @@ function Program.mainLoop()
 		if Program.isValidMapLocation() then
 			Program.trainerPokemonTeam = Program.getTrainerData(1)
 			Program.trainerInfo = Program.getTrainerInfo()
+			WebUI.updateTrainerTeam()
 			if (Program.awaitingLoad and Battle.lastLocation == nil and not Program.awaitingStateLoad and not Program.isNewRun) or (Program.initialLoad and Program.awaitingLoad) then
 				print("Loading run data")
         		if Program.Load() then
@@ -31,43 +33,54 @@ function Program.mainLoop()
 				end
 				Program.initialLoad = false
 			end
-			if Program.isNewRun then
-				Drawing.drawLayout()
-				Drawing.drawNewRunScreen()
-			elseif Program.awaitingLoad  then
-				Drawing.drawLayout()
-				Drawing.drawAwaitingLoad()
-			elseif Program.lostRun then
-				Drawing.drawLayout()
-				Drawing.drawButtons()
-				Drawing.drawGameOverScreen()
+			if not Program.useWebUI then
+				if Program.isNewRun then
+					Drawing.drawLayout()
+					Drawing.drawNewRunScreen()
+				elseif Program.awaitingLoad  then
+					Drawing.drawLayout()
+					Drawing.drawAwaitingLoad()
+				elseif Program.lostRun then
+					Drawing.drawLayout()
+					Drawing.drawButtons()
+					Drawing.drawGameOverScreen()
+				else
+					-- Displays pokemon data on the right if there is a pokemon in the party in slot 1.
+					if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then 
+						local pokemonaux = Program.getPokemonData(LayoutSettings.pokemonIndex)
+						Program.selectedPokemon = pokemonaux
+						Drawing.drawPokemonView()
+					end
+					-- Draws the Map if required.
+					if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.MAP then
+						Drawing.drawMap()
+					end
+					-- Draws encounters if on tab
+					if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.ENCOUNTERS then
+						Drawing.drawEncounters()
+					end
+					Drawing.drawButtons()
+					Drawing.drawLayout()
+				end
 			else
-				-- Displays pokemon data on the right if there is a pokemon in the party in slot 1.
 				if LayoutSettings.showRightPanel and Program.trainerPokemonTeam[1]["pkmID"] ~= 0 then 
 					local pokemonaux = Program.getPokemonData(LayoutSettings.pokemonIndex)
 					Program.selectedPokemon = pokemonaux
-					Drawing.drawPokemonView()
 				end
-				-- Draws the Map if required.
-				if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.MAP then
-					Drawing.drawMap()
-				end
-				-- Draws encounters if on tab
-				if LayoutSettings.menus.main.selecteditem == LayoutSettings.menus.main.ENCOUNTERS then
-					Drawing.drawEncounters()
-				end
-				Drawing.drawButtons()
-				Drawing.drawLayout()
 			end
 		else
 			if Program.awaitingLoad and not Program.isValidMapLocation() and Battle.lastLocation ~= nil then
 				Program.isNewRun = false
-				Drawing.drawLayout()
-				Drawing.drawAwaitingLoad()
+				if not Program.useWebUI then
+					Drawing.drawLayout()
+					Drawing.drawAwaitingLoad()
+				end
 			elseif Program.isNewRun then
-				Drawing.drawLayout()
-				Drawing.drawNewRunScreen()
-			else
+				if not Program.useWebUI then
+					Drawing.drawLayout()
+					Drawing.drawNewRunScreen()
+				end
+			elseif not Program.useWebUI then
 				Drawing.drawLayout()
 				Drawing.drawAwaitingLoad()
 			end
@@ -639,6 +652,7 @@ end
 
 -- Saves data about the current run
 function Program.Save()
+	WebUI.updateBattle()
 	if Encounters.encounters ~= nil then
 		Encounters.updateEncounterTracker(true)
 	end

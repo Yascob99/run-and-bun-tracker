@@ -311,6 +311,7 @@ end
 
 -- Gets just the attributes of a Global for easier storing in files.
 function Utils.getAttributesFromGlobal(Global)
+	if Global == nil then return {} end
 	local global = {}
 	for key, value in pairs(Global) do
 		if type(value) ~= "function" then
@@ -318,4 +319,8 @@ function Utils.getAttributesFromGlobal(Global)
 		end
 	end
 	return global
+end
+
+function Utils.toSignedInt(n)
+	return n - Utils.bit_and(n, math.maxinteger)*2
 end
