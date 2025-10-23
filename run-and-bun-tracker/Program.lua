@@ -13,7 +13,7 @@ Program = {
 	frames = 0,
 	initialLoad = true,
 	awaitingStateLoad = false,
-	isSaveStateLoad = false
+	isSaveStateLoad = false,
 }
 
 -- Main loop for the program. This is run every 10 frames currently (called in Main.).
@@ -761,10 +761,10 @@ function Program.Load()
 			end
 		end
 		if not matches then
-			if not matches then
 				Encounters.findPreviousEncounters()
 				Encounters.updateEncounterTracker(true)
-			end
+		else
+			Encounters.encounters = FileManager.readTableFromFile(FileManager.Files.ENCOUNTER_LOG)
 		end
 	elseif partyCount > 0 then
 		Battle.setDefaults()

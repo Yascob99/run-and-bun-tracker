@@ -112,7 +112,6 @@ function Main.Run()
 		client.SetGameExtraPadding(0, Constants.Graphics.UP_GAP, Constants.Graphics.RIGHT_GAP, Constants.Graphics.DOWN_GAP)
 		gui.defaultTextBackground(0)
 		event.onloadstate(Program.loadNewFile)
-		--WebUI.start()
 		Program.runCounter = Program.readCurrentRuns()
 		if not WebUI.isStarted then
 			WebUI.start()

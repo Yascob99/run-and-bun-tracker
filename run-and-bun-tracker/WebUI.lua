@@ -3,7 +3,7 @@ WebUI = {
 }
 
 function WebUI.start()
-    --local webserver = io.popen(".\\run-and-bun-tracker\\webserver\\redbean-RBT.com -vv -d -L redbean.log -P redbean.pid")
+    local webserver = io.popen(".\\run-and-bun-tracker\\webserver\\redbean-RBT.com -vv -d -L redbean.log -P redbean.pid")
     -- webserver:close()
     WebUI.isStarted = true
 end
@@ -17,7 +17,4 @@ function WebUI.stop()
 end
 
 function WebUI.updateBattle()
-    if WebUI.isStarted then
-        -- comm.httpPost("http://127.0.0.1:8080", Json.encode(Utils.getAttributesFromGlobal(Battle))) doesn't work without command line, looking into alternatives
-    end
 end

@@ -8,6 +8,4 @@ run-and-bun-tracker/attempts/*
 run-and-bun-tracker/Runs.txt
 .VScodeCounter/*
 .VScodeCounter
-run-and-bun-tracker/webserver/*/
-run-and-bun-tracker/webserver/redbean.log
-run-and-bun-tracker/webserver/redbean.pid
+run-and-bun-tracker/webserver/*
